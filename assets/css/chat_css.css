@@ -413,7 +413,7 @@
 
 #frame #sidepanel #contacts ul li.contact {
     position: relative;
-    /* padding: 5px 0 10px 0; */
+    padding: 5px 0 10px 0;
     font-size: 0.9em;
     cursor: pointer;
 }
@@ -819,4 +819,9 @@
     background-color: orange; /* Color of the scrollbar thumb */
     border-radius: 10px; /* Rounded corners for the thumb */
   }
+}
+
+
+#frame #contacts .contactLi p.contactName{
+    margin-bottom: 0px !important;
 }
