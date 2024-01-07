@@ -1,0 +1,7 @@
+phpunit.xml
+reports
+sandbox
+vendor
+composer.lock
+
+/assets/

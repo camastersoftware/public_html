@@ -23,11 +23,7 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-// 	public $baseURL = 'http://ca-super-admin.loc/';
-	// public $baseURL = 'https://camastersoftware.com';
-	public $baseURL = 'https://camastersoftware.com';
-// 	public $baseURL = 'https://camaster.in';
-// 	public $baseURL = 'https://camaster.in/NewProject';
+	public $baseURL = PROJ_BASE_URL;
 
 	/**
 	 * --------------------------------------------------------------------------
