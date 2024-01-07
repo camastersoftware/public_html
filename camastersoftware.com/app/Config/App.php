@@ -23,7 +23,7 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $baseURL = PROJ_BASE_URL;
+	public $baseURL = PROJ_BASE_URL; 
 
 	/**
 	 * --------------------------------------------------------------------------
