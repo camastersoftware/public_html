@@ -11,16 +11,8 @@ class TableLib
 	{
         $this->sessCaFirmId=$this->session->get('caFirmId');
 
-        if($_SERVER['SERVER_NAME']=='localhost')
-        {
-        	$superAdminDB="ca_master";
-            $adminDB="ca_admin_".$this->sessCaFirmId;
-        }
-        else
-        {
-        	$superAdminDB="camastersoftware_admin";
-            $adminDB=PROJ_PREFIX."_ca_firm_".$this->sessCaFirmId;
-        }
+        $superAdminDB=ADMIN_DB_NAME;
+        $adminDB=FIRM_DB_NAME.$this->sessCaFirmId;
 
         //Super Admin
         $tableArr['admin_tbl']=$superAdminDB.".admin_tbl";

@@ -9,29 +9,12 @@ class ConnectDb
     
 	public function admin($caFirmId)
 	{
-        // 'username' => 'camaster_firm_user',
-        // 'password' => 'n8XF!.kIs0Wg',
-        // 'database' => 'camaster_ca_firm_'.$caFirmId,
-
-        if($_SERVER['SERVER_ADDR']=='127.0.0.1')
-        {
-            $ca_firm_db_user="root";
-            $ca_firm_db_pass="";
-            $ca_firm_db_name=PROJ_PREFIX.'_ca_firm_'.$caFirmId;
-        }
-        else
-        {
-            $ca_firm_db_user=FIRM_DB_USERNAME;
-            $ca_firm_db_pass=FIRM_DB_PASSWORD;
-            $ca_firm_db_name=PROJ_PREFIX.'_ca_firm_'.$caFirmId;
-        }
-
         $this->adminDB = [
             'DSN'      => '',
             'hostname' => 'localhost',
-            'username' => $ca_firm_db_user,
-            'password' => $ca_firm_db_pass,
-            'database' => $ca_firm_db_name,
+            'username' => FIRM_DB_USERNAME,
+            'password' => FIRM_DB_PASSWORD,
+            'database' => FIRM_DB_NAME.$caFirmId,
             'DBDriver' => 'MySQLi',
             'DBPrefix' => '',
             'pConnect' => false,

@@ -1,5 +1,16 @@
 <?php
+$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+$protocol = $isSecure ? "https://" : "http://";
+$base_url = $protocol . $_SERVER['HTTP_HOST'];
 
+$current_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+// Remove the base URL from the current URL to get the remaining URI
+$uri = str_replace($base_url, '', $current_url);
+
+// Get the first part of the URI after the base URL
+$parts = explode('/', trim($uri, '/'));
+$uri1 = $parts[0];
 /*
  | --------------------------------------------------------------------
  | App Namespace
@@ -82,11 +93,29 @@ defined('EXT_DUE_DATE_CLR')      || define('EXT_DUE_DATE_CLR', "#80ccdd99"); // 
 
 defined('EXT_DUE_DATE_STYLE')       ||  define('EXT_DUE_DATE_STYLE', "#dbe3dd9e"); // Extended Due Date Colour
 defined('PROJ_PREFIX')              ||  define('PROJ_PREFIX', "camastersoftware"); // Firms Database User Name
-defined('FIRM_DB_USERNAME')         ||  define('FIRM_DB_USERNAME', "camastersoftware_firm_user"); // Firms Database User Name
-defined('FIRM_DB_PASSWORD')         ||  define('FIRM_DB_PASSWORD', "_W8_16dQ$;)S"); // Firms Database Password
 
-// defined('FIRM_DB_USERNAME')         ||  define('FIRM_DB_USERNAME', "root"); // Firms Database User Name
-// defined('FIRM_DB_PASSWORD')         ||  define('FIRM_DB_PASSWORD', ""); // Firms Database Password
+if($_SERVER['SERVER_NAME']=='ca_master.loc')
+{
+    defined('PROJ_BASE_URL')              ||  define('PROJ_BASE_URL', "http://ca_master.loc");
+    defined('ADMIN_DB_NAME')             ||  define('ADMIN_DB_NAME', PROJ_PREFIX."_admin"); // Admin Database Name
+    defined('ADMIN_DB_USERNAME')         ||  define('ADMIN_DB_USERNAME', "root"); // Admin Database User Name
+    defined('ADMIN_DB_PASSWORD')         ||  define('ADMIN_DB_PASSWORD', ""); // Admin Database Password
+
+    defined('FIRM_DB_NAME')             ||  define('FIRM_DB_NAME', PROJ_PREFIX."_ca_firm_"); // Firms Database Name
+    defined('FIRM_DB_USERNAME')         ||  define('FIRM_DB_USERNAME', "root"); // Firms Database User Name
+    defined('FIRM_DB_PASSWORD')         ||  define('FIRM_DB_PASSWORD', ""); // Firms Database Password
+}
+else
+{
+    defined('PROJ_BASE_URL')              ||  define('PROJ_BASE_URL', "https://camastersoftware.com");
+    defined('ADMIN_DB_NAME')             ||  define('ADMIN_DB_NAME', PROJ_PREFIX."_admin"); // Admin Database Name
+    defined('ADMIN_DB_USERNAME')         ||  define('ADMIN_DB_USERNAME', "camastersoftware_adm_usr"); // Admin Database User Name
+    defined('ADMIN_DB_PASSWORD')         ||  define('ADMIN_DB_PASSWORD', "^,57k}ab-0+^"); // Admin Database Password
+
+    defined('FIRM_DB_NAME')             ||  define('FIRM_DB_NAME', PROJ_PREFIX."_ca_firm_"); // Firms Database Name
+    defined('FIRM_DB_USERNAME')         ||  define('FIRM_DB_USERNAME', "camastersoftware_firm_user"); // Firms Database User Name
+    defined('FIRM_DB_PASSWORD')         ||  define('FIRM_DB_PASSWORD', "_W8_16dQ$;)S"); // Firms Database Password
+}
 
 $INDIVIDUAL_ARRAY = array(8, 9, 22, 23);
 
