@@ -84,10 +84,16 @@
                                     <span>Firms :</span> 
                                     <span class="fu_count">
                                         <?php
-                                            if(!empty($totalFirmArr['totalFirms']))
-                                                echo str_replace(".00", "", money_format('%!i', $totalFirmArr['totalFirms']));
-                                            else
+                                            // if(!empty($totalFirmArr['totalFirms']))
+                                            //     echo str_replace(".00", "", money_format('%!i', $totalFirmArr['totalFirms']));
+                                            // else
+                                            //     echo "0";
+
+                                            if (!empty($totalFirmArr['totalFirms'])) {
+                                                echo str_replace(".00", "", number_format($totalFirmArr['totalFirms'], 2));
+                                            } else {
                                                 echo "0";
+                                            }
                                         ?>
                                     </span>
                                 </p>
@@ -95,10 +101,16 @@
                                     <span>Users :</span> 
                                     <span class="fu_count">
                                         <?php
-                                            if(!empty($totalFirmArr['totalUsers']))
-                                                echo str_replace(".00", "", money_format('%!i', $totalFirmArr['totalUsers']));
-                                            else
+                                            // if(!empty($totalFirmArr['totalUsers']))
+                                            //     echo str_replace(".00", "", money_format('%!i', $totalFirmArr['totalUsers']));
+                                            // else
+                                            //     echo "0";
+
+                                            if (!empty($totalFirmArr['totalUsers'])) {
+                                                echo str_replace(".00", "", number_format($totalFirmArr['totalUsers'], 2));
+                                            } else {
                                                 echo "0";
+                                            }
                                         ?>
                                     </span>
                                 </p>
