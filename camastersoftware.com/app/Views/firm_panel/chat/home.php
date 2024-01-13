@@ -75,8 +75,9 @@
 
                     <div class="row">
 
+      
+                        <div class="offset-md-0 offset-lg-0 col-md-12 col-lg-12">
                         
-                        <div class="offset-md-2 offset-lg-2 col-md-8 col-lg-8">
                             <div class="tab-wizard wizard-circle staff_form" id="frame">
                                 <div id="sidepanel">
                                     <div id="profile">
@@ -112,7 +113,7 @@
                                                 </ul>
                                             </div>
                                             <div id="expanded">
-                                                <label for="twitter">
+                                                /* <label for="twitter">
                                                     <i class="fa fa-facebook fa-fw" aria-hidden="true"></i>
                                                 </label>
                                                 <input name="twitter" type="text" value="mikeross" />
@@ -123,7 +124,7 @@
                                                 <label for="twitter">
                                                     <i class="fa fa-instagram fa-fw" aria-hidden="true"></i>
                                                 </label>
-                                                <input name="twitter" type="text" value="mike.ross" />
+                                                <input name="twitter" type="text" value="mike.ross" /> */
                                             </div>
                                         </div>
                                     </div>
@@ -185,11 +186,7 @@
 
                                             <p id="currentName"><?= checkData($getReceiverDetails['userFullName']); ?></p>
                                             <input type="hidden" id="currentID" value="<?= $receiverId; ?>">
-                                            <div class="social-media">
-                                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                                                <i class="fa fa-twitter" aria-hidden="true"></i>
-                                                <i class="fa fa-instagram" aria-hidden="true"></i>
-                                            </div>
+                                           
                                         </div>
                                         <div class="messages">
                                             <ul>
@@ -243,11 +240,7 @@
                                             <?php endif; ?>
 
                                             <input type="hidden" id="currentID" value="<?= $receiverId ?>">
-                                            <div class="social-media">
-                                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                                                <i class="fa fa-twitter" aria-hidden="true"></i>
-                                                <i class="fa fa-instagram" aria-hidden="true"></i>
-                                            </div>
+                                           
                                         </div>
                                         <div class="messages">
                                             <b>

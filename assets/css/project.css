@@ -888,7 +888,8 @@ table tr td a {
 .floatingButtonWrap {
     display: block;
     position: fixed;
-    bottom: 45px;
+    /* bottom: 45px; */
+    bottom: 615px !important;
     right: 45px;
     z-index: 999999999;
 }
@@ -898,8 +899,8 @@ table tr td a {
 }
 .floatingButton {
     display: block;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     text-align: center;
     background: #005495;
     background: #005495;
@@ -917,7 +918,7 @@ table tr td a {
 }
 
 .floatingButton .fa {
-    margin-top:3px;
-    font-size: 40px !important;
+    /* margin-top:3px; */
+    font-size:32px !important;
 }
 /*Chat Section Float Button End*/
