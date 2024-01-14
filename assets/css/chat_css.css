@@ -7,11 +7,11 @@
 }
 #frame {
     width: 100%;
-    min-width: 360px;
+    /* min-width: 360px; */
     /*max-width: 1000px;*/
     height: 65vh;
-    min-height: 300px;
-    max-height: 720px;
+    /* min-height: 300px;
+    max-height: 720px; */
     background: #e6eaea;
     /* border-top-right-radius: 20px;
     border-bottom-right-radius: 20px; */
@@ -28,8 +28,8 @@
 
 #frame #sidepanel {
     float: left;
-    min-width: 280px;
-    max-width: 340px;
+    /* min-width: 280px;
+    max-width: 340px; */
     width: 20%;
     height: 100%;
     background: #005495;

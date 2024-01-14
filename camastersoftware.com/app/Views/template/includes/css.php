@@ -1,14 +1,14 @@
     <!-- Vendors Style-->
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/vendors_css.css?v='.date('Ymd')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/vendors_css.css?v='.date('YmdHis')); ?>">
 
     <!-- Style-->
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css?v='.date('Ymd')); ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/skin_color.css?v='.date('Ymd')); ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/project.css?v='.date('Ymd')); ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/loader.css?v='.date('Ymd')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css?v='.date('YmdHis')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/skin_color.css?v='.date('YmdHis')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/project.css?v='.date('YmdHis')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/loader.css?v='.date('YmdHis')); ?>">
     
     <?php if(in_array('tooltip', $cssArr)): ?>
-        <link rel="stylesheet" href="<?php echo base_url('assets/css/custom-tooltip.css?v='.date('Ymd')); ?>">
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/custom-tooltip.css?v='.date('YmdHis')); ?>">
     <?php endif; ?>
     
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
