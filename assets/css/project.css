@@ -890,7 +890,10 @@ table tr td a {
     position: fixed;
     /* bottom: 45px; */
     bottom: 615px !important;
-    right: 45px;
+    right: 205px;
+    
+    /* bottom: 315px !important; */
+    /* right: 45px; */
     z-index: 999999999;
 }
 

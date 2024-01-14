@@ -190,20 +190,25 @@
                                         </div>
                                         <div class="messages">
                                             <ul>
-                                                <?php foreach ($getAllUserMsg as $row) : ?>
+                                           
+                                                <?php foreach ($getAllUserMsg as $row2) : ?>
+                                                    <center><p id="dateMsg" class="mt-2"><b><?= $row2['id'] ?></b></p></center>
+                                                    <?php if(!empty($row2['msg'])): foreach ($row2['msg'] as $row) : ?>
                                                     <?php if ($row['fromUserId'] == $sessUserId) : ?>
                                                         <li class="replies">
-                                                            <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
-                                                            <p><?= $row['userMessage'] ?></p><br />
-                                                            <b><?= date('d-m-Y h:i:s', strtotime($row['createdDatetime'])); ?></b>
+                                                        <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
+                                                            <p><?= $row['userMessage'] ?> <small  style="color:#4f4646"><?= date('h:i a', strtotime($row['createdDatetime'])); ?></small></p><br />
+                                                            
                                                         </li>
                                                     <?php else : ?>
                                                         <li class="sent">
-                                                            <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
-                                                            <p><?= $row['userMessage'] ?></p><br />
-                                                            <b><?= date('d-m-Y h:i:s', strtotime($row['createdDatetime'])); ?></b>
+                                                        <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
+                                                            
+                                                            <p><?= $row['userMessage'] ?> <small><?= date('h:i a', strtotime($row['createdDatetime'])); ?></small></p><br />
+                                                            
                                                         </li>
                                                     <?php endif; ?>
+                                                    <?php endforeach; endif; ?>
                                                 <?php endforeach; ?>
 
                                             </ul>
