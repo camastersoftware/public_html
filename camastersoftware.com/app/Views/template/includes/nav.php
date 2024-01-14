@@ -284,6 +284,16 @@
                             </div> 
                         </div>
                     </div>
+                    <div class="app-menu">
+                        <div class="search-bx mx-5">
+                            <p class="nav_bar verticalLine">
+                                <a href="<?= base_url('chat/0') ?>" class="text-white">
+                                <i class="fa fa-comments fa-2x icon-default"></i>
+                                </a>                
+                            </p>
+                        </div>
+                    </div>
+
                 </li>  
             </ul>
         </nav>
