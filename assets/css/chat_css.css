@@ -965,3 +965,8 @@
         background-color: #f99d27;
     }
 }
+
+.nav_chat_menu_icon{
+    font-size: 25px !important;
+    margin-top: -4px !important;
+}

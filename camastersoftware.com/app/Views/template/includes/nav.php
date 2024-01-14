@@ -288,7 +288,7 @@
                         <div class="search-bx mx-5">
                             <p class="nav_bar verticalLine">
                                 <a href="<?= base_url('chat/0') ?>" class="text-white">
-                                <i class="fa fa-comments fa-2x icon-default"></i>
+                                    <i class="fa fa-comments icon-default nav_chat_menu_icon"></i>
                                 </a>                
                             </p>
                         </div>
