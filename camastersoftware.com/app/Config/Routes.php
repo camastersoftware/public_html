@@ -878,6 +878,7 @@ $routes->get('/admin/gst_audit_form', 'Admin/Ui_design::gst_audit_form');
 $routes->get('chat/(:any)', 'ChatSection::index/$1');
 $routes->post('chat-send-msg', 'ChatSection::sendMsg');
 $routes->post('chat-get-all-msg', 'ChatSection::getMsg');
+$routes->post('chat-get-all-users', 'ChatSection::getUserList');
 
 // Chat Code End
 

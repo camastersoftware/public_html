@@ -58,10 +58,10 @@
                 <div class="box-header with-border flexbox">
                     <h4 class="box-title font-weight-bold">
                         <?php
-                            if (isset($pageTitle))
-                                echo $pageTitle;
-                            else
-                                echo "N/A";
+                        if (isset($pageTitle))
+                            echo $pageTitle;
+                        else
+                            echo "N/A";
                         ?>
                     </h4>
                     <div class="text-right flex-grow">
@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="messages">
                                             <ul>
-                                                <?php foreach($getAllUserMsg as $row2) : ?>
+                                                <?php foreach ($getAllUserMsg as $row2) : ?>
                                                     <li>
                                                         <center>
                                                             <p class="dateMsg">
@@ -140,13 +140,13 @@
                                                             </p>
                                                         </center>
                                                     </li>
-                                                    <?php if(!empty($row2['msg'])): ?>
-                                                        <?php foreach($row2['msg'] as $row) : ?>
-                                                            <?php if($row['fromUserId'] == $sessUserId) : ?>
+                                                    <?php if (!empty($row2['msg'])) : ?>
+                                                        <?php foreach ($row2['msg'] as $row) : ?>
+                                                            <?php if ($row['fromUserId'] == $sessUserId) : ?>
                                                                 <li class="replies">
                                                                     <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
                                                                     <p>
-                                                                        <?= $row['userMessage'] ?> 
+                                                                        <?= $row['userMessage'] ?>
                                                                         <small style="color:#4f4646">
                                                                             <?= date('h:i a', strtotime($row['createdDatetime'])); ?>
                                                                         </small>
@@ -157,7 +157,7 @@
                                                                 <li class="sent">
                                                                     <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
                                                                     <p>
-                                                                        <?= $row['userMessage'] ?> 
+                                                                        <?= $row['userMessage'] ?>
                                                                         <small>
                                                                             <?= date('h:i a', strtotime($row['createdDatetime'])); ?>
                                                                         </small>
@@ -202,7 +202,7 @@
                                             <?php endif; ?>
 
                                             <input type="hidden" id="currentID" value="<?= $receiverId ?>">
-                                           
+
                                         </div>
                                         <div class="messages">
                                             <b>
@@ -247,6 +247,55 @@
 <script>
     // Use jQuery document ready function
     $(document).ready(function() {
+        $('#message-input').on('input', function() {
+            var searchValue = $(this).val();
+            console.log("PS=>",searchValue);
+
+            $.ajax({
+                url: '/chat-get-all-users', // Path to your server-side script
+                method: 'POST',
+                data: {
+                    user_name: searchValue
+                },
+                dataType: 'json',
+                success: function(response) {
+                    displayResults(response.userData);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error: ' + status + ' ' + error);
+                }
+            });
+        });
+        function displayResults(results) {
+            console.log("results PS=>",results)
+        // Clear previous results
+        $('#contacts').empty();
+        var receiverId = '<?= $receiverId ?>';
+        var userhtml = '';
+        // Display the new results
+        if (results.length > 0) {
+            $('#contacts').html();
+            
+            
+            for (var i = 0; i < results.length; i++) {
+                var activeStatus='';
+                var userImg='<img class="contactPic" src="<?= base_url("assets/images/avatar/blank.png"); ?>"  style="width: 30px;border-radius: 50%;float: left;margin: 9px 12px 0 9px;" alt="" />';
+                if(receiverId == results[i].userId){
+                    activeStatus= 'active';
+                }
+                if(results[i].userImg){
+                    userImg='<img style="width: 30px;border-radius: 50%;float: left;margin: 9px 12px 0 9px;" class="contactPic" src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents"); ?>/' + results[i].userImg+'" alt="' + results[i].userFullName+'" />';
+                }
+                userhtml +='<li class="contact contactLi '+activeStatus+'" data-id="'+ results[i].userId +'" ><a href="<?= base_url() . '/chat/'; ?>'+results[i].userId+'"><div class="wrap">'+userImg+'<div class="meta"><input type="hidden" class="name contactID" value="' + results[i].userId + '"><p class="name " style="font-size:13px !important">' + results[i].userFullName+'</p></div></div></a></li>';
+            }
+        } else {
+            userhtml +='<li  class="contact contactLi ">No results found</li>';
+        }
+        console.log('userhtml=>',userhtml);
+        $('#contacts').append('<ul>'+userhtml+'</ul>');
+    }
+
+
         scrollToBottom();
         // Scroll to the send message button after sending a message
         function scrollToBottom() {

@@ -198,8 +198,56 @@ class ChatSection extends BaseController
         return view('firm_panel/chat/home', $this->data);
     }
 
+    public function getUserList()
+    {
+        $user_name = $this->request->getPost('user_name');
+        
+        if (!empty($user_name)) {
 
+            $userCondtnArr['user_tbl.status'] = "1";
+            $userCondtnArr['user_tbl.isOldUser'] = 2;
+            $userCondtnArr['user_tbl.userId !='] = $this->sessUserId;
+            $likeCondtnArr['user_tbl.userFullName'] = $user_name;
 
+            $userOrderByArr['user_tbl.userId'] = "ASC";
+            $userOrderByArr['user_tbl.userDesgn'] = "ASC";
+
+            $userGroupByArr = ['user_tbl.userId'];
+
+            $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan, user_tbl.userImg", $userCondtnArr, $likeCondtnArr, $joinArr = array(), $singleRow = FALSE, $userOrderByArr, $userGroupByArr, $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+            $getUserList = $query['userData'];
+            // echo $query['query'];die();
+
+            if (!empty($getUserList)) {
+                $responseData['userData'] = $getUserList;
+                $responseData['message'] = "User List Fetched Successfully";
+                $responseData['status'] = true;
+            } else {
+                $responseData['userData'] = [];
+                $responseData['message'] = "User List Not Found!";
+                $responseData['status'] = true;
+            }
+        } else {
+            $userCondtnArr['user_tbl.status'] = "1";
+            $userCondtnArr['user_tbl.isOldUser'] = 2;
+            $userCondtnArr['user_tbl.userId !='] = $this->sessUserId;
+            $likeCondtnArr['user_tbl.userFullName'] = $user_name;
+
+            $userOrderByArr['user_tbl.userId'] = "ASC";
+            $userOrderByArr['user_tbl.userDesgn'] = "ASC";
+
+            $userGroupByArr = ['user_tbl.userId'];
+
+            $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan, user_tbl.userImg", $userCondtnArr, $likeCondtnArr, $joinArr = array(), $singleRow = FALSE, $userOrderByArr, $userGroupByArr, $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+            $getUserList = $query['userData'];
+            $responseData['userData'] = $getUserList;
+            $responseData['message'] = "User List Not Found!";
+            $responseData['status'] = true;
+        }
+        echo json_encode($responseData);
+    }
     public function sendMsg()
     {
         $this->db->transBegin();

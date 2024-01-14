@@ -733,7 +733,7 @@
 
 @media screen and (min-width: 735px) {
     #frame .content .messages ul li p {
-        max-width: 300px;
+        max-width: 1000px;
     }
 }
 
@@ -764,7 +764,8 @@
     /*width: calc(100% - 90px);*/
     width: calc(100% - 55px);
     padding: 11px 32px 10px 8px;
-    font-size: 0.8em;
+    /* font-size: 0.8em; */
+    font-size: 16px;
     color: #000;
 }
 
