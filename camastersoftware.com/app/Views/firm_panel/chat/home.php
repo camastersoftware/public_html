@@ -8,7 +8,7 @@
 <style>
     #frame .content .messages ul li b {
         display: inline-block;
-        padding: 1px 5px;
+        /* padding: 1px 5px; */
         border-radius: 20px;
         max-width: 205px;
         line-height: 130%;
@@ -24,8 +24,10 @@
         float: left;
     }
 
-    @media screen and (min-width: 735px) #frame .content .messages ul li b {
-        max-width: 300px;
+    @media screen and (min-width: 735px) {
+        #frame .content .messages ul li b {
+            max-width: 300px;
+        }
     }
 
     b {
@@ -57,10 +59,10 @@
                 <div class="box-header with-border flexbox">
                     <h4 class="box-title font-weight-bold">
                         <?php
-                        if (isset($pageTitle))
-                            echo $pageTitle;
-                        else
-                            echo "N/A";
+                            if (isset($pageTitle))
+                                echo $pageTitle;
+                            else
+                                echo "N/A";
                         ?>
                     </h4>
                     <div class="text-right flex-grow">
@@ -71,61 +73,18 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body tab_body_div card_bg_format">
-
-
                     <div class="row">
-
-      
                         <div class="offset-md-0 offset-lg-0 col-md-12 col-lg-12">
-                        
                             <div class="tab-wizard wizard-circle staff_form" id="frame">
                                 <div id="sidepanel">
                                     <div id="profile">
                                         <div class="wrap">
-
                                             <?php if (!empty($sessUserImg)) : ?>
                                                 <img id="profile-img" src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
                                             <?php else : ?>
                                                 <img id="profile-img" src="<?= base_url("assets/images/avatar/blank.png"); ?>" class="online" alt="" />
                                             <?php endif; ?>
-
                                             <p><?= checkData($sessUserFullName); ?></p>
-
-                                            <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
-                                            <div id="status-options">
-                                                <ul>
-                                                    <li id="status-online" class="active">
-                                                        <span class="status-circle"></span>
-                                                        <p>Online</p>
-                                                    </li>
-                                                    <li id="status-away">
-                                                        <span class="status-circle"></span>
-                                                        <p>Away</p>
-                                                    </li>
-                                                    <li id="status-busy">
-                                                        <span class="status-circle"></span>
-                                                        <p>Busy</p>
-                                                    </li>
-                                                    <li id="status-offline">
-                                                        <span class="status-circle"></span>
-                                                        <p>Offline</p>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div id="expanded">
-                                                /* <label for="twitter">
-                                                    <i class="fa fa-facebook fa-fw" aria-hidden="true"></i>
-                                                </label>
-                                                <input name="twitter" type="text" value="mikeross" />
-                                                <label for="twitter">
-                                                    <i class="fa fa-twitter fa-fw" aria-hidden="true"></i>
-                                                </label>
-                                                <input name="twitter" type="text" value="ross81" />
-                                                <label for="twitter">
-                                                    <i class="fa fa-instagram fa-fw" aria-hidden="true"></i>
-                                                </label>
-                                                <input name="twitter" type="text" value="mike.ross" /> */
-                                            </div>
                                         </div>
                                     </div>
                                     <div id="search">
@@ -141,7 +100,7 @@
                                                     <li class="contact contactLi <?php if ($receiverId == $row['userId']) : ?>active<?php endif; ?>" data-id="<?= $row['userId']; ?>">
                                                         <a href="<?= base_url() . '/chat/' . $row['userId']; ?>">
                                                             <div class="wrap">
-                                                                <span class="contact-status online"></span>
+                                                                <!-- <span class="contact-status online"></span> -->
                                                                 <?php if (!empty($row['userImg'])) : ?>
                                                                     <img class="contactPic" src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $row['userImg']); ?>" alt="" />
                                                                 <?php else : ?>
@@ -150,7 +109,6 @@
                                                                 <div class="meta">
                                                                     <input type="hidden" class="name contactID" value="<?= $row['userId']; ?>">
                                                                     <p class="name contactName"><?= checkData($row['userFullName']); ?> <?php if ($row['unReadMsgCount'] != 0) : ?>(<?= $row['unReadMsgCount'] ?>)<?php endif; ?></p>
-                                                                    
                                                                 </div>
                                                             </div>
                                                         </a>
@@ -159,22 +117,8 @@
                                             <?php endif; ?>
                                         </ul>
                                     </div>
-                                    <!--
-                                                <div id="bottom-bar">
-                                                    <button id="addcontact">
-                                                        <i class="fa fa-user-plus fa-fw" aria-hidden="true"></i>
-                                                        <span>Add contact</span>
-                                                    </button>
-                                                    <button id="settings">
-                                                        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
-                                                        <span>Settings</span>
-                                                    </button>
-                                                </div>
-                                                -->
                                 </div>
-
                                 <?php if (!empty($getAllUserMsg)) : ?>
-
                                     <!--User Messages Detials Start-->
                                     <div class="content">
                                         <div class="contact-profile">
@@ -186,31 +130,45 @@
 
                                             <p id="currentName"><?= checkData($getReceiverDetails['userFullName']); ?></p>
                                             <input type="hidden" id="currentID" value="<?= $receiverId; ?>">
-                                           
                                         </div>
                                         <div class="messages">
                                             <ul>
-                                           
-                                                <?php foreach ($getAllUserMsg as $row2) : ?>
-                                                    <center><p id="dateMsg" class="mt-2"><b><?= $row2['id'] ?></b></p></center>
-                                                    <?php if(!empty($row2['msg'])): foreach ($row2['msg'] as $row) : ?>
-                                                    <?php if ($row['fromUserId'] == $sessUserId) : ?>
-                                                        <li class="replies">
-                                                        <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
-                                                            <p><?= $row['userMessage'] ?> <small  style="color:#4f4646"><?= date('h:i a', strtotime($row['createdDatetime'])); ?></small></p><br />
-                                                            
-                                                        </li>
-                                                    <?php else : ?>
-                                                        <li class="sent">
-                                                        <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
-                                                            
-                                                            <p><?= $row['userMessage'] ?> <small><?= date('h:i a', strtotime($row['createdDatetime'])); ?></small></p><br />
-                                                            
-                                                        </li>
+                                                <?php foreach($getAllUserMsg as $row2) : ?>
+                                                    <li>
+                                                        <center>
+                                                            <p class="dateMsg">
+                                                                <b><?= $row2['id'] ?></b>
+                                                            </p>
+                                                        </center>
+                                                    </li>
+                                                    <?php if(!empty($row2['msg'])): ?>
+                                                        <?php foreach($row2['msg'] as $row) : ?>
+                                                            <?php if($row['fromUserId'] == $sessUserId) : ?>
+                                                                <li class="replies">
+                                                                    <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
+                                                                    <p>
+                                                                        <?= $row['userMessage'] ?> 
+                                                                        <small style="color:#4f4646">
+                                                                            <?= date('h:i a', strtotime($row['createdDatetime'])); ?>
+                                                                        </small>
+                                                                    </p>
+                                                                    <br />
+                                                                </li>
+                                                            <?php else : ?>
+                                                                <li class="sent">
+                                                                    <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
+                                                                    <p>
+                                                                        <?= $row['userMessage'] ?> 
+                                                                        <small>
+                                                                            <?= date('h:i a', strtotime($row['createdDatetime'])); ?>
+                                                                        </small>
+                                                                    </p>
+                                                                    <br />
+                                                                </li>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
                                                     <?php endif; ?>
-                                                    <?php endforeach; endif; ?>
                                                 <?php endforeach; ?>
-
                                             </ul>
                                         </div>
                                         <div class="message-input">
