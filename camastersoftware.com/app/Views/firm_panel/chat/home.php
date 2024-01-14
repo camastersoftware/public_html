@@ -3,7 +3,6 @@
 <?= $this->section('headerJavacript'); ?>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet">
-<link href="<?php echo base_url('assets/css/chat_css.css?v='.date('YmdHis')); ?>" rel="stylesheet">
 <!-- Main content -->
 <style>
     #frame .content .messages ul li b {
