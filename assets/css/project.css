@@ -890,7 +890,7 @@ table tr td a {
     position: fixed;
     /* bottom: 45px; */
     bottom: 615px !important;
-    right: 205px;
+    right: 225px;
     
     /* bottom: 315px !important; */
     /* right: 45px; */
@@ -903,18 +903,18 @@ table tr td a {
 .floatingButton {
     display: block;
     width: 45px;
-    height: 45px;
+    height: 35px;
     text-align: center;
     background: #005495;
-    background: #005495;
-    background: #005495;
+    /* background: #005495; */
+    /* background: #005495; */
     color: #fff;
-    line-height: 50px;
+    line-height: 20px;
     position: absolute;
     border-radius: 50% 50%;
-    bottom: 0px;
+    bottom: 8px;
     right: 0px;
-    border: 5px solid #f99d27 !important;
+    /* border: 5px solid #f99d27 !important; */
     /* opacity: 0.3; */
     opacity: 1;
     transition: all 0.4s;
