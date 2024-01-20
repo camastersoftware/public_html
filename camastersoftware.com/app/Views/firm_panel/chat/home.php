@@ -5,6 +5,13 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet">
 <!-- Main content -->
 <style>
+    .messages {
+        height: 300px;
+        /* Set a fixed height for your chat container */
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+
     #frame .content .messages ul li b {
         display: inline-block;
         /* padding: 1px 5px; */
@@ -247,9 +254,11 @@
 <script>
     // Use jQuery document ready function
     $(document).ready(function() {
+        // alert($(document).height());
+        // $(".messages").animate({ scrollTop: $(document).height() }, "fast");
         $('#message-input').on('input', function() {
             var searchValue = $(this).val();
-            console.log("PS=>",searchValue);
+            console.log("PS=>", searchValue);
 
             $.ajax({
                 url: '/chat-get-all-users', // Path to your server-side script
@@ -266,49 +275,42 @@
                 }
             });
         });
+
         function displayResults(results) {
-            console.log("results PS=>",results)
-        // Clear previous results
-        $('#contacts').empty();
-        var receiverId = '<?= $receiverId ?>';
-        var userhtml = '';
-        // Display the new results
-        if (results.length > 0) {
-            $('#contacts').html();
-            
-            
-            for (var i = 0; i < results.length; i++) {
-                var activeStatus='';
-                var userImg='<img class="contactPic" src="<?= base_url("assets/images/avatar/blank.png"); ?>"  style="width: 30px;border-radius: 50%;float: left;margin: 9px 12px 0 9px;" alt="" />';
-                if(receiverId == results[i].userId){
-                    activeStatus= 'active';
+            console.log("results PS=>", results)
+            // Clear previous results
+            $('#contacts').empty();
+            var receiverId = '<?= $receiverId ?>';
+            var userhtml = '';
+            // Display the new results
+            if (results.length > 0) {
+                $('#contacts').html();
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var activeStatus = '';
+                    var userImg = '<img class="contactPic" src="<?= base_url("assets/images/avatar/blank.png"); ?>"  style="width: 30px;border-radius: 50%;float: left;margin: 9px 12px 0 9px;" alt="" />';
+                    if (receiverId == results[i].userId) {
+                        activeStatus = 'active';
+                    }
+                    if (results[i].userImg) {
+                        userImg = '<img style="width: 30px;border-radius: 50%;float: left;margin: 9px 12px 0 9px;" class="contactPic" src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents"); ?>/' + results[i].userImg + '" alt="' + results[i].userFullName + '" />';
+                    }
+                    userhtml += '<li class="contact contactLi ' + activeStatus + '" data-id="' + results[i].userId + '" ><a href="<?= base_url() . '/chat/'; ?>' + results[i].userId + '"><div class="wrap">' + userImg + '<div class="meta"><input type="hidden" class="name contactID" value="' + results[i].userId + '"><p class="name " style="font-size:13px !important">' + results[i].userFullName + '</p></div></div></a></li>';
                 }
-                if(results[i].userImg){
-                    userImg='<img style="width: 30px;border-radius: 50%;float: left;margin: 9px 12px 0 9px;" class="contactPic" src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents"); ?>/' + results[i].userImg+'" alt="' + results[i].userFullName+'" />';
-                }
-                userhtml +='<li class="contact contactLi '+activeStatus+'" data-id="'+ results[i].userId +'" ><a href="<?= base_url() . '/chat/'; ?>'+results[i].userId+'"><div class="wrap">'+userImg+'<div class="meta"><input type="hidden" class="name contactID" value="' + results[i].userId + '"><p class="name " style="font-size:13px !important">' + results[i].userFullName+'</p></div></div></a></li>';
+            } else {
+                userhtml += '<li  class="contact contactLi ">No results found</li>';
             }
-        } else {
-            userhtml +='<li  class="contact contactLi ">No results found</li>';
+            console.log('userhtml=>', userhtml);
+            $('#contacts').append('<ul>' + userhtml + '</ul>');
         }
-        console.log('userhtml=>',userhtml);
-        $('#contacts').append('<ul>'+userhtml+'</ul>');
-    }
 
+        setTimeout(function() {
+            $(".messages").animate({
+                scrollTop: $(document).height()
+            }, "fast");
+        }, 1000);
 
-        scrollToBottom();
-        // Scroll to the send message button after sending a message
-        function scrollToBottom() {
-            // Get the send message button element
-            var sendMessageButton = document.getElementById('sendWSMsg');
-
-            // Scroll the messages container to the position of the send message button
-            sendMessageButton.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end',
-                inline: 'nearest'
-            });
-        }
     });
 </script>
 <?= $this->endSection(); ?>
