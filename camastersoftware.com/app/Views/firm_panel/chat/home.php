@@ -186,7 +186,7 @@
 
                                     <!--No Content Detials Start-->
                                     <div class="no-content content">
-                                        <div class="contact-profile mb-2">
+                                        <div class="contact-profile mb-3">
 
                                             <?php if (!empty($getReceiverDetails)) : ?>
                                                 <?php if (!empty($getReceiverDetails['userImg'])) : ?>
