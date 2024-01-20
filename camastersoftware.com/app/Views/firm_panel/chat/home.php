@@ -120,7 +120,7 @@
                                 <?php if (!empty($getAllUserMsg)) : ?>
                                     <!--User Messages Detials Start-->
                                     <div class="content">
-                                        <div class="contact-profile">
+                                        <div class="contact-profile mb-2">
                                             <?php if (!empty($getReceiverDetails['userImg'])) : ?>
                                                 <img id="profile-img" src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
                                             <?php else : ?>
@@ -186,7 +186,7 @@
 
                                     <!--No Content Detials Start-->
                                     <div class="no-content content">
-                                        <div class="contact-profile">
+                                        <div class="contact-profile mb-2">
 
                                             <?php if (!empty($getReceiverDetails)) : ?>
                                                 <?php if (!empty($getReceiverDetails['userImg'])) : ?>
