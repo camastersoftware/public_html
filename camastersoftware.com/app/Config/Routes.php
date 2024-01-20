@@ -841,6 +841,7 @@ $routes->get('TestCron', 'TestCron::index');
 
 //External API
 $routes->post('/add_request', 'Other::add_request');
+$routes->post('/send_otp', 'Other::send_otp');
 $routes->get('/tax_calendar_view', 'Other::tax_calendar');
 
 //UI
