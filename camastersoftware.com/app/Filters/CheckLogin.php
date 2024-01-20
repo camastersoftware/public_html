@@ -40,7 +40,7 @@ class CheckLogin implements FilterInterface
         if($uri1!="tax_calendar_view" && $uri1!="software" && $uri1!="tax-calendar" && $uri1!="faq" && $uri1!="pricing" && $uri1!="contact" && $uri1!="register-firm" && $uri2!="getCities")
         {
             // if($uri1!="landing" && $uri1!="register" && $uri1!="" && $uri1!="ShiftDueDateNextYearCron" && $uri1!="ShiftDueDatePreviousYearCron" && $uri1!="add_request" && $uri1!="register_firm")
-            if($uri1!="assets" && $uri1!="landing" && $uri1!="register" && $uri1!="" && $uri1!="TestCron" && $uri1!="ShiftDueDateNextYearCron" && $uri1!="ShiftDueDatePreviousYearCron" && $uri1!="add_request" && $uri1!="register_firm" && $uri1!="getOptions")
+            if($uri1!="assets" && $uri1!="landing" && $uri1!="register" && $uri1!="" && $uri1!="TestCron" && $uri1!="ShiftDueDateNextYearCron" && $uri1!="ShiftDueDatePreviousYearCron" && $uri1!="add_request" && $uri1!="send_otp" && $uri1!="register_firm" && $uri1!="getOptions")
             {
                 /*
                 if(($this->adminId=="" || $this->adminUserName=="") && ($uri1!="admin"))

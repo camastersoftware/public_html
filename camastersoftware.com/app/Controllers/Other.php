@@ -17,8 +17,10 @@ class Other extends BaseController
         $this->Mstate = new \App\Models\Mstate();
         $this->Mdue_date = new \App\Models\Mdue_date();
         $this->Mdemo = new \App\Models\Mdemo();
+        $this->Motp = new \App\Models\Motp();
         $this->Mcommon = new \App\Models\Mcommon();
         $this->TableLib = new \App\Libraries\TableLib();
+        $this->Sms_lib = new \App\Libraries\Sms_lib();
 
         $tableArr=$this->TableLib->get_tables();
 
@@ -257,44 +259,154 @@ class Other extends BaseController
 	
 	public function add_request()
 	{
-	    $demoReqName=$this->request->getPost('demoReqName');
-	    $demoReqEmail=$this->request->getPost('demoReqEmail');
-	    $demoReqMobile=$this->request->getPost('demoReqMobile');
-	    $ipAddress=$this->request->getIPAddress();
-	    
-	    $insertArr=[
-            'demoReqName'=>$demoReqName,
-            'demoReqEmail'=>$demoReqEmail,
-            'demoReqMobile'=>$demoReqMobile,
-            'demoReqDateTime'=>date('Y-m-d H:i:s'),
-            'isReplied' => 2,
-            'ipAddress' => $ipAddress,
+        $demoReqName=$this->request->getPost('demoReqName');
+        $demoReqEmail=$this->request->getPost('demoReqEmail');
+        $demoReqMobile=$this->request->getPost('demoReqMobile');
+        $demoMobileOTP=$this->request->getPost('demoMobileOTP');
+        $ipAddress=$this->request->getIPAddress();
+
+        $updateCondtn = [
+            'mobileNo' => $demoReqMobile,
+            'status' => 1
+        ];
+
+        $mobOtpData = $this->Motp->where($updateCondtn)
+                        ->get()
+                        ->getRowArray();
+
+        if(!empty($mobOtpData))
+        {
+            $mobOtp=$mobOtpData['otp'];
+
+            if($demoMobileOTP==$mobOtp)
+            {
+                $updateOTPCondtn = [
+                    'mobileNo' => $demoReqMobile,
+                    'status' => 1
+                ];
+                
+                $updateOTPData = [
+                    'status' => 2,
+                    'updatedBy' => $this->adminId,
+                    'updatedDateTime' => $this->currTimeStamp
+                ];
+                
+                $this->Motp->where($updateOTPCondtn)
+                                ->set($updateOTPData)
+                                ->update();
+
+                $insertArr=[
+                    'demoReqName'=>$demoReqName,
+                    'demoReqEmail'=>$demoReqEmail,
+                    'demoReqMobile'=>$demoReqMobile,
+                    'demoReqDateTime'=>date('Y-m-d H:i:s'),
+                    'isReplied' => 2,
+                    'ipAddress' => $ipAddress,
+                    'status' => 1,
+                    'createdBy' => $this->adminId,
+                    'createdDatetime' => $this->currTimeStamp
+                ];
+                
+                if($this->Mdemo->save($insertArr))
+                {
+                    $insertLogArr['section']=$this->section;
+                    $insertLogArr['message']=$this->section." Added";
+                    $insertLogArr['ip']=$this->IPAddress;
+                    // $insertLogArr['macAddr']=$this->macAddress;
+                    $insertLogArr['createdBy']=$this->adminId;
+                    $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+                    $this->Mcommon->insertLog($insertLogArr);
+                    
+                    $resData['msg']="Thank you for your demo request.";
+                    $resData['status']=TRUE;
+                }
+                else
+                {
+                    $resData['msg']="Demo request not added, Please try again.";
+                    $resData['status']=FALSE;
+                }
+            }
+            else
+            {
+                $resData['msg']="OTP not matched, Please try again.";
+                $resData['status']=FALSE;
+            }
+        }
+        else
+        {
+            $resData['msg']="Something went wrong, Please try again.";
+            $resData['status']=FALSE;
+        }
+        
+        echo json_encode($resData);
+	}
+
+	public function send_otp()
+	{
+        $demoReqMobile=$this->request->getPost('demoReqMobile');
+
+        $updateCondtn = [
+            'mobileNo' => $demoReqMobile,
+            'status' => 1
+        ];
+        
+        $updateData = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDateTime' => $this->currTimeStamp
+        ];
+        
+        $this->Motp->where($updateCondtn)
+                        ->set($updateData)
+                        ->update();
+
+        $otp = rand(1111,9999);
+
+        $insertArr=[
+            'mobileNo' => $demoReqMobile,
+            'otp' => $otp,
+            'ipAddress' => $this->IPAddress,
             'status' => 1,
             'createdBy' => $this->adminId,
             'createdDatetime' => $this->currTimeStamp
         ];
-	    
-	    if($this->Mdemo->save($insertArr))
-	    {
-	        $insertLogArr['section']=$this->section;
-            $insertLogArr['message']=$this->section." Added";
-            $insertLogArr['ip']=$this->IPAddress;
-            // $insertLogArr['macAddr']=$this->macAddress;
-            $insertLogArr['createdBy']=$this->adminId;
-            $insertLogArr['createdDatetime']=$this->currTimeStamp;
 
-            $this->Mcommon->insertLog($insertLogArr);
-            
-	        $resData['msg']="Thank you for your demo request.";
-	        $resData['status']=TRUE;
-	    }
-	    else
-	    {
-	        $resData['msg']="Demo request not added, Please try again.";
-	        $resData['status']=FALSE;
-	    }
-	    
-	    echo json_encode($resData);
+        if($this->Motp->save($insertArr))
+        {
+            $message = 'OTP to reset password on Motorpark is '.$otp.' and is valid for 10 mins. Do not share this OTP to anyone for security purposes.';
+
+            $smsDataArr['to'] = $demoReqMobile;
+            $smsDataArr['message'] = $message;
+
+            $smsResData=$this->Sms_lib->send($smsDataArr);
+
+            if($smsResData['status']==TRUE)
+            {
+                $insertLogArr['section']=$this->section;
+                $insertLogArr['message']="OTP Sent";
+                $insertLogArr['ip']=$this->IPAddress;
+                $insertLogArr['createdBy']=$this->adminId;
+                $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+                $this->Mcommon->insertLog($insertLogArr);
+                
+                $resData['msg']="OTP Sent";
+                $resData['status']=TRUE;
+            }
+            else
+            {
+                $resData['msg']="Gateway error, OTP not sent.";
+                $resData['status']=FALSE;
+            }
+        }
+        else
+        {
+            $resData['msg']="Something went wrong, OTP not sent.";
+            $resData['status']=FALSE;
+        }
+        
+        echo json_encode($resData);
 	}
 }
 ?>

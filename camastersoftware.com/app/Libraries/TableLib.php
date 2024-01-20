@@ -57,6 +57,8 @@ class TableLib
         $tableArr['due_date_for_group_map_tbl']=$superAdminDB.".due_date_for_group_map_tbl";
         $tableArr['menu_tbl']=$superAdminDB.".menu_tbl";
         $tableArr['sub_menu_tbl']=$superAdminDB.".sub_menu_tbl";
+        $tableArr['sms_config']=$superAdminDB.".sms_config";
+        $tableArr['otp_tbl']=$superAdminDB.".otp_tbl";
 
         //Admin
         $tableArr['client_act_map_tbl']=$adminDB.".client_act_map_tbl";
