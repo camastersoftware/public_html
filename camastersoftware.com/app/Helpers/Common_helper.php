@@ -1,84 +1,77 @@
 <?php
-if(!function_exists('add_leading_zero')) {
-    function add_leading_zero($num){
+if (!function_exists('add_leading_zero')) {
+    function add_leading_zero($num)
+    {
         $num_padded = sprintf("%02d", $num);
         return $num_padded;
     }
 }
 
-if(!function_exists('display_client_name')) {
-    function display_client_name($orgType, $clientName, $orgName){
-        
-        $orgNm = (!empty($orgName)) ? " (".$orgName.")" : "";
-        
-        if($orgType==8)
-        {
-            $cliNameVar = $clientName.$orgNm;
-        }
-        elseif($orgType==9 || $orgType==22 || $orgType==23)
-        {
+if (!function_exists('display_client_name')) {
+    function display_client_name($orgType, $clientName, $orgName)
+    {
+
+        $orgNm = (!empty($orgName)) ? " (" . $orgName . ")" : "";
+
+        if ($orgType == 8) {
+            $cliNameVar = $clientName . $orgNm;
+        } elseif ($orgType == 9 || $orgType == 22 || $orgType == 23) {
             $cliNameVar = $clientName;
+        } else {
+            $cliNameVar = $orgName;
         }
-        else
-        {
-            $cliNameVar = $orgName; 
-        }
-        
+
         $cliNameLength = strlen($cliNameVar);
-        
-        $fullLength=30;
-        $partLength=15;
-        
-        if($cliNameLength>$fullLength)
-        {
-            if($orgType==8)
-            {
+
+        $fullLength = 30;
+        $partLength = 15;
+
+        if ($cliNameLength > $fullLength) {
+            if ($orgType == 8) {
                 $cliNameLgth = strlen($clientName);
                 $orgNameLgth = strlen($orgNm);
-                
-                if($cliNameLgth>$partLength)
-                    $cliNameVal=substr($clientName, 0, $partLength)."...";
+
+                if ($cliNameLgth > $partLength)
+                    $cliNameVal = substr($clientName, 0, $partLength) . "...";
                 else
-                    $cliNameVal=$clientName;
-                
-                if($orgNameLgth>$partLength)
-                    $orgNameVal=substr($orgNm, 0, $partLength)."...";
+                    $cliNameVal = $clientName;
+
+                if ($orgNameLgth > $partLength)
+                    $orgNameVal = substr($orgNm, 0, $partLength) . "...";
                 else
-                    $orgNameVal=$orgNm;
-                    
-                $displayName = $cliNameVal." ".$orgNameVal;
+                    $orgNameVal = $orgNm;
+
+                $displayName = $cliNameVal . " " . $orgNameVal;
+            } else {
+                $displayName = substr($cliNameVar, 0, $fullLength) . "...";
             }
-            else
-            {
-                $displayName = substr($cliNameVar, 0, $fullLength)."...";
-            }
+        } else {
+            $displayName = $cliNameVar;
         }
-        else
-        {
-            $displayName = $cliNameVar; 
-        }
-        
-        $returnData='<span data-toggle="tooltip" data-original-title="'.$cliNameVar.'" style="cursor:pointer;">'.$displayName.'</span>';
-        
+
+        $returnData = '<span data-toggle="tooltip" data-original-title="' . $cliNameVar . '" style="cursor:pointer;">' . $displayName . '</span>';
+
         return $returnData;
     }
 }
 
-if(!function_exists('getRandomUpperCaseAlpha')) {
-    function getRandomUpperCaseAlpha($length){
+if (!function_exists('getRandomUpperCaseAlpha')) {
+    function getRandomUpperCaseAlpha($length)
+    {
         $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
-        
+
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $alphabet[rand(0, strlen($alphabet) - 1)];
         }
-        
+
         return $randomString;
     }
 }
 
-if(!function_exists('getUserAgentData')) {
-    function getUserAgentData($request){
+if (!function_exists('getUserAgentData')) {
+    function getUserAgentData($request)
+    {
         $agent = $request->getUserAgent();
 
         if ($agent->isBrowser()) {
@@ -90,19 +83,36 @@ if(!function_exists('getUserAgentData')) {
         } else {
             $currentAgent = 'Unidentified User Agent';
         }
-        
-        $responseArr['currentAgent']=$currentAgent;
-        $responseArr['currentPlatform']=$agent->getPlatform(); // Platform info (Windows, Linux, Mac, etc.)
-        
+
+        $responseArr['currentAgent'] = $currentAgent;
+        $responseArr['currentPlatform'] = $agent->getPlatform(); // Platform info (Windows, Linux, Mac, etc.)
+
         return $responseArr;
     }
 }
 
-if(!function_exists('checkData')) {
-    function checkData($data){
+if (!function_exists('checkData')) {
+    function checkData($data)
+    {
         $returnData = (!empty($data)) ? $data : "N/A";
         return $returnData;
     }
 }
 
-?>
+if (!function_exists('getTotMSGCount')) {
+    function getTotMSGCount($sessUserId)
+    {
+        $MUserMessage = new \App\Models\MUserMessage();
+        $userUnreadMsgArr = $MUserMessage->select('COUNT(user_message_tbl.fromUserId) as msgCount')
+            ->where("user_message_tbl.status", '1')
+            ->where("user_message_tbl.toUserId", $sessUserId)
+            ->where("user_message_tbl.isRead",  '0')
+            ->groupBy("user_message_tbl.fromUserId")
+            ->findAll();
+        $tot_Count = 0;
+        foreach ($userUnreadMsgArr as $ct_row) {
+            $tot_Count += $ct_row['msgCount'];
+        }
+       return $tot_Count;
+    }
+}

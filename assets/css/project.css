@@ -924,4 +924,16 @@ table tr td a {
     /* margin-top:3px; */
     font-size:32px !important;
 }
-/*Chat Section Float Button End*/
+
+/* Add this style to your existing CSS or in a style block */
+.bell-icon {
+    position: relative;
+    top: -8px; /* Adjust the position based on your design */
+    right: -56px; /* Adjust the position based on your design */
+    background-color: red; /* Background color for the badge */
+    color: white; /* Text color for the badge */
+    border-radius: 50%; /* Make it a circle */
+    padding: 4px 8px; /* Adjust the padding based on your design */
+    font-size: 12px; /* Adjust the font size based on your design */
+}
+
