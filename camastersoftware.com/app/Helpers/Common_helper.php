@@ -101,18 +101,25 @@ if (!function_exists('checkData')) {
 
 if (!function_exists('getTotMSGCount')) {
     function getTotMSGCount($sessUserId)
-    {
-        $MUserMessage = new \App\Models\MUserMessage();
-        $userUnreadMsgArr = $MUserMessage->select('COUNT(user_message_tbl.fromUserId) as msgCount')
-            ->where("user_message_tbl.status", '1')
-            ->where("user_message_tbl.toUserId", $sessUserId)
-            ->where("user_message_tbl.isRead",  '0')
-            ->groupBy("user_message_tbl.fromUserId")
-            ->findAll();
-        $tot_Count = 0;
-        foreach ($userUnreadMsgArr as $ct_row) {
-            $tot_Count += $ct_row['msgCount'];
+    {   
+        $totalMsgCount = 0;
+        if(!empty($sessUserId))
+        {
+            $MUserMessage = new \App\Models\MUserMessage();
+            $userUnreadMsgArr = $MUserMessage->select('COUNT(user_message_tbl.fromUserId) as msgCount')
+                ->where("user_message_tbl.status", '1')
+                ->where("user_message_tbl.toUserId", $sessUserId)
+                ->where("user_message_tbl.isRead",  '0')
+                ->groupBy("user_message_tbl.fromUserId")
+                ->findAll();
+
+            if(!empty($userUnreadMsgArr))
+            {
+                foreach ($userUnreadMsgArr as $ct_row) {
+                    $totalMsgCount += $ct_row['msgCount'];
+                }
+            }
         }
-       return $tot_Count;
+        return $totalMsgCount;
     }
 }
