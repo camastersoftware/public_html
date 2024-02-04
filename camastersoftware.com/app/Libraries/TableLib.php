@@ -111,6 +111,8 @@ class TableLib
         $tableArr['bill_description_tbl']=$adminDB.".bill_description_tbl";
         $tableArr['user_chat_connection_tbl']=$adminDB.".user_chat_connection_tbl";
         $tableArr['user_message_tbl']=$adminDB.".user_message_tbl";
+        $tableArr['chartered_accuntant_tbl']=$adminDB.".chartered_accuntant_tbl";
+        $tableArr['articleship_staff_tbl']=$adminDB.".articleship_staff_tbl";
         
            
         return $tableArr;

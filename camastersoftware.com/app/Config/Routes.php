@@ -802,7 +802,19 @@ $routes->post('/delete-general-password', 'OfficeAdministration::delete_general_
 $routes->get('/staff-administration', 'StaffAdministration::index');
 $routes->get('/my-attendance/(:any)', 'StaffAdministration::my_attendance/$1');
 $routes->get('/emp-attendance', 'StaffAdministration::emp_attendance');
+
 $routes->get('/employees', 'StaffAdministration::employees');
+$routes->get('/articleship-leave-cal', 'StaffAdministration::articleship_leave_cal');
+$routes->get('/hierarchy-chart', 'StaffAdministration::hierarchy_chart');
+$routes->get('/all-staff', 'StaffAdministration::all_staff');
+$routes->get('/ca-staff', 'StaffAdministration::ca_staff');
+$routes->get('/articleship-staff', 'StaffAdministration::articleship_staff');
+// $routes->get('/create-chartered-accountant', 'User::create_chartered_accountant');
+$routes->get('/create-chartered-accountant/(:any)', 'StaffAdministration::create_chartered_accountant/$1');
+$routes->get('/create-articleship/(:any)', 'StaffAdministration::create_articleship/$1');
+$routes->post('/save-ca', 'Remote/Staff::save_ca');
+$routes->post('/save-articleship-staff', 'Remote/Staff::save_articleship');
+$routes->get('/payslip/(:any)', 'StaffAdministration::payslip/$1');
 $routes->get('/employee-salary-payable/(:any)', 'StaffAdministration::employee_salary_payable/$1');
 $routes->post('/update-employee-salary-payable', 'StaffAdministration::update_employee_salary_payable');
 $routes->get('/employee-salary-payable-details/(:any)', 'StaffAdministration::employee_salary_payable_details/$1');
