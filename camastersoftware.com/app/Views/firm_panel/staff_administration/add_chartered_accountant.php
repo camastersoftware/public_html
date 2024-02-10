@@ -274,7 +274,7 @@
                         ?>
                     </h4>
                     <div class="text-right flex-grow">
-                        <a href="<?= base_url('all-staff'); ?>">
+                        <a href="<?= base_url('staff-administration'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right">Back</button>
                         </a>
                     </div>
