@@ -104,10 +104,39 @@
                                                 <td class="text-center"><?php echo $i + 1; ?></td>
                                                 <td class="column-2 text-center"><?php echo $e_row['userFullName']; ?></td>
                                                 <td class="column-3 text-center"><?php echo $e_row['ca_membership_no']; ?></td>
-                                                <td class="column-4 text-center"><?php if($e_row['ca_date_commencement'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_commencement'])); ?></td>
-                                                <td class="column-5 text-center"><?php if($e_row['ca_date_termination'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_termination'])); ?></td>
-                                                <td class="column-6 text-center"><?php if($e_row['ca_date_intimation_icai'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_intimation_icai'])); ?></td>
-                                                <td class="column-6 text-center"><?php if($e_row['ca_date_intimation_icai_termination'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_intimation_icai_termination'])); ?></td>
+                                                <td class="column-4 text-center"><?php 
+                                                if(check_valid_date($e_row['ca_date_commencement']))
+                                                $ca_date_commencement=date('d-m-Y', strtotime($e_row['ca_date_commencement']));
+                                            else 
+                                                $ca_date_commencement="";
+
+                                                echo $ca_date_commencement;
+                                                
+                                                ?></td>
+                                                <td class="column-5 text-center"><?php 
+                                                if(check_valid_date($e_row['ca_date_termination']))
+                                                $ca_date_termination=date('d-m-Y', strtotime($e_row['ca_date_termination']));
+                                            else 
+                                                $ca_date_termination="";
+
+                                                echo $ca_date_termination;
+                                                ?></td>
+                                                <td class="column-6 text-center"><?php 
+                                                if(check_valid_date($e_row['ca_date_intimation_icai']))
+                                                $ca_date_intimation_icai=date('d-m-Y', strtotime($e_row['ca_date_intimation_icai']));
+                                            else 
+                                                $ca_date_intimation_icai="";
+
+                                                echo $ca_date_intimation_icai;
+                                                
+                                                 ?></td>
+                                                <td class="column-6 text-center"><?php 
+                                                if(check_valid_date($e_row['ca_date_intimation_icai_termination']))
+                                                $ca_date_intimation_icai_termination=date('d-m-Y', strtotime($e_row['ca_date_intimation_icai_termination']));
+                                            else 
+                                                $ca_date_intimation_icai_termination="";
+
+                                                echo $ca_date_intimation_icai_termination; ?></td>
                                                 <td class="column-6 text-center"><?php echo $e_row['ca_remark']; ?></td>
                                             </tr>
                                         <?php $i++;

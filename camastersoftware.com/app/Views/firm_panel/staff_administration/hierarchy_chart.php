@@ -36,6 +36,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        border: 1px solid;
+        border-radius: 5px;
     }
 
     .custom-row {
@@ -81,12 +83,12 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <div class="custom-container">
+                    <div class="custom-container row">
                         <?php if (!empty($getUserData)) : ?>
                             <?php foreach ($getUserData as $type => $ST_Row) : ?>
-                                <div class="custom-box">
-                                    <div class="box box-inverse box-card-parent p_clr">
-                                        <div class="box-body box-p_new menu_box_new">
+                                <div class="custom-box col-md-12 mt-1 mb-1">
+                                    <div class="box box-inverse box-card-parent p_clr mt-2">
+                                        <div class="box-body box-p_new menu_box_new ">
                                             <p><?= $type; ?></p>
                                         </div>
                                     </div>
