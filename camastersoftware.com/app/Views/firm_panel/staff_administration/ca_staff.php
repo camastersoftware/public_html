@@ -65,7 +65,7 @@
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Back</button>
                         </a>
                         <a href="<?php echo base_url('create-chartered-accountant/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add CA</button>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1" style="">Add CA</button>
                         </a>
                     </div>
                 </div>
@@ -79,20 +79,20 @@
 
                             <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable-act no-footer">
                                 <thead>
-                                    <tr class="row-1">
-                                        <th class="column-1" width="1%" rowspan="2">SN</th>
-                                        <th class="column-2" width="25%" colspan="2">Details of Paid Assistant-CA</th>
-                                        <th class="column-3" width="25%" colspan="2">Period of Employment</th>
-                                        <th class="column-3" width="25%" colspan="2">Intimation to ICAI</th>
-                                        <th class="column-4" width="24%" rowspan="2">Remarks<br />(If Any)</th>
+                                    <tr class="">
+                                        <th class="text-center" width="1%" rowspan="2">SN</th>
+                                        <th class="text-center" width="25%" colspan="2" nowrap>Details of Paid Assistant-CA</th>
+                                        <th class="text-center" width="25%" colspan="2" nowrap>Period of Employment</th>
+                                        <th class="text-center" width="25%" colspan="2" nowrap>Intimation to ICAI</th>
+                                        <th class="text-center" width="24%" rowspan="2" nowrap>Remarks (If Any)</th>
                                     </tr>
                                     <tr class="row-1">
-                                        <th class="column-1" width="15%">Name</th>
-                                        <th class="column-2" width="10%">Membership No</th>
-                                        <th class="column-3" width="12%">From</th>
-                                        <th class="column-3" width="12%">To</th>
-                                        <th class="column-4" width="7%">Employment</th>
-                                        <th class="column-5" width="7%">Termination</th>
+                                        <th class="text-center" width="15%">Name</th>
+                                        <th class="text-center" width="10%" nowrap>Membership No</th>
+                                        <th class="text-center" width="12%">From</th>
+                                        <th class="text-center" width="12%">To</th>
+                                        <th class="text-center" width="7%">Employment</th>
+                                        <th class="text-center" width="7%">Termination</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -101,20 +101,20 @@
                                     if (!empty($staffList)) : ?>
                                         <?php foreach ($staffList as $k_row => $e_row) : ?>
                                             <tr>
-                                                <td class="column-1 text-center"><?php echo $i + 1; ?></td>
+                                                <td class="text-center"><?php echo $i + 1; ?></td>
                                                 <td class="column-2 text-center"><?php echo $e_row['userFullName']; ?></td>
                                                 <td class="column-3 text-center"><?php echo $e_row['ca_membership_no']; ?></td>
-                                                <td class="column-4 text-center"><?php echo $e_row['ca_date_commencement']; ?></td>
-                                                <td class="column-5 text-center"><?php echo $e_row['ca_date_termination']; ?></td>
-                                                <td class="column-6 text-center"><?php echo $e_row['ca_date_intimation_icai']; ?></td>
-                                                <td class="column-6 text-center"><?php echo $e_row['ca_date_intimation_icai_termination']; ?></td>
+                                                <td class="column-4 text-center"><?php if($e_row['ca_date_commencement'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_commencement'])); ?></td>
+                                                <td class="column-5 text-center"><?php if($e_row['ca_date_termination'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_termination'])); ?></td>
+                                                <td class="column-6 text-center"><?php if($e_row['ca_date_intimation_icai'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_intimation_icai'])); ?></td>
+                                                <td class="column-6 text-center"><?php if($e_row['ca_date_intimation_icai_termination'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['ca_date_intimation_icai_termination'])); ?></td>
                                                 <td class="column-6 text-center"><?php echo $e_row['ca_remark']; ?></td>
                                             </tr>
                                         <?php $i++;
                                         endforeach; ?>
                                     <?php else : ?>
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="9">
                                                 <center>No Records</center>
                                             </td>
                                         </tr>
