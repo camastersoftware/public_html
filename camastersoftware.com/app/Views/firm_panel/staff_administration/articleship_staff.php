@@ -75,7 +75,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content tabcontent-border p-15" id="myTabContent">
 
-                        <div class="tab-pane fade table-responsive show active" id="<?php echo $row['tabId']; ?>_tab" role="tabpanel" aria-labelledby="<?php echo $row['tabId']; ?>-tab">
+                        <div class="tab-pane fade table-responsive show active" id="articleship_staff_tab" role="tabpanel" aria-labelledby="articleship_staff-tab">
 
                             <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable-act no-footer">
                                 <thead>

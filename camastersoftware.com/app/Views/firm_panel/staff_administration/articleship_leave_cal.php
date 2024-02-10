@@ -426,8 +426,6 @@
                             <div class="col-md-12">
                                 <div class="row mt-10 m-30">
                                     <div class="col-md-12 col-lg-12 text-center">
-                                        <input type="hidden" name="empSalId" id="empSalId" value="<?= $empSalId; ?>">
-                                        <input type="hidden" name="userId" id="userId" value="<?= $getUserData['userId']; ?>">
                                         <a href="<?= base_url('employees'); ?>">
                                             <button type="button" class="btn btn-dark text-left">Back</button>
                                         </a>

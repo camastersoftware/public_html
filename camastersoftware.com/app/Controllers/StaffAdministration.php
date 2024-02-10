@@ -1407,7 +1407,7 @@ class StaffAdministration extends BaseController
         $userOrderByArr['user_tbl.userDesgn'] = "ASC";
         $userJoinArr[] = array("tbl" => $this->user_tbl, "condtn" => 'user_tbl.userStaffType=staff_types.staff_type_id', "type" => "left");
 
-        $query = $this->Mquery->getRecords($tableName = $this->staff_types, $colNames = "staff_types.staff_type_name, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userStaffType, user_tbl.userDesgn", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = $userJoinArr, $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+        $query = $this->Mcommon->getRecords($tableName = $this->staff_types, $colNames = "staff_types.staff_type_name, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userStaffType, user_tbl.userDesgn", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = $userJoinArr, $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
         $getUserData = $query['userData'];
         $resultArray = [];
@@ -1557,7 +1557,7 @@ class StaffAdministration extends BaseController
             // $userOrderByArr['user_tbl.userDesgn'] = "ASC";
             $userOrderByArr['user_tbl.userFullName'] = "ASC";
             $userJoinArr[] = array("tbl" => $this->user_tbl, "condtn" => 'user_tbl.userStaffType=staff_types.staff_type_id', "type" => "left");
-            $query = $this->Mquery->getRecords($tableName = $this->staff_types, $colNames = "staff_types.staff_type_name, user_tbl.userId,user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userStaffType, user_tbl.userDesgn", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = $userJoinArr, $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+            $query = $this->Mcommon->getRecords($tableName = $this->staff_types, $colNames = "staff_types.staff_type_name, user_tbl.userId,user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userStaffType, user_tbl.userDesgn", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = $userJoinArr, $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
             $getUserData = $query['userData'];
         }
@@ -1655,13 +1655,13 @@ class StaffAdministration extends BaseController
 
         $getCAData = [];
 
-        if (!empty($getUserData)) {
-            foreach ($getUserData as $row) {
-                $row['Type'] = "Staff";
-                $getUserList[] = $row;
-            }
-        }
+        $caCondtnArr['chartered_accuntant_tbl.status'] = 1;
+        $caOrderByArr['chartered_accuntant_tbl.ca_name'] = "ASC";
 
+        $caQuery = $this->Mquery->getRecords($tableName = $this->chartered_accuntant_tbl, $colNames = "chartered_accuntant_tbl.ca_id as userId, chartered_accuntant_tbl.ca_name as userFullName, chartered_accuntant_tbl.ca_membership_no, chartered_accuntant_tbl.ca_img, chartered_accuntant_tbl.ca_date_commencement, chartered_accuntant_tbl.ca_date_intimation_icai, chartered_accuntant_tbl.ca_date_termination, chartered_accuntant_tbl.ca_remark,chartered_accuntant_tbl.ca_date_intimation_icai_termination", $caCondtnArr, $likeCondtnArr = array(), $JoinArr = array(), $singleRow = FALSE, $caOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+        $getCAData = $caQuery['userData'];
+        $getCAList = [];
         if (!empty($getCAData)) {
             foreach ($getCAData as $row) {
                 $row['Type'] = "CA";
