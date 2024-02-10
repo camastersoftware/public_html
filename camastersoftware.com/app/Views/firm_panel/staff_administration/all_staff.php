@@ -3,43 +3,52 @@
 <?= $this->section('content'); ?>
 
 <style>
-    .tabcontent-border {
-        border: 1px solid #bfbfbf !important;
+   .wizard-content .wizard > .steps > ul > li.current > a {
+        color: #ffffff !important;
+        cursor: default;
     }
-
-    td.column_date {
-        font-size: 15px !important;
-        width: 10% !important;
+    
+    .table-responsive table thead tr{
+        background: #005495 !important;
+        color: #fff !important;
     }
-
-    .tablepress tbody td,
-    .tablepress tfoot th {
+    
+    .table-responsive table tbody tr{
+        background: #96c7f242 !important;
+    }
+    
+    .table-responsive tr th{
+        border: 1px solid #fff !important;
+    }
+    
+    .table-responsive tr td{
         border: 1px solid #015aacab !important;
-        /*color: #000;*/
     }
-
-    .nav-tabs .nav-link:hover,
-    .nav-tabs .nav-link:focus {
-        border-color: #015aac #015aac #015aac !important;
-    }
-
-    .nav-tabs .nav-link {
-        position: relative;
-        color: #7792b1;
-        padding: 0.5rem 1.25rem;
-        border-radius: 0;
-        -webkit-transition: 0.5s;
-        transition: 0.5s;
-        border: 1px solid #015aac !important;
-        border-top-color: rgb(1, 90, 172);
-        border-right-color: rgb(1, 90, 172);
-        border-bottom-color: rgb(1, 90, 172);
-        border-left-color: rgb(1, 90, 172);
-    }
-
+    
     table.dataTable {
-        border-collapse: separate !important;
-        font-size: 15px !important;
+        border-collapse: collapse !important;
+        font-size: 16px !important;
+    }
+    
+    .table > tbody > tr > td, .table > tbody > tr > th {
+        padding: 0px 14px !important;
+    }
+    
+    .btnPrimClr {
+        margin-top: 5px !important;
+        height: 30px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .box_body_bg {
+        padding: 1.1rem 1.1rem;
+        flex: 1 1 auto;
+        /*border-radius: 10px;*/
+        border: 1px solid #015aacab !important;
+        background: #96c7f242 !important;
+        /*margin-top: 20px !important;*/
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
     }
 </style>
 
@@ -94,52 +103,55 @@
                         <div class="tab-pane fade table-responsive show active" id="<?php echo $row['tabId']; ?>_tab" role="tabpanel" aria-labelledby="<?php echo $row['tabId']; ?>-tab">
 
                             <?php if ($currTab == 1 || $currTab == 2) :  ?>
-                                <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20">
-                                    <thead>
-                                        <tr class="row-1">
-                                            <th class="column-1">SN</th>
-                                            <th class="column-2">Staff Name</th>
-                                            <th class="column-3">Type</th>
-                                            <th class="column-4">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="row-hover">
+                                <div class="table-responsive">
+                                    <table class="data_tbl table table-bordered table-striped" style="width:100%">
+                                        <!-- <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20"> -->
+                                        <thead>
+                                            <tr class="row-1">
+                                                <th class="column-1">SN</th>
+                                                <th class="column-2">Staff Name</th>
+                                                <th class="column-3">Type</th>
+                                                <th class="column-4">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                        <?php
-                                        $i = 0;
-                                        if (!empty($staffList)) : ?>
-                                            <?php foreach ($staffList as $k_row => $e_row) : ?>
-                                                <tr>
-                                                    <td class="column-1 text-center"><?php echo $i + 1; ?></td>
-                                                    <td class="column-2 text-center"><?php echo $e_row['userFullName']; ?></td>
-                                                    <!-- <td class="column-3 text-center"><?php echo $e_row['staff_type_name']; ?></td> -->
-                                                    <td class="column-3 text-center"><?php echo $e_row['Type']; ?></td>
-                                                    <td class="column-4 text-center">
-                                                        <div class="btn-group">
-                                                            <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
-                                                            <div class="dropdown-menu" style="will-change: transform;">
-                                                                <?php if ($currTab == 4 || $e_row['Type'] == 'CA') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('create-chartered-accountant/' . $e_row['userId']); ?>">Edit</a>
-                                                                <?php elseif ($currTab == 3 || $e_row['Type'] == 'Articleship') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('create-articleship/' . $e_row['userId']); ?>">Edit</a>
-                                                                <?php elseif ($currTab == 2 || $e_row['Type'] == 'Staff') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('user/edit_user/' . $e_row['userId']); ?>">Edit</a>
-                                                                <?php endif; ?>
+                                            <?php
+                                            $i = 0;
+                                            if (!empty($staffList)) : ?>
+                                                <?php foreach ($staffList as $k_row => $e_row) : ?>
+                                                    <tr>
+                                                        <td class="column-1 text-center"><?php echo $i + 1; ?></td>
+                                                        <td class="column-2 text-center"><?php echo $e_row['userFullName']; ?></td>
+                                                        <!-- <td class="column-3 text-center"><?php echo $e_row['staff_type_name']; ?></td> -->
+                                                        <td class="column-3 text-center"><?php echo $e_row['Type']; ?></td>
+                                                        <td class="column-4 text-center">
+                                                            <div class="btn-group">
+                                                                <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                <div class="dropdown-menu" style="will-change: transform;">
+                                                                    <?php if ($currTab == 4 || $e_row['Type'] == 'CA') : ?>
+                                                                        <a class="dropdown-item" href="<?php echo base_url('create-chartered-accountant/' . $e_row['userId']); ?>">Edit</a>
+                                                                    <?php elseif ($currTab == 3 || $e_row['Type'] == 'Articleship') : ?>
+                                                                        <a class="dropdown-item" href="<?php echo base_url('create-articleship/' . $e_row['userId']); ?>">Edit</a>
+                                                                    <?php elseif ($currTab == 2 || $e_row['Type'] == 'Staff') : ?>
+                                                                        <a class="dropdown-item" href="<?php echo base_url('user/edit_user/' . $e_row['userId']); ?>">Edit</a>
+                                                                    <?php endif; ?>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php $i++;
+                                                endforeach; ?>
+                                            <?php else : ?>
+                                                <tr>
+                                                    <td colspan="7">
+                                                        <center>No Records</center>
                                                     </td>
                                                 </tr>
-                                            <?php $i++;
-                                            endforeach; ?>
-                                        <?php else : ?>
-                                            <tr>
-                                                <td colspan="7">
-                                                    <center>No Records</center>
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             <?php elseif ($currTab == 3) : ?>
                                 <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable-act no-footer">
                                     <thead>

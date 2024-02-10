@@ -65,7 +65,7 @@
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Back</button>
                         </a>
                         <a href="<?php echo base_url('create-articleship/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add Articleship</button>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1" style="">Add Articleship</button>
                         </a>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                                         endforeach; ?>
                                     <?php else : ?>
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="11">
                                                 <center>No Records</center>
                                             </td>
                                         </tr>

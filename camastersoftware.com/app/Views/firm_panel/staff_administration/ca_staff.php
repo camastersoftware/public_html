@@ -65,7 +65,7 @@
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Back</button>
                         </a>
                         <a href="<?php echo base_url('create-chartered-accountant/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add CA</button>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1" style="">Add CA</button>
                         </a>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                                         endforeach; ?>
                                     <?php else : ?>
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="9">
                                                 <center>No Records</center>
                                             </td>
                                         </tr>
