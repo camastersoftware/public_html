@@ -44,6 +44,7 @@
         display: flex;
         justify-content: center;
         gap: 20px;
+        font-size: 13px !important;
         /* Adjust the gap between items */
         flex-wrap: wrap;
     }
@@ -103,7 +104,7 @@
                                             ?>
                                                 <div class="<?= $colClass; ?>">
                                                     <div class="box box-inverse box-card-child p_clr">
-                                                        <div class="box-body box-p_new menu_box_new">
+                                                        <div class="box-body menu_box_new">
                                                             <p><?= $user_Row['userFullName']; ?></p>
                                                         </div>
                                                     </div>
