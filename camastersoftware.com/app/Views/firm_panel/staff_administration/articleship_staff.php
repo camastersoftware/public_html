@@ -106,11 +106,35 @@
                                                 <td class=" text-center"><?php echo $i + 1; ?></td>
                                                 <td class="column-2 text-center"><?php echo $e_row['userFullName']; ?></td>
                                                 <td class="column-3 text-center"><?php echo $e_row['art_staff_reg_no']; ?></td>
-                                                <td class="column-4 text-center"><?php if($e_row['art_staff_date_commencement'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_date_commencement'])); ?></td>
-                                                <td class="column-5 text-center"><?php if($e_row['art_staff_year_completion_inter_ca'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_year_completion_inter_ca'])); ?></td>
+                                                <td class="column-4 text-center"><?php 
+                                                if(check_valid_date($e_row['art_staff_date_commencement']))
+                                                $art_staff_date_commencement=date('d-m-Y', strtotime($e_row['art_staff_date_commencement']));
+                                            else 
+                                                $art_staff_date_commencement="";
+                                                
+                                                echo $art_staff_date_commencement ?></td>
+                                                <td class="column-5 text-center"><?php 
+                                                   if(check_valid_date($e_row['art_staff_year_completion_inter_ca']))
+                                                   $art_staff_year_completion_inter_ca=date('d-m-Y', strtotime($e_row['art_staff_year_completion_inter_ca']));
+                                               else 
+                                                   $art_staff_year_completion_inter_ca="";
+
+                                                   echo $art_staff_year_completion_inter_ca; ?></td>
                                                 <td class="column-6 text-center"><?php echo $e_row['art_staff_remark']; ?></td>
-                                                <td class="column-6 text-center"><?php if($e_row['art_staff_year_completion_inter_ca'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_year_completion_inter_ca'])); ?></td>
-                                                <td class="column-6 text-center"><?php if($e_row['art_staff_year_completion_final_ca'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_year_completion_final_ca'])); ?></td>
+                                                <td class="column-6 text-center"><?php 
+                                                 if(check_valid_date($e_row['art_staff_year_completion_inter_ca']))
+                                                 $art_staff_year_completion_inter_ca=date('d-m-Y', strtotime($e_row['art_staff_year_completion_inter_ca']));
+                                                else 
+                                                        $art_staff_year_completion_inter_ca="";
+
+                                                        echo  $art_staff_year_completion_inter_ca; ?></td>
+                                                <td class="column-6 text-center"><?php 
+                                                 if(check_valid_date($e_row['art_staff_year_completion_final_ca']))
+                                                 $art_staff_year_completion_final_ca=date('d-m-Y', strtotime($e_row['art_staff_year_completion_final_ca']));
+                                                else 
+                                                 $art_staff_year_completion_final_ca="";
+                                                
+                                                 echo  $art_staff_year_completion_final_ca; ?></td>
                                                 <td class="column-6 text-center"><?php echo $e_row['art_staff_job_status']; ?></td>
                                             </tr>
                                         <?php $i++;
