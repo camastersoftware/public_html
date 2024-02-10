@@ -123,7 +123,7 @@
                                                                 <?php elseif ($currTab == 3 || $e_row['Type'] == 'Articleship') : ?>
                                                                     <a class="dropdown-item" href="<?php echo base_url('create-articleship/' . $e_row['userId']); ?>">Edit</a>
                                                                 <?php elseif ($currTab == 2 || $e_row['Type'] == 'Staff') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('create-user/' . $e_row['userId']); ?>">Edit</a>
+                                                                    <a class="dropdown-item" href="<?php echo base_url('user/edit_user/' . $e_row['userId']); ?>">Edit</a>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
