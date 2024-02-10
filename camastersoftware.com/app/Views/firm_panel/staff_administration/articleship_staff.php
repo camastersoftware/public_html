@@ -80,15 +80,15 @@
                             <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable-act no-footer">
                                 <thead>
                                     <tr class="row-1">
-                                        <th class="column-1" width="1%">SN</th>
-                                        <th class="column-2" width="15%">Name of the Articled Student</th>
-                                        <th class="column-3" width="5%" rowspan="2">REGN. No.</th>
+                                        <th class="" width="1%" rowspan="2">SN</th>
+                                        <th class="column-2" width="15%" rowspan="2" nowrap>Name of the Articled Student</th>
+                                        <th class="column-3" width="5%" rowspan="2" nowrap>REGN. No.</th>
                                         <th class="column-3" width="25%" colspan="3">Period of Training</th>
                                         <th class="column-3" width="25%" colspan="2">Date of Passing</th>
-                                        <th class="column-4" width="25%" rowspan="2">Remarks<br />(If Any)</th>
+                                        <th class="column-4" width="25%" rowspan="2">Remarks (If Any)</th>
                                     </tr>
                                     <tr class="row-1">
-                                        <th class="column-1" width="16%" colspan="2">Articleship Completed / Transfer</th>
+                                        <!-- <th class="" width="16%" colspan="2">Articleship Completed / Transfer</th> -->
 
                                         <th class="column-3" width="12%">From</th>
                                         <th class="column-3" width="12%">To</th>
@@ -103,14 +103,14 @@
                                     if (!empty($staffList)) : ?>
                                         <?php foreach ($staffList as $k_row => $e_row) : ?>
                                             <tr>
-                                                <td class="column-1 text-center"><?php echo $i + 1; ?></td>
+                                                <td class=" text-center"><?php echo $i + 1; ?></td>
                                                 <td class="column-2 text-center"><?php echo $e_row['userFullName']; ?></td>
                                                 <td class="column-3 text-center"><?php echo $e_row['art_staff_reg_no']; ?></td>
-                                                <td class="column-4 text-center"><?php echo $e_row['art_staff_date_commencement']; ?></td>
-                                                <td class="column-5 text-center"><?php echo $e_row['art_staff_year_completion_inter_ca']; ?></td>
+                                                <td class="column-4 text-center"><?php if($e_row['art_staff_date_commencement'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_date_commencement'])); ?></td>
+                                                <td class="column-5 text-center"><?php if($e_row['art_staff_year_completion_inter_ca'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_year_completion_inter_ca'])); ?></td>
                                                 <td class="column-6 text-center"><?php echo $e_row['art_staff_remark']; ?></td>
-                                                <td class="column-6 text-center"><?php echo $e_row['art_staff_year_completion_inter_ca']; ?></td>
-                                                <td class="column-6 text-center"><?php echo $e_row['art_staff_year_completion_final_ca']; ?></td>
+                                                <td class="column-6 text-center"><?php if($e_row['art_staff_year_completion_inter_ca'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_year_completion_inter_ca'])); ?></td>
+                                                <td class="column-6 text-center"><?php if($e_row['art_staff_year_completion_final_ca'] !='0000-00-00') echo date("d-m-Y",strtotime($e_row['art_staff_year_completion_final_ca'])); ?></td>
                                                 <td class="column-6 text-center"><?php echo $e_row['art_staff_job_status']; ?></td>
                                             </tr>
                                         <?php $i++;
