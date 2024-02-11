@@ -34,6 +34,7 @@ class StaffAdministration extends BaseController
         $this->employee_attendance_tbl = $tableArr['employee_attendance_tbl'];
         $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
         $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
+        $this->expense_voucher_tbl = $tableArr['expense_voucher_tbl'];
 
         $this->section = "Staff Administration";
 
@@ -1761,5 +1762,88 @@ class StaffAdministration extends BaseController
         $this->data['navArr'] = $navArr;
 
         return view('firm_panel/staff_administration/add_articleship_staff', $this->data);
+    }
+
+
+    public function expense_list()
+    {
+        $uri = service('uri');
+        $this->data['uri1'] = $uri1 = $uri->getSegment(1);
+
+        $jsArr = array('data-table', 'datatables.min', 'sweetalert.min');
+        $this->data['jsArr'] = $jsArr;
+
+        $pageTitle = "Expense Vouchers";
+        $this->data['pageTitle'] = $pageTitle;
+
+        $navArr = array();
+
+        $navArr[0]['active'] = true;
+        $navArr[0]['title'] = $pageTitle;
+
+        $this->data['navArr'] = $navArr;
+
+        $getExpData = [];
+
+        $ExpCondtnArr['expense_voucher_tbl.status'] = 1;
+        $ExpOrderByArr['expense_voucher_tbl.exp_bill_no'] = "ASC";
+
+        $ExpQuery = $this->Mquery->getRecords($tableName = $this->expense_voucher_tbl, $colNames = "expense_voucher_tbl.exp_id, expense_voucher_tbl.exp_head, expense_voucher_tbl.exp_doc, expense_voucher_tbl.exp_bill_no, expense_voucher_tbl.exp_date, expense_voucher_tbl.exp_details, expense_voucher_tbl.exp_amt,expense_voucher_tbl.fk_user_id", $ExpCondtnArr, $likeCondtnArr = array(), $JoinArr = array(), $singleRow = FALSE, $ExpOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+        $getExpData = $ExpQuery['userData'];
+
+        $this->data['getExpData'] = $getExpData;
+
+        return view('firm_panel/staff_administration/expense_voucher_list', $this->data);
+    }
+
+    public function expense_vouchers($exp_id)
+    {
+        $uri = service('uri');
+        $this->data['uri1'] = $uri1 = $uri->getSegment(1);
+
+        $jsArr = array('data-table', 'datatables.min', 'sweetalert.min');
+        $this->data['jsArr'] = $jsArr;
+
+        $pageAction = $exp_id > 0?"Update":"Add";
+        $pageTitle = $pageAction." Expense Voucher";
+
+        $this->data['pageTitle'] = $pageTitle;
+
+        $navArr = array();
+
+        $navArr[0]['active'] = true;
+        $navArr[0]['title'] = $pageTitle;
+
+        $this->data['navArr'] = $navArr;
+
+        $getExpData = [];
+
+        if (!empty($exp_id) && $exp_id > 0) {
+            $ExpCondtnArr['expense_voucher_tbl.exp_id'] = $exp_id;
+            $ExpCondtnArr['expense_voucher_tbl.status'] = 1;
+            $ExpOrderByArr['expense_voucher_tbl.exp_bill_no'] = "ASC";
+
+            $ExpQuery = $this->Mquery->getRecords($tableName = $this->expense_voucher_tbl, $colNames = "expense_voucher_tbl.exp_id, expense_voucher_tbl.exp_head, expense_voucher_tbl.exp_doc, expense_voucher_tbl.exp_bill_no, expense_voucher_tbl.exp_date, expense_voucher_tbl.exp_details, expense_voucher_tbl.exp_amt,expense_voucher_tbl.fk_user_id", $ExpCondtnArr, $likeCondtnArr = array(), $JoinArr = array(), $singleRow = TRUE, $ExpOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+            $getExpData = $ExpQuery['userData'];
+        }
+
+        $this->data['getExpData'] = $getExpData;
+
+        $this->data['exp_id'] = $exp_id;
+
+        $userCondtnArr['user_tbl.status'] = 1;
+        $userCondtnArr['user_tbl.isOldUser'] = 2;
+
+        $userOrderByArr['user_tbl.userFullName'] = "ASC";
+
+        $query = $this->Mcommon->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId,user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userStaffType, user_tbl.userDesgn", $userCondtnArr, $likeCondtnArr = array(), $joinArr = array(), $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+        $userList = $query['userData'];
+
+        $this->data['userList'] = $userList;
+
+        return view('firm_panel/staff_administration/expense_voucher', $this->data);
     }
 }

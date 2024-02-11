@@ -19,6 +19,7 @@ class Staff extends BaseController
         $this->user_tbl = $tableArr['user_tbl'];
         $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
         $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
+        $this->expense_voucher_tbl = $tableArr['expense_voucher_tbl'];
     }
 
     public function mark_old_user()
@@ -314,6 +315,115 @@ class Staff extends BaseController
             $responseArr['userdata'] = $errorArr;
 
             $this->session->setFlashdata('successMsg', "Articleship Staff has been added successfully :)");
+        }
+
+        echo json_encode($responseArr);
+    }
+
+    public function save_expense()
+    {
+        $this->db->transBegin();
+
+        $validationRulesArr['exp_head'] = ['label' => 'Expense Head', 'rules' => 'required|trim'];
+
+        // if (isset($_FILES['exp_doc']['name']) && !empty($_FILES['exp_doc']['name']))
+        //     $validationRulesArr['exp_doc'] = ['label' => 'Expense Doc', 'rules' => 'uploaded[exp_doc]|max_size[exp_doc,10000]|ext_in[exp_doc,png,jpg,jpeg]'];
+
+        $validationRulesArr['exp_date'] = ['label' => 'Expense Date', 'rules' => 'required|trim'];
+        $validationRulesArr['exp_bill_no'] = ['label' => 'Expense Bill No', 'rules' => 'required|trim'];
+        $validationRulesArr['exp_details'] = ['label' => 'Expense Details', 'rules' => 'trim'];
+        $validationRulesArr['exp_amt'] = ['label' => 'Expense Amount', 'rules' => 'required|trim'];
+        $validationRulesArr['fk_user_id'] = ['label' => 'Staff Name', 'rules' => 'required|trim'];
+
+        $errorArr = array();
+
+        if (!$this->validate($validationRulesArr)) {
+            $errorArr = $this->validation->getErrors();
+        } else {
+
+            $exp_idData = $this->request->getPost('exp_id');
+            $exp_bill_no = $this->request->getPost('exp_bill_no');
+            $exp_head = $this->request->getPost('exp_head');
+            $exp_date = $this->request->getPost('exp_date');
+            $exp_details = $this->request->getPost('exp_details');
+            $exp_amt = $this->request->getPost('exp_amt');
+            $fk_user_id = $this->request->getPost('fk_user_id');
+            $exp_doc = $this->request->getFile('exp_doc');
+            // $exp_docPath = "";
+            // if ($exp_doc !== null && !empty($exp_doc->getTempName())) {
+            //     if ($exp_doc->isValid() && !$exp_doc->hasMoved()) {
+            //         $ext = $exp_doc->guessExtension();
+            //         $uploadPath = FCPATH . 'uploads/ca_firm_' . $this->sessCaFirmId;
+
+            //         if (!is_dir($uploadPath))
+            //             mkdir($uploadPath, 0777, TRUE);
+
+            //         $uploadPath1 = $uploadPath . '/documents';
+
+            //         if (!is_dir($uploadPath1))
+            //             mkdir($uploadPath1, 0777, TRUE);
+
+            //         $newName = $exp_doc->getRandomName();
+            //         $exp_doc->move($uploadPath1, $newName);
+
+            //         $exp_docPath = $newName;
+            //     }
+            // }
+
+
+            $expUpsertArr[] = [
+                'exp_head' => $exp_head,
+                // 'exp_doc' => $exp_docPath,
+                'exp_bill_no' => $exp_bill_no,
+                'exp_date' => $exp_date,
+                'exp_details' => $exp_details,
+                'exp_amt' => $exp_amt,
+                'fk_user_id' => $fk_user_id,
+                'status' => 1
+            ];
+            $titleMSG= "";
+            if ($exp_idData > 0) {
+                $expCondtnArr['expense_voucher_tbl.exp_id']=$exp_idData;
+                $expUpsertArr[0]['updatedBy']=$this->adminId;
+                $expUpsertArr[0]['updatedDatetime']=$this->currTimeStamp;
+                $query = $this->Mquery->updateData($tableName=$this->expense_voucher_tbl, $updateArr=$expUpsertArr[0],  $condtnArr =$expCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+                $exp_id =$exp_idData;
+                $titleMSG= "Updated";
+            } else {
+                $expUpsertArr[0]['createdBy']=$this->adminId;
+                $expUpsertArr[0]['createdDatetime']=$this->currTimeStamp;
+                $query = $this->Mquery->insert($tableName = $this->expense_voucher_tbl, $expUpsertArr, $returnType = "");
+
+                $exp_id = $query['lastID'];
+                $titleMSG= "Added";
+            }
+        }
+
+        if ($this->db->transStatus() === FALSE || !empty($errorArr)) {
+
+            $this->db->transRollback();
+
+            $responseArr['status'] = FALSE;
+            $responseArr['message'] = "Expense has not ".$titleMSG." :(";
+            $responseArr['userdata'] = $errorArr;
+        } else {
+
+            $this->db->transCommit();
+
+            $insertLogArr['section'] = "Expense";
+            $insertLogArr['message'] = "Expense added";
+            $insertLogArr['ip'] = $this->IPAddress;
+            // $insertLogArr['macAddr']=strtok(exec('getmac'), ' ');
+            $insertLogArr['createdBy'] = $this->adminId;
+            $insertLogArr['createdDatetime'] = $this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $responseArr['status'] = TRUE;
+            $responseArr['message'] = "Expense has been ".$titleMSG." successfully :)";
+            $responseArr['userdata'] = $errorArr;
+
+            $this->session->setFlashdata('successMsg', "Expense has been ".$titleMSG." successfully :)");
         }
 
         echo json_encode($responseArr);

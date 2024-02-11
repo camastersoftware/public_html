@@ -154,7 +154,7 @@
                                                                     <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>" alt="" />
                                                                     <p>
                                                                         <?= $row['userMessage'] ?>
-                                                                        <small style="color:#4f4646">
+                                                                        <small style="color:#fff">
                                                                             <?= date('h:i a', strtotime($row['createdDatetime'])); ?>
                                                                         </small>
                                                                     </p>
@@ -165,7 +165,7 @@
                                                                     <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . checkData($getReceiverDetails['userImg'])); ?>" alt="" />
                                                                     <p>
                                                                         <?= $row['userMessage'] ?>
-                                                                        <small>
+                                                                        <small style="color:#4f4646">
                                                                             <?= date('h:i a', strtotime($row['createdDatetime'])); ?>
                                                                         </small>
                                                                     </p>

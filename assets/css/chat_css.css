@@ -698,8 +698,8 @@
 
 #frame .content .messages ul li.sent p {
     /*background: #005495;*/
-    background: #005495 !important;
-    color: #f5f5f5;
+    background: #f5f5f5 !important;
+    /* color: #; */
     font-size: 15px;
 }
 #frame .content .messages ul li.sent p small {
@@ -712,8 +712,9 @@
 }
 
 #frame .content .messages ul li.replies p {
-    background: #f5f5f5;
+    background: #005495;
     float: right;
+    color:#f5f5f5;
     font-size: 15px;
 }
 
@@ -733,7 +734,8 @@
 
 @media screen and (min-width: 735px) {
     #frame .content .messages ul li p {
-        max-width: 1000px;
+        /* max-width: 1000px; */
+        max-width: 900px;
     }
 }
 
