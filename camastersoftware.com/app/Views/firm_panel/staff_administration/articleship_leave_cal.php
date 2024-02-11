@@ -170,7 +170,7 @@
                     <form action="<?php echo base_url('update-employee-salary-payable'); ?>" method="POST" enctype="multipart/form-data">
                         <div class="row mt-10 m-30 ">
                             <!-- <div class="col-md-4 offset-md-2"></div> -->
-                            <div class="col-md-5 offset-md-4">
+                            <div class="col-md-5 offset-md-3">
                                 <div class="row bg_prjt_format">
                                     <div class="offset-lg-1 col-md-10">
                                         <hr>
@@ -423,9 +423,9 @@
                             </div>
 
                             <!-- <div class="col-md-4 offset-md-2"></div> -->
-                            <div class="col-md-12">
+                            <div class="col-md-12  text-center">
                                 <div class="row mt-10 m-30">
-                                    <div class="col-md-12 col-lg-12 text-center">
+                                    <div class="col-md-5 offset-md-3 text-center">
                                         <a href="<?= base_url('employees'); ?>">
                                             <button type="button" class="btn btn-dark text-left">Back</button>
                                         </a>
