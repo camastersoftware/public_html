@@ -113,6 +113,7 @@ class TableLib
         $tableArr['user_message_tbl']=$adminDB.".user_message_tbl";
         $tableArr['chartered_accuntant_tbl']=$adminDB.".chartered_accuntant_tbl";
         $tableArr['articleship_staff_tbl']=$adminDB.".articleship_staff_tbl";
+        $tableArr['expense_voucher_tbl']=$adminDB.".expense_voucher_tbl";
         
            
         return $tableArr;

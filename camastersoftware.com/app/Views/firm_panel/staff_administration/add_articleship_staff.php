@@ -448,7 +448,7 @@
                     var resUserData = response['userdata'];
 
                     if (resStatus == true) {
-                        window.location.href = base_url + "/all-staff?getCurrTab=3";
+                        window.location.href = base_url + "/articleship-staff";
                     } else {
 
                         $.each(resUserData, function(index, value) {

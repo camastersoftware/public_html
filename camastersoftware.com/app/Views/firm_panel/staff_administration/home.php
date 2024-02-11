@@ -97,6 +97,15 @@
                                     </div>
                                 </a>
                             </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('expense-vouchers-list'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p>Expense Vouchers</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <!-- /.box-body -->
