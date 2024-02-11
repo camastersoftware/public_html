@@ -406,7 +406,7 @@
                     var resUserData = response['userdata'];
 
                     if (resStatus == true) {
-                        window.location.href = base_url + "/all-staff?getCurrTab=4";
+                        window.location.href = base_url + "/ca-staff";
                     } else {
 
                         $.each(resUserData, function(index, value) {

@@ -74,26 +74,25 @@
                         <a href="<?php echo base_url('staff-administration'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Back</button>
                         </a>
-                        <!-- <a href="<?php echo base_url('create-chartered-accountant/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add CA</button>
+                        <a href="<?php echo base_url('expense-vouchers/0'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1" style="">Add Expense</button>
                         </a>
-                        <a href="<?php echo base_url('create-articleship/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add Articleship</button>
-                        </a> -->
                     </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row ">
-                        <div class="offset-md-3 col-lg-6">
+                        <div class="offset-md-2 col-lg-8">
                             <div class="table-responsive">
                                 <table class="data_tbl table table-bordered table-striped" style="width:100%">
-                                    <!-- <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20"> -->
                                     <thead>
                                         <tr class="">
                                             <th class="text-center" width="5%">SN</th>
-                                            <th class="text-center">Staff Name</th>
-                                            <th class="text-center">Type</th>
+                                            <th class="text-center" nowrap>Date</th>
+                                            <th class="text-center" nowrap>Bill No</th>
+                                            <th class="text-center" nowrap>Head</th>
+                                            <th class="text-center" nowrap>Details</th>
+                                            <th class="text-center" nowrap>Amount</th>
                                             <th class="text-center" width="5%">Action</th>
                                         </tr>
                                     </thead>
@@ -101,23 +100,25 @@
 
                                         <?php
                                         $i = 0;
-                                        if (!empty($staffList)) : ?>
-                                            <?php foreach ($staffList as $k_row => $e_row) : ?>
+                                        if (!empty($getExpData)) : ?>
+                                            <?php foreach ($getExpData as $k_row => $e_row) : ?>
                                                 <tr>
                                                     <td class="text-center" width="5%"><?php echo $i + 1; ?></td>
-                                                    <td class="text-center" nowrap><?php echo $e_row['userFullName']; ?></td>
-                                                    <td class="text-center" nowrap><?php echo $e_row['Type']; ?></td>
+                                                    <td class="text-center" nowrap><?php if (check_valid_date($e_row['exp_date']))
+                                                        $exp_date = date('d-m-Y', strtotime($e_row['exp_date']));
+                                                    else
+                                                        $exp_date = "";
+
+                                                    echo $exp_date; ?></td>
+                                                    <td class="text-center" nowrap><?php echo $e_row['exp_bill_no']; ?></td>
+                                                    <td class="text-center" nowrap><?php echo $e_row['exp_head']; ?></td>
+                                                    <td class="text-center" nowrap><?php echo $e_row['exp_details']; ?></td>
+                                                    <td class="text-center" nowrap><?php echo $e_row['exp_amt']; ?></td>
                                                     <td class="text-center" width="5%">
                                                         <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
                                                             <div class="dropdown-menu" style="will-change: transform;">
-                                                                <?php if ($currTab == 4 || $e_row['Type'] == 'CA') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('create-chartered-accountant/' . $e_row['userId']); ?>">Edit</a>
-                                                                <?php elseif ($currTab == 3 || $e_row['Type'] == 'Articleship') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('create-articleship/' . $e_row['userId']); ?>">Edit</a>
-                                                                <?php elseif ($currTab == 2 || $e_row['Type'] == 'Staff') : ?>
-                                                                    <a class="dropdown-item" href="<?php echo base_url('user/edit_user/' . $e_row['userId']); ?>">Edit</a>
-                                                                <?php endif; ?>
+                                                                <a class="dropdown-item" href="<?php echo base_url('expense-vouchers/' . $e_row['exp_id']); ?>">Edit</a>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -154,14 +155,6 @@
     $(document).ready(function() {
 
         var base_url = "<?php echo base_url(); ?>";
-
-        // $('#radio_30').on('click', function(){
-        //     window.location.href=base_url+"/admin/tax_calendar";
-        // });
-
-        // $('#radio_32').on('click', function(){
-        //     window.location.href=base_url+"/admin/date_wise_tax_calendar";
-        // });
 
     });
 </script>

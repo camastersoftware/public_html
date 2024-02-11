@@ -803,6 +803,12 @@ $routes->get('/staff-administration', 'StaffAdministration::index');
 $routes->get('/my-attendance/(:any)', 'StaffAdministration::my_attendance/$1');
 $routes->get('/emp-attendance', 'StaffAdministration::emp_attendance');
 
+
+$routes->get('/expense-vouchers-list', 'StaffAdministration::expense_list');
+$routes->get('/expense-vouchers', 'StaffAdministration::expense_vouchers');
+$routes->get('/expense-vouchers/(:any)', 'StaffAdministration::expense_vouchers/$1');
+$routes->post('/save-expense', 'Remote/Staff::save_expense');
+
 $routes->get('/employees', 'StaffAdministration::employees');
 $routes->get('/articleship-leave-cal', 'StaffAdministration::articleship_leave_cal');
 $routes->get('/hierarchy-chart', 'StaffAdministration::hierarchy_chart');
