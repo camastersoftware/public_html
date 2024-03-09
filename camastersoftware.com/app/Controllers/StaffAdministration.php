@@ -1392,6 +1392,8 @@ class StaffAdministration extends BaseController
             $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.*", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $orderByArr = array(), $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
             $userDataArr = $query['userData'];
+        }else{
+            $this->data['userId'] = 0;
         }
 
         $this->data['userData'] = $userDataArr;
