@@ -137,7 +137,8 @@
         border: 1px solid #8c8c8cab !important;
         background: #fff !important;
     }
-    .card_bg_format{
+
+    .card_bg_format {
         padding: 1.1rem 1.1rem;
         flex: 1 1 auto;
         border-radius: 0px !important;
@@ -169,11 +170,32 @@
                 <div class="box-body p-10 card_bg_format">
                     <form action="<?php echo base_url('update-employee-salary-payable'); ?>" method="POST" enctype="multipart/form-data">
                         <div class="row mt-10 m-30 ">
-                            <!-- <div class="col-md-4 offset-md-2"></div> -->
-                            <div class="col-md-5 offset-md-3">
+                            <div class="col-md-6 offset-md-3">
                                 <div class="row bg_prjt_format">
                                     <div class="offset-lg-1 col-md-10">
+                                        <div class="row form-group">
+                                            <div class="col-md-12 col-lg-12 text-center">
+                                                <span class="font-weight-bold h4">
+                                                    <?php echo $userData['userFullName']; ?>
+                                                </span>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6 text-left">
+                                                <span class="font-weight-bold">PAN :&nbsp;</span>
+                                                <span class="font-weight-bold">
+                                                    <?php echo $userData['userPan']; ?>
+                                                </span>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6 text-right">
+                                                <span class="font-weight-bold">Designation :&nbsp;</span>
+                                                <span class="font-weight-bold">
+                                                    <?php echo $userData['userDesgn']; ?>
+                                                </span>
+                                            </div>
+                                        </div>
                                         <hr>
+                                    </div>
+
+                                    <div class="offset-lg-1 col-md-10">
                                         <div class="row">
                                             <div class="col-md-6 col-lg-6">
                                                 <h6 class="heading">
