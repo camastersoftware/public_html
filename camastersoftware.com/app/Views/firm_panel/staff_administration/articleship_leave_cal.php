@@ -137,7 +137,8 @@
         border: 1px solid #8c8c8cab !important;
         background: #fff !important;
     }
-    .card_bg_format{
+
+    .card_bg_format {
         padding: 1.1rem 1.1rem;
         flex: 1 1 auto;
         border-radius: 0px !important;
@@ -169,11 +170,37 @@
                 <div class="box-body p-10 card_bg_format">
                     <form action="<?php echo base_url('update-employee-salary-payable'); ?>" method="POST" enctype="multipart/form-data">
                         <div class="row mt-10 m-30 ">
-                            <!-- <div class="col-md-4 offset-md-2"></div> -->
-                            <div class="col-md-5 offset-md-3">
+                            <div class="col-md-6 offset-md-3">
                                 <div class="row bg_prjt_format">
+                                    <?php if (!empty($userData['userFullName'])) : ?>
+                                        <div class="offset-lg-1 col-md-10">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-lg-12 text-center">
+                                                    <span class="font-weight-bold h4">
+                                                        <?php if (!empty($userData['userFullName'])) echo $userData['userFullName'];
+                                                        else echo "N/A"; ?>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 text-left">
+                                                    <span class="font-weight-bold">PAN :&nbsp;</span>
+                                                    <span class="font-weight-bold">
+                                                        <?php if (!empty($userData['userPan'])) echo $userData['userPan'];
+                                                        else echo "N/A"; ?>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 text-right">
+                                                    <span class="font-weight-bold">Designation :&nbsp;</span>
+                                                    <span class="font-weight-bold">
+                                                        <?php if (!empty($userData['userDesgn'])) echo $userData['userDesgn'];
+                                                        else echo "N/A"; ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    <?php endif; ?>
+
                                     <div class="offset-lg-1 col-md-10">
-                                        <hr>
                                         <div class="row">
                                             <div class="col-md-6 col-lg-6">
                                                 <h6 class="heading">
@@ -362,7 +389,6 @@
                                                 </div>
                                             </div>
 
-
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
                                                 <span class="heading">
                                                     Less : Net Leave Taken&nbsp;
@@ -422,17 +448,19 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-md-4 offset-md-2"></div> -->
-                            <div class="col-md-12  text-center">
+                            <div class="col-md-12 text-center">
                                 <div class="row mt-10 m-30">
-                                    <div class="col-md-5 offset-md-3 text-center">
+                                    <div class="col-md-6 offset-md-3 text-center">
                                         <a href="<?= base_url('employees'); ?>">
                                             <button type="button" class="btn btn-dark text-left">Back</button>
                                         </a>
-                                        <button type="submit" name="submit" class="btn btn-success btn-submit text-left">Submit</button>
+                                        <?php if ($userId > 0) : ?>
+                                            <button type="submit" name="submit" class="btn btn-success btn-submit text-left">Submit</button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </form>
                 </div>

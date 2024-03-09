@@ -1368,7 +1368,7 @@ class StaffAdministration extends BaseController
         return view('firm_panel/staff_administration/my_attendance', $this->data);
     }
 
-    public function articleship_leave_cal()
+    public function articleship_leave_cal($userId)
     {
         $uri = service('uri');
         $this->data['uri1'] = $uri1 = $uri->getSegment(1);
@@ -1382,6 +1382,21 @@ class StaffAdministration extends BaseController
         $navArr[0]['title'] = $pageTitle;
 
         $this->data['navArr'] = $navArr;
+        $userDataArr =[];
+        if ($userId > 0) {
+            $this->data['userId'] = $userId;
+
+            $userCondtnArr['user_tbl.userId'] = $userId;
+            $userCondtnArr['user_tbl.status'] = "1";
+
+            $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.*", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $orderByArr = array(), $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+            $userDataArr = $query['userData'];
+        }else{
+            $this->data['userId'] = 0;
+        }
+
+        $this->data['userData'] = $userDataArr;
 
         return view('firm_panel/staff_administration/articleship_leave_cal', $this->data);
     }
@@ -1804,9 +1819,9 @@ class StaffAdministration extends BaseController
 
         $jsArr = array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr'] = $jsArr;
-
-        $pageAction = $exp_id > 0?"Update":"Add";
-        $pageTitle = $pageAction." Expense Voucher";
+      
+        $pageAction = $exp_id > 0 ? "Update" : "Add";
+        $pageTitle = $pageAction . " Expense Voucher";
 
         $this->data['pageTitle'] = $pageTitle;
 
