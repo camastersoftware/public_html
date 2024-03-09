@@ -3,19 +3,14 @@
 <?= $this->section('content'); ?>
 <style>
     .box-card-parent {
-        /* background-color: #005495 !important; */
-        background-color: #f99d27 !important;
-        padding: 2px !important;
-        /* width: fit-content; */
+        background-color: #005495 !important;
+        padding: 4px !important;
+        width: fit-content;
         /* border: 3px solid #f99d27 !important; */
-        margin-top: 0px !important;
-        border-radius: 0px !important;
-
     }
 
     .box-card-child {
-        /* background-color: #6F8FAF !important; */
-        background-color: #005495 !important;
+        background-color: #6F8FAF !important;
         padding: 4px !important;
         /* border: 3px solid #f99d27 !important; */
     }
@@ -28,7 +23,7 @@
 
     .box-p_new p {
         text-align: center !important;
-        font-size: 20px !important;
+        font-size: 19px !important;
         font-weight: 900;
     }
 
@@ -41,7 +36,7 @@
 
 
     .custom-box {
-        /* margin: 0 auto; */
+        margin: 0 auto;
         /* Center the box horizontally */
         margin-bottom: 20px;
         display: flex;
@@ -49,11 +44,6 @@
         align-items: center;
         border: 1px solid;
         border-radius: 5px;
-        
-        background: #96c7f242 !important;
-        
-        padding-left: 0px !important;
-        padding-right: 0px !important;
     }
 
     .custom-row {
@@ -104,7 +94,7 @@
                     <div class="custom-container row">
                         <?php if (!empty($getUserData)) : ?>
                             <?php foreach ($getUserData as $type => $ST_Row) : ?>
-                                <div class="custom-box col-md-12 mt-1 mb-2">
+                                <div class="custom-box col-md-12 mt-1 mb-1">
                                     <div class="box box-inverse box-card-parent p_clr mt-2">
                                         <div class="box-body box-p_new menu_box_new ">
                                             <p><?= $type; ?></p>
