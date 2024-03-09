@@ -1817,7 +1817,7 @@ class StaffAdministration extends BaseController
 
         $jsArr = array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr'] = $jsArr;
-
+      
         $pageAction = $exp_id > 0 ? "Update" : "Add";
         $pageTitle = $pageAction . " Expense Voucher";
 
