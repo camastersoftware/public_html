@@ -178,7 +178,7 @@
                             <p class="nav_bar"><a href="<?php echo base_url('home'); ?>" class="text-white">&nbsp;Dashboard</a></p>
                         </div>
                     </div>
-                    <div class="app-menu <?php if ($uri1 == "clients" || $uri1 == "users" || $uri1 == "groups") : ?>active<?php endif; ?>">
+                    <div class="app-menu <?php if ($uri1 == "clients" || $uri1 == "users" || $uri1 == "groups" || $uri1 == "non-regular-due-date-for-list") : ?>active<?php endif; ?>">
                         <div class="search-bx mx-5">
                             <div class="btn-group">
                                 <a href="javascript:void(0);" class="dropdown-toggle nav_bar" data-toggle="dropdown">
@@ -188,6 +188,7 @@
                                     <a class="dropdown-item" href="<?php echo base_url('clients'); ?>">Create Client</a>
                                     <a class="dropdown-item" href="<?php echo base_url('groups'); ?>">Create Group</a>
                                     <a class="dropdown-item" href="<?php echo base_url('users'); ?>">Create User (Employee)</a>
+                                    <a class="dropdown-item" href="<?php echo base_url('non-regular-due-date-for-list'); ?>">Create Non-Regular Due Date For</a>
                                 </div>
                             </div>
                         </div>

@@ -111,8 +111,9 @@ class TableLib
         $tableArr['bill_description_tbl']=$adminDB.".bill_description_tbl";
         $tableArr['user_chat_connection_tbl']=$adminDB.".user_chat_connection_tbl";
         $tableArr['user_message_tbl']=$adminDB.".user_message_tbl";
+        $tableArr['non_regular_due_date_tbl']=$adminDB.".non_regular_due_date_tbl";
+        $tableArr['non_regular_due_date_for_tbl']=$adminDB.".non_regular_due_date_for_tbl";
         
-           
         return $tableArr;
 	}
 }

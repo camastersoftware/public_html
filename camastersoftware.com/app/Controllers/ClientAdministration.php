@@ -16,6 +16,10 @@ class ClientAdministration extends BaseController
         $this->MclientDocumentMap = new \App\Models\MclientDocumentMap();
         $this->MdigitalCertificateClassMaster = new \App\Models\MdigitalCertificateClassMaster();
         $this->MclientsCredetialsAdministration = new \App\Models\MclientsCredetialsAdministration();
+        $this->Mact = new \App\Models\Mact();
+        $this->Mperiodicity = new \App\Models\Mperiodicity();
+        $this->Mstate = new \App\Models\Mstate();
+        $this->MorganisationType = new \App\Models\MorganisationType();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -1115,6 +1119,64 @@ class ClientAdministration extends BaseController
 	    }
     	    
 	    return redirect()->route('partnership-password');
+	}
+
+    public function custom_due_dates()
+	{
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Custom Due Dates";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $clientDinCondtnArr['client_tbl.status']=1;
+        $clientDinCondtnArr['client_tbl.isOldClient']=2;
+        
+        $clientDinWhereInArray['client_tbl.clientBussOrganisationType']=INDIVIDUAL_ARRAY;
+        
+        $clientDinOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $clientDinOrderByArr['organisation_type_tbl.sortingBy']="ASC";
+        
+        $clientDinJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $clientDinJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientName, client_tbl.clientBussOrganisationType AS orgType", $clientDinCondtnArr, $likeCondtnArr=array(), $clientDinJoinArr, $singleRow=FALSE, $clientDinOrderByArr, $groupByArr=array(), $clientDinWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $clientList=$query['userData'];
+        
+        $this->data['clientList']=$clientList;
+        
+        $actArr = $this->Mact->where('status', 1)
+                    ->findAll();
+
+        $this->data['actArr']=$actArr;
+
+        $periodArr = $this->Mperiodicity->where('status', 1)
+                    ->findAll();
+
+        $this->data['periodArr']=$periodArr;
+
+        $stateList = $this->Mstate->where('status', 1)
+                    ->findAll();
+
+        $this->data['stateList']=$stateList;
+        
+        $organisationTypes=$this->MorganisationType->where('organisation_type_tbl.status', 1)
+                        ->findAll();
+
+        $this->data['organisationTypes']=$organisationTypes;
+
+        return view('firm_panel/client_administration/custom_due_dates', $this->data);
 	}
 }
 ?>
