@@ -812,6 +812,7 @@ $routes->post('/save-expense', 'Remote/Staff::save_expense');
 $routes->get('/employees', 'StaffAdministration::employees');
 $routes->get('/articleship-leave-cal', 'StaffAdministration::articleship_leave_cal');
 $routes->get('/articleship-leave-cal/(:any)', 'StaffAdministration::articleship_leave_cal/$1');
+$routes->post('/update-articleship-leave-cal', 'StaffAdministration::save_articleship_leave_cal');
 $routes->get('/hierarchy-chart', 'StaffAdministration::hierarchy_chart');
 $routes->get('/all-staff', 'StaffAdministration::all_staff');
 $routes->get('/ca-staff', 'StaffAdministration::ca_staff');

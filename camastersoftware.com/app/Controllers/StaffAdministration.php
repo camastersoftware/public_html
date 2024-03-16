@@ -23,6 +23,7 @@ class StaffAdministration extends BaseController
         $this->MstaffTypes = new \App\Models\MstaffTypes();
         $this->Mfirm = new \App\Models\Mfirm();
         $this->Mconfig = new \App\Models\Mconfig();
+        $this->MArticleshipLeaveCal = new \App\Models\MArticleshipLeaveCal();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr = $this->TableLib->get_tables();
@@ -35,6 +36,7 @@ class StaffAdministration extends BaseController
         $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
         $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
         $this->expense_voucher_tbl = $tableArr['expense_voucher_tbl'];
+        $this->articleship_leave_tbl = $tableArr['articleship_leave_tbl'];
 
         $this->section = "Staff Administration";
 
@@ -1373,6 +1375,9 @@ class StaffAdministration extends BaseController
         $uri = service('uri');
         $this->data['uri1'] = $uri1 = $uri->getSegment(1);
 
+        $jsArr = array('sweetalert.min');
+        $this->data['jsArr'] = $jsArr;
+
         $pageTitle = "Articleship Leave Calculator";
         $this->data['pageTitle'] = $pageTitle;
 
@@ -1382,7 +1387,9 @@ class StaffAdministration extends BaseController
         $navArr[0]['title'] = $pageTitle;
 
         $this->data['navArr'] = $navArr;
-        $userDataArr =[];
+        $userDataArr = [];
+        $this->data['art_lev_id'] = 0;
+        $leaveCalDataArr  = [];
         if ($userId > 0) {
             $this->data['userId'] = $userId;
 
@@ -1392,11 +1399,19 @@ class StaffAdministration extends BaseController
             $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.*", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $orderByArr = array(), $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
             $userDataArr = $query['userData'];
-        }else{
+
+            $leaveCalCondtnArr['articleship_leave_tbl.fkUserId'] = $userId;
+            $leaveCalCondtnArr['articleship_leave_tbl.status'] = "1";
+
+            $leaveCalquery = $this->Mquery->getRecords($tableName = $this->articleship_leave_tbl, $colNames = "articleship_leave_tbl.*", $leaveCalCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $orderByArr = array(), $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+
+            $leaveCalDataArr = $leaveCalquery['userData'];
+        } else {
             $this->data['userId'] = 0;
         }
 
         $this->data['userData'] = $userDataArr;
+        $this->data['leaveCalDataArr'] = $leaveCalDataArr;
 
         return view('firm_panel/staff_administration/articleship_leave_cal', $this->data);
     }
@@ -1419,6 +1434,7 @@ class StaffAdministration extends BaseController
         $userCondtnArr['staff_types.status'] = 1;
         $userCondtnArr['user_tbl.status'] = 1;
         $userCondtnArr['user_tbl.isOldUser'] = 2;
+        $userOrderByArr['staff_types.seqNo'] = "ASC";
         $userOrderByArr['staff_types.staff_type_id'] = "ASC";
         $userOrderByArr['user_tbl.userDesgn'] = "ASC";
         $userJoinArr[] = array("tbl" => $this->user_tbl, "condtn" => 'user_tbl.userStaffType=staff_types.staff_type_id', "type" => "left");
@@ -1799,9 +1815,11 @@ class StaffAdministration extends BaseController
         $this->data['navArr'] = $navArr;
 
         $getExpData = [];
+        // print_r($this->session->get());die();
 
         $ExpCondtnArr['expense_voucher_tbl.status'] = 1;
         $ExpOrderByArr['expense_voucher_tbl.exp_bill_no'] = "ASC";
+        $ExpOrderByArr['expense_voucher_tbl.fk_user_id'] = $this->sessUserId;
 
         $ExpQuery = $this->Mquery->getRecords($tableName = $this->expense_voucher_tbl, $colNames = "expense_voucher_tbl.exp_id, expense_voucher_tbl.exp_head, expense_voucher_tbl.exp_doc, expense_voucher_tbl.exp_bill_no, expense_voucher_tbl.exp_date, expense_voucher_tbl.exp_details, expense_voucher_tbl.exp_amt,expense_voucher_tbl.fk_user_id", $ExpCondtnArr, $likeCondtnArr = array(), $JoinArr = array(), $singleRow = FALSE, $ExpOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
@@ -1819,7 +1837,7 @@ class StaffAdministration extends BaseController
 
         $jsArr = array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr'] = $jsArr;
-      
+
         $pageAction = $exp_id > 0 ? "Update" : "Add";
         $pageTitle = $pageAction . " Expense Voucher";
 
@@ -1860,5 +1878,87 @@ class StaffAdministration extends BaseController
         $this->data['userList'] = $userList;
 
         return view('firm_panel/staff_administration/expense_voucher', $this->data);
+    }
+
+    public function save_articleship_leave_cal()
+    {
+        // dd($this->request->getPost('userId'));
+        $this->db->transBegin();
+
+        $userId = $this->request->getPost('userId');
+        $art_lev_id = $this->request->getPost('art_lev_id');
+        $start_date = $this->request->getPost('start_date');
+        $completion_date = $this->request->getPost('completion_date');
+        $tot_no_days = $this->request->getPost('tot_no_days');
+        $tot_leave_taken = $this->request->getPost('tot_leave_taken');
+        $ca_exam_leave = $this->request->getPost('ca_exam_leave');
+        $gmcs_course = $this->request->getPost('gmcs_course');
+        $itt_training = $this->request->getPost('itt_training');
+        $seminar = $this->request->getPost('seminar');
+        $other_leave = $this->request->getPost('other_leave');
+        $final_leave_amt = $this->request->getPost('final_leave_amt');
+        $weekends = $this->request->getPost('weekends');
+        $holidays = $this->request->getPost('holidays');
+        $netLeaveTaken = $this->request->getPost('netLeaveTaken');
+        $no_days = $this->request->getPost('no_days');
+        $less_net_leave_taken = $this->request->getPost('less_net_leave_taken');
+        $daysActuallyServed = $this->request->getPost('daysActuallyServed');
+        $allowableSix = $this->request->getPost('allowableSix');
+        $net_leave_takenabove = $this->request->getPost('net_leave_takenabove');
+        $allowableExcessLeaveAMT = $this->request->getPost('allowableExcessLeaveAMT');
+
+        if ($userId > 0) {
+            $updateLeaveCalArr = array(
+                'art_lev_id' => $art_lev_id,
+                'art_lev_start_date' => date("Y-m-d", strtotime($start_date)),
+                'art_lev_completion_date' => date("Y-m-d", strtotime($completion_date)),
+                'art_lev_tot_no_days' => $tot_no_days,
+                'art_lev_tot_lev_taken' => $tot_leave_taken,
+                'art_lev_ca_exam_leave' => $ca_exam_leave,
+                'art_lev_gmcs_course' => $gmcs_course,
+                'art_lev_itt_training' => $itt_training,
+                'art_lev_seminar' => $seminar,
+                'art_lev_other_leave' => $other_leave,
+                'art_lev_tot_eligible_leave' => $final_leave_amt,
+                'art_lev_weekends' => $weekends,
+                'art_lev_holidays' => $holidays,
+                'art_lev_tot_extra_leaves' => $netLeaveTaken,
+                'art_lev_net_leave_taken' => $less_net_leave_taken,
+                'art_lev_days_actually_served' => $daysActuallyServed,
+                'art_lev_one_sixth_allowable' => $allowableSix,
+                'art_lev_allowable_excess_leave' => $allowableExcessLeaveAMT,
+                'fkUserId' => $userId,
+                'status' => 1,
+            );
+            if ($art_lev_id > 0) {
+                $updateLeaveCalArr['updatedBy'] = $this->adminId;
+                $updateLeaveCalArr['updatedDatetime'] = $this->currTimeStamp;
+            } else {
+                $updateLeaveCalArr['createdBy'] = $this->adminId;
+                $updateLeaveCalArr['createdDatetime'] = $this->currTimeStamp;
+            }
+            // print_r($updateLeaveCalArr);
+            // die('sas');
+            $this->MArticleshipLeaveCal->save($updateLeaveCalArr);
+        }
+
+        if ($this->db->transStatus() === FALSE) {
+            $this->db->transRollback();
+
+            $this->session->setFlashdata('errorMsg', "Something went wrong!!, Articleship Leave calculation not updated :(");
+        } else {
+            $this->db->transCommit();
+
+            $insertLogArr['section'] = $this->section;
+            $insertLogArr['message'] = "Articleship Leave calculation updated";
+            $insertLogArr['ip'] = $this->IPAddress;
+            $insertLogArr['createdBy'] = $this->adminId;
+            $insertLogArr['createdDatetime'] = $this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $this->session->setFlashdata('successMsg', "Articleship Leave calculation has been updated successfully :)");
+        }
+        return redirect()->to(base_url('articleship-leave-cal/' . $userId));
     }
 }
