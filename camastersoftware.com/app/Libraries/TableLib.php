@@ -114,6 +114,7 @@ class TableLib
         $tableArr['chartered_accuntant_tbl']=$adminDB.".chartered_accuntant_tbl";
         $tableArr['articleship_staff_tbl']=$adminDB.".articleship_staff_tbl";
         $tableArr['expense_voucher_tbl']=$adminDB.".expense_voucher_tbl";
+        $tableArr['articleship_leave_tbl']=$adminDB.".articleship_leave_tbl";
         
            
         return $tableArr;
