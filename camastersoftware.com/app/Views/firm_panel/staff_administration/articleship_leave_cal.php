@@ -221,7 +221,7 @@ if (!empty($leaveCalDataArr)) {
                                     <?php
                                     $start_date1 = "";
                                     $completion_date1 = "";
-                                    $tot_no_days = 0;
+                                    $tot_no_days1 = 0;
                                     if (!empty($userData['userFullName'])) {
                                         if (!empty($userData['userArtStartDate'])) {
                                             // $start_date = date("Y-m-d", strtotime($userData['userArtStartDate']));
@@ -234,7 +234,7 @@ if (!empty($leaveCalDataArr)) {
                                         $date1 = new DateTime($start_date1); // First date
                                         $date2 = new DateTime($completion_date1); // Second date
                                         $interval = $date1->diff($date2);
-                                        $tot_no_days = abs($interval->days);
+                                        $tot_no_days1 = abs($interval->days);
                                     }
                                     // print_r($userData);
                                     // die(); 
