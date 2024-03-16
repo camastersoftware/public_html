@@ -146,7 +146,53 @@
         background: #96c7f242 !important;
     }
 </style>
+<?php
+if (!empty($leaveCalDataArr)) {
+    $art_lev_id = $leaveCalDataArr['art_lev_id'];
+    $start_date = $leaveCalDataArr['art_lev_start_date'];
+    $completion_date = $leaveCalDataArr['art_lev_completion_date'];
+    $tot_no_days = $leaveCalDataArr['art_lev_tot_no_days'];
+    $tot_leave_taken = $leaveCalDataArr['art_lev_tot_lev_taken'];
+    $ca_exam_leave = $leaveCalDataArr['art_lev_ca_exam_leave'];
+    $gmcs_course = $leaveCalDataArr['art_lev_gmcs_course'];
+    $itt_training = $leaveCalDataArr['art_lev_itt_training'];
+    $seminar = $leaveCalDataArr['art_lev_seminar'];
+    $other_leave = $leaveCalDataArr['art_lev_other_leave'];
+    $final_leave_amt = $leaveCalDataArr['art_lev_tot_eligible_leave'];
+    $weekends = $leaveCalDataArr['art_lev_weekends'];
+    $holidays = $leaveCalDataArr['art_lev_holidays'];
+    $netLeaveTaken = $leaveCalDataArr['art_lev_tot_extra_leaves'];
+    $less_net_leave_taken = $leaveCalDataArr['art_lev_net_leave_taken'];
+    $daysActuallyServed = $leaveCalDataArr['art_lev_days_actually_served'];
+    $allowableSix = $leaveCalDataArr['art_lev_one_sixth_allowable'];
+    $allowableExcessLeaveAMT = $leaveCalDataArr['art_lev_allowable_excess_leave'];
 
+
+    $totLeaveTaken  = intval($final_leave_amt) + intval($netLeaveTaken);
+    $finaltotLeaveTaken = intval($tot_leave_taken) - intval($totLeaveTaken);
+} else {
+    $art_lev_id = "";
+    $start_date = "";
+    $completion_date = "";
+    $tot_no_days = "";
+    $tot_leave_taken = "";
+    $ca_exam_leave = "";
+    $gmcs_course = "";
+    $itt_training = "";
+    $seminar = "";
+    $other_leave = "";
+    $final_leave_amt = "";
+    $weekends = "";
+    $holidays = "";
+    $netLeaveTaken = "";
+    $less_net_leave_taken = "";
+    $daysActuallyServed = "";
+    $allowableSix = "";
+    $allowableExcessLeaveAMT = "";
+    $totLeaveTaken  = "";
+    $finaltotLeaveTaken  = "";
+}
+?>
 <!-- Main content -->
 <section class="content mt-35">
     <div class="row">
@@ -168,31 +214,67 @@
 
                 <!-- /.box-header -->
                 <div class="box-body p-10 card_bg_format">
-                    <form action="<?php echo base_url('update-employee-salary-payable'); ?>" method="POST" enctype="multipart/form-data">
+                    <form action="<?php echo base_url('update-articleship-leave-cal'); ?>" method="POST">
                         <div class="row mt-10 m-30 ">
                             <div class="col-md-6 offset-md-3">
                                 <div class="row bg_prjt_format">
+                                    <?php
+                                    $start_date1 = "";
+                                    $completion_date1 = "";
+                                    $tot_no_days = 0;
+                                    if (!empty($userData['userFullName'])) {
+                                        if (!empty($userData['userArtStartDate'])) {
+                                            // $start_date = date("Y-m-d", strtotime($userData['userArtStartDate']));
+                                            $start_date1 = date("d-m-Y", strtotime($userData['userArtStartDate']));
+                                        }
+                                        if (!empty($userData['userArtEndDate'])) {
+                                            // $completion_date = date("Y-m-d", strtotime($userData['userArtEndDate']));
+                                            $completion_date1 = date("d-m-Y", strtotime($userData['userArtEndDate']));
+                                        }
+                                        $date1 = new DateTime($start_date1); // First date
+                                        $date2 = new DateTime($completion_date1); // Second date
+                                        $interval = $date1->diff($date2);
+                                        $tot_no_days = abs($interval->days);
+                                    }
+                                    // print_r($userData);
+                                    // die(); 
+                                    ?>
                                     <?php if (!empty($userData['userFullName'])) : ?>
+                                        <input type="hidden" name="userId" id="userId" value="<?php echo $userId; ?>">
+                                        <input type="hidden" name="art_lev_id" id="art_lev_id" value="<?php echo $art_lev_id; ?>">
                                         <div class="offset-lg-1 col-md-10">
                                             <div class="row form-group">
-                                                <div class="col-md-12 col-lg-12 text-center">
+                                                <div class="col-md-12 col-lg-12 text-center mb-3">
                                                     <span class="font-weight-bold h4">
                                                         <?php if (!empty($userData['userFullName'])) echo $userData['userFullName'];
                                                         else echo "N/A"; ?>
                                                     </span>
                                                 </div>
-                                                <div class="col-md-6 col-lg-6 text-left">
+                                                <div class="col-md-6 col-lg-6 text-left mb-1 mt-1">
                                                     <span class="font-weight-bold">PAN :&nbsp;</span>
                                                     <span class="font-weight-bold">
                                                         <?php if (!empty($userData['userPan'])) echo $userData['userPan'];
                                                         else echo "N/A"; ?>
                                                     </span>
                                                 </div>
-                                                <div class="col-md-6 col-lg-6 text-right">
+                                                <div class="col-md-6 col-lg-6 text-right mb-1 mt-1">
                                                     <span class="font-weight-bold">Designation :&nbsp;</span>
                                                     <span class="font-weight-bold">
                                                         <?php if (!empty($userData['userDesgn'])) echo $userData['userDesgn'];
                                                         else echo "N/A"; ?>
+                                                    </span>
+                                                </div>
+
+                                                <div class="col-md-6 col-lg-6 text-left">
+                                                    <span class="font-weight-bold">Start Date :&nbsp;</span>
+                                                    <span class="font-weight-bold">
+                                                        <?php echo $start_date; ?>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 text-right">
+                                                    <span class="font-weight-bold">Completion Date :&nbsp;</span>
+                                                    <span class="font-weight-bold">
+                                                        <?php echo $completion_date; ?>
                                                     </span>
                                                 </div>
                                             </div>
@@ -209,7 +291,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="date" class="form-control grossSalaryAmtMth inputRTL" name="grossSalaryAmtMth" id="grossSalaryAmtMth" value="">
+                                                    <input type="date" class="form-control start_date inputRTL" name="start_date" id="start_date" onchange="getTotalDays()" value="<?php echo $start_date; ?>">
                                                 </div>
                                             </div>
 
@@ -220,7 +302,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="date" class="form-control grossSalaryAmtMth inputRTL" name="grossSalaryAmtMth" id="grossSalaryAmtMth" value="">
+                                                    <input type="date" class="form-control completion_date inputRTL" name="completion_date" id="completion_date" value="<?php echo $completion_date; ?>" onchange="getTotalDays()">
                                                 </div>
                                             </div>
 
@@ -231,7 +313,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control tot_no_days inputRTL" name="tot_no_days" id="tot_no_days" onkeypress="validateNum(event);getNoOfDays();" value="">
+                                                    <input type="text" class="form-control tot_no_days inputRTL" name="tot_no_days" id="tot_no_days" value="<?php echo $tot_no_days; ?>" onkeypress="validateNum(event);getNoOfDays();">
                                                 </div>
                                             </div>
 
@@ -242,7 +324,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control tot_leave_taken inputRTL" name="tot_leave_taken" id="tot_leave_taken" onkeypress="validateNum(event);" value="">
+                                                    <input type="text" class="form-control tot_leave_taken inputRTL" name="tot_leave_taken" id="tot_leave_taken" onkeypress="validateNum(event);" value="<?php echo $tot_leave_taken; ?>">
                                                 </div>
                                             </div>
 
@@ -265,7 +347,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="ca_exam_leave" id="ca_exam_leave" onkeypress="validateNum(event);" value="">
+                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="ca_exam_leave" id="ca_exam_leave" onkeypress="validateNum(event);" value="<?php echo $ca_exam_leave; ?>">
                                                 </div>
                                             </div>
 
@@ -276,7 +358,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="gmcs_course" id="gmcs_course" onkeypress="validateNum(event);" value="">
+                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="gmcs_course" id="gmcs_course" onkeypress="validateNum(event);" value="<?php echo $gmcs_course; ?>">
                                                 </div>
                                             </div>
 
@@ -287,7 +369,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="iit_training" id="iit_training" onkeypress="validateNum(event);" value="">
+                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="itt_training" id="itt_training" onkeypress="validateNum(event);" value="<?php echo $itt_training; ?>">
                                                 </div>
                                             </div>
 
@@ -298,7 +380,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="seminar" id="seminar" onkeypress="validateNum(event);" value="">
+                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="seminar" id="seminar" onkeypress="validateNum(event);" value="<?php echo $seminar; ?>">
                                                 </div>
                                             </div>
 
@@ -309,7 +391,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="other_leave" id="other_leave" onkeypress="validateNum(event);" value="">
+                                                    <input type="text" class="form-control eligibleLeaveAmt inputRTL" name="other_leave" id="other_leave" onkeypress="validateNum(event);" value="<?php echo $other_leave; ?>">
                                                 </div>
                                             </div>
 
@@ -320,7 +402,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control final_leave_amt inputRTL" name="final_leave_amt" id="final_leave_amt" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control final_leave_amt inputRTL" name="final_leave_amt" id="final_leave_amt" onkeypress="validateNum(event);" value="<?php echo $final_leave_amt; ?>" readonly>
                                                 </div>
                                             </div>
 
@@ -337,23 +419,23 @@
 
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
                                                 <span class="heading">
-                                                    WEEKENDS :&nbsp;
+                                                    Weekends :&nbsp;
                                                 </span>
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control extraDaysWork inputRTL lessextraDaysWork" name="weekends" id="weekends" onkeypress="validateNum(event);getNetLeaveTaken()" value="">
+                                                    <input type="text" class="form-control extraDaysWork inputRTL lessextraDaysWork" name="weekends" id="weekends" onkeypress="validateNum(event);getNetLeaveTaken()" value="<?php echo $weekends; ?>">
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
                                                 <span class="heading">
-                                                    HOLIDAYS :&nbsp;
+                                                    Holidays :&nbsp;
                                                 </span>
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control extraDaysWork inputRTL lessextraDaysWork" name="holidays" id="holidays" onkeypress="validateNum(event);getNetLeaveTaken()" value="">
+                                                    <input type="text" class="form-control extraDaysWork inputRTL lessextraDaysWork" name="holidays" id="holidays" onkeypress="validateNum(event);getNetLeaveTaken()" value="<?php echo $holidays; ?>">
                                                 </div>
                                             </div>
 
@@ -364,7 +446,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control netLeaveTaken inputRTL" name="netLeaveTaken" id="netLeaveTaken" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control netLeaveTaken inputRTL" name="netLeaveTaken" id="netLeaveTaken" onkeypress="validateNum(event);" value="<?php echo $netLeaveTaken; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
@@ -374,7 +456,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control totLeaveTaken inputRTL" name="totLeaveTaken" id="totLeaveTaken" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control totLeaveTaken inputRTL" name="totLeaveTaken" id="totLeaveTaken" onkeypress="validateNum(event);" value="<?php echo $finaltotLeaveTaken; ?>" readonly>
                                                 </div>
                                             </div>
 
@@ -385,7 +467,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control no_days  netLeaveTaken inputRTL" name="no_days" id="no_days" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control no_days  netLeaveTaken inputRTL" name="no_days" id="no_days" onkeypress="validateNum(event);" value="<?php echo $tot_no_days; ?>" readonly>
                                                 </div>
                                             </div>
 
@@ -396,7 +478,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control less_net_leave_taken netLeaveTaken inputRTL" name="less_net_leave_taken" id="less_net_leave_taken" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control less_net_leave_taken netLeaveTaken inputRTL" name="less_net_leave_taken" id="less_net_leave_taken" onkeypress="validateNum(event);" value="<?php echo $less_net_leave_taken; ?>" readonly>
                                                 </div>
                                             </div>
 
@@ -407,7 +489,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control daysActuallyServed inputRTL" name="daysActuallyServed" id="daysActuallyServed" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control daysActuallyServed inputRTL" name="daysActuallyServed" id="daysActuallyServed" onkeypress="validateNum(event);" value="<?php echo $daysActuallyServed; ?>" readonly>
                                                 </div>
                                             </div>
 
@@ -418,7 +500,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control allowableSix AllowableExcessLeave inputRTL" name="allowableSix" id="allowableSix" onkeypress="validateNum(event);getAllowableExcessLeave()" value="" readonly>
+                                                    <input type="text" class="form-control allowableSix AllowableExcessLeave inputRTL" name="allowableSix" id="allowableSix" onkeypress="validateNum(event);getAllowableExcessLeave()" value="<?php echo $allowableSix; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
@@ -428,7 +510,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control net_leave_takenabove   inputRTL" name="net_leave_takenabove" id="net_leave_takenabove" onkeypress="validateNum(event);getAllowableExcessLeave()" value="" readonly>
+                                                    <input type="text" class="form-control net_leave_takenabove   inputRTL" name="net_leave_takenabove" id="net_leave_takenabove" onkeypress="validateNum(event);getAllowableExcessLeave()" value="<?php echo $netLeaveTaken; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
@@ -438,28 +520,29 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control allowableExcessLeaveAMT inputRTL" name="allowableExcessLeaveAMT" id="allowableExcessLeaveAMT" onkeypress="validateNum(event);" value="" readonly>
+                                                    <input type="text" class="form-control allowableExcessLeaveAMT inputRTL" name="allowableExcessLeaveAMT" id="allowableExcessLeaveAMT" onkeypress="validateNum(event);" value="<?php echo $allowableExcessLeaveAMT; ?>" readonly>
                                                 </div>
                                             </div>
 
                                         </div>
                                         <hr>
+                                        <div class="col-md-12 text-center">
+                                            <div class="row mt-10 m-30">
+                                                <div class="col-md-6 offset-md-3 text-center">
+                                                    <a href="<?= base_url('staff-administration'); ?>">
+                                                        <button type="button" class="btn btn-dark text-left">Back</button>
+                                                    </a>
+                                                    <?php if ($userId > 0) : ?>
+                                                        <button type="submit" name="submit" class="btn btn-success btn-submit text-left">Submit</button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-12 text-center">
-                                <div class="row mt-10 m-30">
-                                    <div class="col-md-6 offset-md-3 text-center">
-                                        <a href="<?= base_url('employees'); ?>">
-                                            <button type="button" class="btn btn-dark text-left">Back</button>
-                                        </a>
-                                        <?php if ($userId > 0) : ?>
-                                            <button type="submit" name="submit" class="btn btn-success btn-submit text-left">Submit</button>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
+
 
                         </div>
                     </form>
@@ -507,7 +590,6 @@
     });
 
     function getNoOfDays() {
-        // alert($("#tot_no_days").val())
         $('.tot_no_days').on('input', function() {
             var tot_no_days = parseInt($("#tot_no_days").val());
             $("#no_days").val(tot_no_days);
@@ -515,7 +597,6 @@
     }
 
     function getNetLeaveTaken() {
-        // alert($("#tot_no_days").val())
         $('.extraDaysWork').on('input', function() {
             var netLeaveTaken = 0;
             $('.extraDaysWork').each(function(i, val) {
@@ -528,7 +609,6 @@
     }
 
     function getAllowableExcessLeave() {
-        // alert($("#tot_no_days").val())
         $('.AllowableExcessLeave').on('input', function() {
             var allowableExcessLeave = 0;
 
@@ -543,18 +623,10 @@
                 net_leave_takenVal = ($(val).val() != "") ? $(val).val() : 0;
                 net_leave_taken += parseInt(net_leave_takenVal);
             });
-            // var net_leave_takenabove = $("#net_leave_takenabove").val() != "" ? $("#net_leave_takenabove").val() : 0;
-            // allowableExcessLeave = net_leave_takenabove - allowableSix;
-            // $("#allowableExcessLeaveAMT").val(allowableExcessLeave);
-
-            // tot_leave_taken
-            //final_leave_amt
-            //netLeaveTaken
         });
     }
 
     function getTotLeaveTaken() {
-        // alert($("#tot_no_days").val())
         var final_leave_amt = $("#final_leave_amt").val() != "" ? $("#final_leave_amt").val() : 0;
         var netLeaveTaken = $("#netLeaveTaken").val() != "" ? $("#netLeaveTaken").val() : 0;
         var tot_leave_taken = $("#tot_leave_taken").val() != "" ? $("#tot_leave_taken").val() : 0;
@@ -585,6 +657,27 @@
         var net_leave_takenabove = $("#net_leave_takenabove").val() != "" ? $("#net_leave_takenabove").val() : 0;
         allowableExcessLeave = net_leave_takenabove - roundedValue;
         $("#allowableExcessLeaveAMT").val(allowableExcessLeave);
+    }
+
+    function getTotalDays() {
+        var start_date = new Date($('#start_date').val());
+        var completion_date = new Date($('#completion_date').val());
+        if (start_date.getTime() > completion_date.getTime()) {
+            new Date($('#completion_date').val(""));
+            let warningMSG = "Date of Starting cannot be greater than Date Of Completion.";
+            swal("Warning!", warningMSG, "warning");
+            return;
+        }
+
+        var timeDifference = completion_date.getTime() - start_date.getTime();
+        var daysDifference = Math.abs(timeDifference / (1000 * 60 * 60 * 24));
+        if (isNaN(daysDifference)) {
+            daysDifference = 0;
+        }
+        if (daysDifference > 0) {
+            $('#tot_no_days').val(daysDifference);
+            $('#no_days').val(daysDifference);
+        }
     }
 </script>
 
