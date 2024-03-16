@@ -218,27 +218,7 @@ if (!empty($leaveCalDataArr)) {
                         <div class="row mt-10 m-30 ">
                             <div class="col-md-6 offset-md-3">
                                 <div class="row bg_prjt_format">
-                                    <?php
-                                    $start_date1 = "";
-                                    $completion_date1 = "";
-                                    $tot_no_days1 = 0;
-                                    if (!empty($userData['userFullName'])) {
-                                        if (!empty($userData['userArtStartDate'])) {
-                                            // $start_date = date("Y-m-d", strtotime($userData['userArtStartDate']));
-                                            $start_date1 = date("d-m-Y", strtotime($userData['userArtStartDate']));
-                                        }
-                                        if (!empty($userData['userArtEndDate'])) {
-                                            // $completion_date = date("Y-m-d", strtotime($userData['userArtEndDate']));
-                                            $completion_date1 = date("d-m-Y", strtotime($userData['userArtEndDate']));
-                                        }
-                                        $date1 = new DateTime($start_date1); // First date
-                                        $date2 = new DateTime($completion_date1); // Second date
-                                        $interval = $date1->diff($date2);
-                                        $tot_no_days1 = abs($interval->days);
-                                    }
-                                    // print_r($userData);
-                                    // die(); 
-                                    ?>
+                                  
                                     <?php if (!empty($userData['userFullName'])) : ?>
                                         <input type="hidden" name="userId" id="userId" value="<?php echo $userId; ?>">
                                         <input type="hidden" name="art_lev_id" id="art_lev_id" value="<?php echo $art_lev_id; ?>">
