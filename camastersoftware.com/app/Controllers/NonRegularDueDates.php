@@ -14,6 +14,7 @@ class NonRegularDueDates extends BaseController
         
         $this->Mcommon = new \App\Models\Mcommon();
         $this->Mquery = new \App\Models\Mquery();
+        $this->Mstate = new \App\Models\Mstate();
         $this->Mgroup = new \App\Models\Mgroup();
         $this->Mgroup_cat = new \App\Models\Mgroup_cat();
         $this->Muser = new \App\Models\Muser();
@@ -53,6 +54,8 @@ class NonRegularDueDates extends BaseController
 
         $this->data['documentsPath']=$documentsPath;
 
+        $this->sessDueDateYear=$this->session->get('dueDateYear');
+
         $this->dueYear=$this->sessDueDateYear;
         
         $this->data['dueYear']=$this->dueYear;
@@ -76,7 +79,72 @@ class NonRegularDueDates extends BaseController
 
         $this->data['navArr']=$navArr;
 
-        $actArr = $this->Mact->where('status', 1)
+        $taxYearArr=explode('-', $this->sessDueDateYear);
+        
+        $taxFromYear=date('Y-m-d', strtotime("01-04-".$taxYearArr[0]));
+        $taxToYear=date('Y-m-d', strtotime("31-03-20".$taxYearArr[1]));
+        
+        $taxCondtnArr['non_regular_due_date_tbl.non_rglr_due_date >=']=$taxFromYear;
+        $taxCondtnArr['non_regular_due_date_tbl.non_rglr_due_date <=']=$taxToYear;
+
+        $taxCondtnArr['non_regular_due_date_tbl.status']=1;
+            
+        $taxOrderByArr['non_regular_due_date_tbl.non_rglr_due_date']="ASC";
+        $taxOrderByArr['non_regular_due_date_tbl.non_rglr_due_date_id']="ASC";
+
+        $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=non_regular_due_date_tbl.non_rglr_due_date_for", "type"=>"left");
+        $taxJoinArr[]=array("tbl"=>'act_tbl', "condtn"=>"act_tbl.act_id=non_regular_due_date_tbl.non_rglr_due_act", "type"=>"left");
+ 
+        $taxColNames="
+            non_regular_due_date_tbl.non_rglr_due_date_id,
+            non_regular_due_date_tbl.non_rglr_due_act,
+            non_regular_due_date_tbl.non_rglr_due_date_for,
+            non_regular_due_date_tbl.non_rglr_periodicity,
+            non_regular_due_date_tbl.non_rglr_daily_date,
+            non_regular_due_date_tbl.non_rglr_period_month,
+            non_regular_due_date_tbl.non_rglr_period_year,
+            non_regular_due_date_tbl.non_rglr_f_period_month,
+            non_regular_due_date_tbl.non_rglr_f_period_year,
+            non_regular_due_date_tbl.non_rglr_t_period_month,
+            non_regular_due_date_tbl.non_rglr_t_period_year,
+            non_regular_due_date_tbl.non_rglr_finYear,
+            non_regular_due_date_tbl.non_rglr_due_date,
+            non_regular_due_date_tbl.non_rglr_due_notes,
+            non_regular_due_date_tbl.non_rglr_doc_file,
+            DATE_FORMAT(non_regular_due_date_tbl.non_rglr_due_date, '%c') AS act_due_month,
+            act_tbl.act_name,
+            act_tbl.act_short_name,
+            due_date_for_tbl.act_option_name AS act_option_name1
+        ";
+
+        $query=$this->Mcommon->getRecords($tableName=$this->non_regular_due_date_tbl, $colNames=$taxColNames, $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $dueDatesArr=$query['userData'];
+
+        $this->data['dueDatesArr']=$dueDatesArr;
+
+        return view('firm_panel/non_regular_due_dates/list', $this->data);
+    }
+
+	public function add()
+	{
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $jsArr=array('sweetalert.min', 'ckeditor');
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="Add Non-Regular Due Date";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+	    $actArr = $this->Mact->where('status', 1)
                     ->findAll();
 
         $this->data['actArr']=$actArr;
@@ -91,47 +159,10 @@ class NonRegularDueDates extends BaseController
 
         $this->data['stateList']=$stateList;
 
-        if(!empty($taxCalStateAdminCookie))
-            $taxCondtnArr['due_date_master_tbl.due_state']=$taxCalStateAdminCookie;
+        return view('firm_panel/non_regular_due_dates/add', $this->data);
+	}
 
-        if(!empty($taxCalFinYearAdminCookie))
-        {
-            // $taxCondtnArr['due_date_master_tbl.finYear']=$taxCalFinYearAdminCookie;
-            
-            $taxYearArr=explode('-', $taxCalFinYearAdminCookie);
-            
-            $taxFromYear=date('Y-m-d', strtotime("01-04-".$taxYearArr[0]));
-            $taxToYear=date('Y-m-d', strtotime("31-03-20".$taxYearArr[1]));
-            
-            $taxCondtnArr['ext_due_date_master_tbl.extended_date >=']=$taxFromYear;
-            $taxCondtnArr['ext_due_date_master_tbl.extended_date <=']=$taxToYear;
-        }
-
-        $taxCondtnArr['due_date_master_tbl.status']=1;
-            
-        // $taxOrderByArr['due_date_master_tbl.due_date']="ASC";
-        $taxOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
-        $taxGroupByArr=array('due_date_master_tbl.due_date_id', 'ext_due_date_master_tbl.ext_due_date_master_id');
-
-        $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>$this->tax_payer_due_date_map_tbl, "condtn"=>"tax_payer_due_date_map_tbl.fk_due_date_id=due_date_master_tbl.due_date_id AND tax_payer_due_date_map_tbl.status=1", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=tax_payer_due_date_map_tbl.fk_org_type_id", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS under_section_tbl', "condtn"=>"under_section_tbl.act_option_map_id=due_date_master_tbl.under_section", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS audit_tbl', "condtn"=>"audit_tbl.act_option_map_id=due_date_master_tbl.audit", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS applicable_form_tbl', "condtn"=>"applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>'act_tbl', "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
-        $taxJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1", "type"=>"left");
-        
-        $query=$this->Mcommon->getRecords($tableName="due_date_master_tbl", $colNames="due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, GROUP_CONCAT(DISTINCT(organisation_type_tbl.organisation_type_name)) AS tax_payers, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_date_month, ext_due_date_master_tbl.ext_due_date_master_id, ext_due_date_master_tbl.extended_date_notes, ext_due_date_master_tbl.ext_doc_file, ext_due_date_master_tbl.is_extended, ext_due_date_master_tbl.isFirst, ext_due_date_master_tbl.next_extended_date", $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
-        
-        $dueDatesArr=$query['userData'];
-
-        $this->data['dueDatesArr']=$dueDatesArr;
-
-        return view('firm_panel/non_regular_due_dates/list', $this->data);
-    }
-
-	public function add()
+	public function insertData()
 	{
 	    $this->db->transBegin();
 
@@ -160,10 +191,18 @@ class NonRegularDueDates extends BaseController
                 
                 if($ext=="pdf")
                 {
-                    $uploadPath=FCPATH.'uploads/admin/due_date';
+                    $uploadPath=FCPATH.'uploads/ca_firm_'.$this->sessCaFirmId;
+
+                    if(!is_dir($uploadPath))
+                        mkdir($uploadPath, 0777, TRUE);
+
+                    $uploadPath1=$uploadPath.'/non_regular_due_dates';
+
+                    if(!is_dir($uploadPath1))
+                        mkdir($uploadPath1, 0777, TRUE);
     
                     $doc_file = $file->getRandomName();
-                    $file->move($uploadPath, $doc_file);
+                    $file->move($uploadPath1, $doc_file);
                 }
                 else
                 {
@@ -179,27 +218,26 @@ class NonRegularDueDates extends BaseController
         }
 
         $insertArr[]=[
-            'due_state'=>$due_state,
-            'due_act'=>$due_act,
-            'due_date_for'=>$due_date_for,
-            'periodicity'=>$periodicity,
-            'daily_date'=>$daily_date,
-            'period_month'=>$period_month,
-            'period_year'=>$period_year,
-            'f_period_month'=>$f_period_month,
-            'f_period_year'=>$f_period_year,
-            't_period_month'=>$t_period_month,
-            't_period_year'=>$t_period_year,
-            'finYear'=>$finYear,
-            'due_date'=>$due_date,
-            'doc_file'=>$doc_file,
-            'due_notes'=>$due_notes,
+            'non_rglr_due_act'=>$due_act,
+            'non_rglr_due_date_for'=>$due_date_for,
+            'non_rglr_periodicity'=>$periodicity,
+            'non_rglr_daily_date'=>$daily_date,
+            'non_rglr_period_month'=>$period_month,
+            'non_rglr_period_year'=>$period_year,
+            'non_rglr_f_period_month'=>$f_period_month,
+            'non_rglr_f_period_year'=>$f_period_year,
+            'non_rglr_t_period_month'=>$t_period_month,
+            'non_rglr_t_period_year'=>$t_period_year,
+            'non_rglr_finYear'=>$finYear,
+            'non_rglr_due_date'=>$due_date,
+            'non_rglr_doc_file'=>$doc_file,
+            'non_rglr_due_notes'=>$due_notes,
             'status' => 1,
             'createdBy' => $this->adminId,
             'createdDatetime' => $this->currTimeStamp
         ];
 
-        $query=$this->Mcommon->insert($tableName="due_date_master_tbl", $insertArr, $returnType="");
+        $query=$this->Mcommon->insert($tableName=$this->non_regular_due_date_tbl, $insertArr, $returnType="");
 
         $due_date_id=$query['lastID'];
 

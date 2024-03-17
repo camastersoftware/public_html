@@ -43,7 +43,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body card_bg_format">
-                    <form action="<?php echo base_url('add-non-regular-due-date'); ?>" method="post" enctype="multipart/form-data">
+                    <form action="<?php echo base_url('insert-non-regular-due-date'); ?>" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="offset-md-1 offset-lg-1 col-md-10 col-lg-10">
                                 <div class="form-group row form_bg_format">
@@ -209,6 +209,13 @@
                                                                     <div id="ckeditor_textarea"></div>
                                                                     <textarea name="due_notes" id="due_notes" class="form-control textarea_input hide" rows="20" placeholder="Enter Notes"></textarea>
                                                                 </div>
+                                                            </div>
+                                                            <div class="col-md-12 mt-30 text-center">
+                                                                <input type="hidden" name="due_state" value="12" />
+                                                                <button type="submit" name="submit" class="waves-effect waves-light btn btn-submit">Submit</button>
+                                                                <a href="<?php echo base_url('add-non-regular-due-date'); ?>" >
+                                                                    <button type="button" class="btn btn-dark">Back</button>
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -60,7 +60,7 @@ table.dataTable {
             <div class="col-12">
 
                 <div class="box">
-                    <div class="box-header with-border text-center">
+                    <div class="box-header with-border flexbox">
                         <h4 class="box-title font-weight-bold">
                             <?php
                                 if(isset($pageTitle))
@@ -69,146 +69,152 @@ table.dataTable {
                                     echo "N/A";
                             ?>
                         </h4>
+                        <div class="text-right flex-grow">
+                            <a href="<?php echo base_url('add-non-regular-due-date'); ?>">
+                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Add Non-Regular Due Date</button>
+                            </a>
+                        </div>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20 table-responsive">
-                            <thead>
-                                <tr class="row-1">
-                                    <th class="column-1">Due Date</th>
-                                    <th class="column-2">Due Date For</th>
-                                    <th class="column-3">Act</th>
-                                    <th class="column-4">Periodicity</th>
-                                    <th class="column-5">Financial<br/>Year</th>
-                                    <th class="column-6">Period</th>
-                                    <th class="column-7">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="row-hover">
-                                <?php if(!empty($dueDatesArr)): ?>
-                                    <?php foreach($dueDatesArr AS $k_row=>$e_row): ?>
-                                        <?php $extended_date=$e_row['extended_date']; ?>
-                                        <?php $extended_date_notes=htmlspecialchars_decode(html_entity_decode($e_row['due_notes'])); ?>
-                                        <tr class="row-3" style="background-color:#96c7f242;">
-                                            <td class="column-1 column_date" nowrap><?php echo date('d-m-Y', strtotime($e_row['extended_date'])); ?></td>
-                                            <td class="column-2" nowrap>
-                                                <?php 
-                                                    if(!empty($e_row['act_option_name5']))
-                                                        $ddForm = $e_row['act_option_name5']; 
-                                                    else
-                                                        $ddForm = "N/A";
-                                                ?>
-                                                <?php if(!empty($e_row['act_option_name1'])): ?>
-                                                    <?php $dueDateForStr=$ddForm."-".$e_row['act_option_name1']; ?>
-                                                        
-                                                    <?php if(strlen($dueDateForStr)>50): ?>
-                                                    
-                                                        <span data-toggle="tooltip" data-original-title="<?= $dueDateForStr; ?>" style="cursor:pointer;"><?= $dueDateForText=substr($dueDateForStr, 0, 50)."..."; ?></span>
-                                                            
-                                                    <?php else: ?>
-                                                        <?= $dueDateForStr; ?>
-                                                    <?php endif; ?>
-                                                    
-                                                <?php else: ?>
-                                                    <div class="text-center">N/A</div>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="column-3 text-center" nowrap><?php echo $e_row['act_short_name']; ?></td>
-                                            <td class="column-8 text-center" nowrap>
-                                                <?php 
-                                                    if($e_row['periodicity']=="1")
-                                                    {
-                                                        echo "Daily";
-                                                    }
-                                                    elseif($e_row['periodicity']=="2")
-                                                    {
-                                                        echo "Monthly";
-                                                    }
-                                                    elseif($e_row['periodicity']=="3")
-                                                    {
-                                                        echo "Quaterly";
-                                                    }
-                                                    elseif($e_row['periodicity']=="4")
-                                                    {
-                                                        echo "Half Yearly";
-                                                    }
-                                                    elseif($e_row['periodicity']=="5")
-                                                    {
-                                                        echo "Annually";
-                                                    }
-                                                    else
-                                                    {
-                                                        echo "N/A";
-                                                    }
-                                                ?>
-                                            </td>
-                                            <td class="column-3 text-center" nowrap><?php echo $e_row['finYear']; ?></td>
-                                            <td class="column-9 text-center" nowrap>
-                                                <?php 
-                                                    if($e_row['periodicity']=="1")
-                                                    {
-                                                        echo date("d-M-Y", strtotime($e_row["daily_date"]));
-                                                    }
-                                                    elseif($e_row['periodicity']=="2")
-                                                    {
-                                                        echo date("M", strtotime("2021-".$e_row["period_month"]."-01"))."-".$e_row["period_year"];
-                                                    }
-                                                    elseif($e_row['periodicity']>="3")
-                                                    {
-                                                        echo date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
-                                                    }
-                                                    else
-                                                    {
-                                                        echo "N/A";
-                                                    }
-                                                ?>
-                                            </td>
-                                            <td class="column-10" nowrap>
-                                                
-                                                <div class="btn-group mb-5">
-                                                    <button type="button" class="waves-effect waves-light btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
-                                                    <div class="dropdown-menu" style="will-change: transform;">
-                                                        <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?php echo $k_row; ?>">View Note</a>
-                                                        <?php if($e_row['is_extended']==2): ?>
-                                                            <a class="dropdown-item" href="<?php echo base_url("uploads/admin/due_date/".$e_row['ext_doc_file']); ?>" target="_blank">View Document</a>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="modal_view<?php echo $k_row; ?>" tabindex="-1">
-                                                    <div class="modal-dialog modal-xl">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Acts Details</h5>
-                                                                <button type="button" class="close" data-dismiss="modal">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body" style="width: 100% !important;">
-                                                                <?php if(!empty($extended_date_notes)): ?>
-                                                                    <?php echo $extended_date_notes; ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20 table-responsive">
+                                        <thead>
+                                            <tr class="row-1">
+                                                <th class="column-1">Due Date</th>
+                                                <th class="column-2">Due Date For</th>
+                                                <th class="column-3">Act</th>
+                                                <th class="column-4">Periodicity</th>
+                                                <th class="column-5">Financial<br/>Year</th>
+                                                <th class="column-6">Period</th>
+                                                <th class="column-7">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="row-hover">
+                                            <?php if(!empty($dueDatesArr)): ?>
+                                                <?php foreach($dueDatesArr AS $k_row=>$e_row): ?>
+                                                    <?php $non_rglr_due_date=$e_row['non_rglr_due_date']; ?>
+                                                    <?php $non_rglr_due_date_notes=htmlspecialchars_decode(html_entity_decode($e_row['non_rglr_due_notes'])); ?>
+                                                    <tr class="row-3" style="background-color:#96c7f242;">
+                                                        <td class="column-1 column_date" nowrap><?php echo date('d-m-Y', strtotime($e_row['non_rglr_due_date'])); ?></td>
+                                                        <td class="column-2" nowrap>
+                                                            <?php if(!empty($e_row['act_option_name1'])): ?>
+                                                                <?php $dueDateForStr=$e_row['act_option_name1']; ?>
+                                                                    
+                                                                <?php if(strlen($dueDateForStr)>50): ?>
+                                                                
+                                                                    <span data-toggle="tooltip" data-original-title="<?= $dueDateForStr; ?>" style="cursor:pointer;"><?= $dueDateForText=substr($dueDateForStr, 0, 50)."..."; ?></span>
+                                                                        
                                                                 <?php else: ?>
-                                                                    N/A
+                                                                    <?= $dueDateForStr; ?>
                                                                 <?php endif; ?>
+                                                                
+                                                            <?php else: ?>
+                                                                <div class="text-center">N/A</div>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td class="column-3 text-center" nowrap><?php echo $e_row['act_short_name']; ?></td>
+                                                        <td class="column-8 text-center" nowrap>
+                                                            <?php 
+                                                                if($e_row['non_rglr_periodicity']=="1")
+                                                                {
+                                                                    echo "Daily";
+                                                                }
+                                                                elseif($e_row['non_rglr_periodicity']=="2")
+                                                                {
+                                                                    echo "Monthly";
+                                                                }
+                                                                elseif($e_row['non_rglr_periodicity']=="3")
+                                                                {
+                                                                    echo "Quaterly";
+                                                                }
+                                                                elseif($e_row['non_rglr_periodicity']=="4")
+                                                                {
+                                                                    echo "Half Yearly";
+                                                                }
+                                                                elseif($e_row['non_rglr_periodicity']=="5")
+                                                                {
+                                                                    echo "Annually";
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo "N/A";
+                                                                }
+                                                            ?>
+                                                        </td>
+                                                        <td class="column-3 text-center" nowrap><?php echo $e_row['non_rglr_finYear']; ?></td>
+                                                        <td class="column-9 text-center" nowrap>
+                                                            <?php 
+                                                                if($e_row['non_rglr_periodicity']=="1")
+                                                                {
+                                                                    echo date("d-M-Y", strtotime($e_row["non_rglr_daily_date"]));
+                                                                }
+                                                                elseif($e_row['non_rglr_periodicity']=="2")
+                                                                {
+                                                                    echo date("M", strtotime("2021-".$e_row["non_rglr_period_month"]."-01"))."-".$e_row["non_rglr_period_year"];
+                                                                }
+                                                                elseif($e_row['non_rglr_periodicity']>="3")
+                                                                {
+                                                                    echo date("M", strtotime("2021-".$e_row["non_rglr_f_period_month"]."-01"))."-".$e_row["non_rglr_f_period_year"]." - ".date("M", strtotime("2021-".$e_row["non_rglr_t_period_month"]."-01"))."-".$e_row["non_rglr_t_period_year"];
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo "N/A";
+                                                                }
+                                                            ?>
+                                                        </td>
+                                                        <td class="column-10" nowrap>
+                                                            
+                                                            <div class="btn-group mb-5">
+                                                                <button type="button" class="waves-effect waves-light btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                <div class="dropdown-menu" style="will-change: transform;">
+                                                                    <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?php echo $k_row; ?>">View Note</a>
+                                                                    <?php if(!empty($e_row['non_rglr_doc_file'])): ?>
+                                                                        <?php $non_rglr_doc_file_path = base_url("uploads/ca_firm_".$sessCaFirmId."/non_regular_due_dates/".$e_row['non_rglr_doc_file']); ?>
+                                                                        <a class="dropdown-item" href="<?php echo base_url("uploads/admin/non_rglr_due_date/".$non_rglr_doc_file_path); ?>" target="_blank">View Document</a>
+                                                                    <?php endif; ?>
+                                                                </div>
                                                             </div>
-                                                            <div class="modal-footer text-right">
-                                                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                                            
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="modal_view<?php echo $k_row; ?>" tabindex="-1">
+                                                                <div class="modal-dialog modal-xl">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">Acts Details</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body" style="width: 100% !important;">
+                                                                            <?php if(!empty($non_rglr_due_date_notes)): ?>
+                                                                                <?php echo $non_rglr_due_date_notes; ?>
+                                                                            <?php else: ?>
+                                                                                N/A
+                                                                            <?php endif; ?>
+                                                                        </div>
+                                                                        <div class="modal-footer text-right">
+                                                                            <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- /.modal -->
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="7"><center>No Records</center></td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                                            <!-- /.modal -->
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="7"><center>No Records</center></td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                 </div>

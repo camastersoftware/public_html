@@ -841,7 +841,8 @@ $routes->post('/delete-non-regular-due-date-for', 'NonRegularDueDateFor::deleteD
 
 // Non-Regular Due Dates
 $routes->get('non-regular-due-dates', 'NonRegularDueDates::index');
-$routes->post('/add-non-regular-due-date', 'NonRegularDueDates::add');
+$routes->get('/add-non-regular-due-date', 'NonRegularDueDates::add');
+$routes->post('/insert-non-regular-due-date', 'NonRegularDueDates::insertData');
 $routes->post('/edit-non-regular-due-date', 'NonRegularDueDates::updateData');
 $routes->post('/delete-non-regular-due-date', 'NonRegularDueDates::deleteData');
 

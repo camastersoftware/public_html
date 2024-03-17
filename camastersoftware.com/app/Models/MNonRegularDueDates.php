@@ -17,7 +17,7 @@ class MNonRegularDueDates extends Model
 
     protected $allowedFields = [
         'non_rglr_due_act',
-        'non_rglr_tax_payer',
+        'non_rglr_due_date_for',
         'non_rglr_periodicity',
         'non_rglr_due_notes',
         'non_rglr_daily_date',
