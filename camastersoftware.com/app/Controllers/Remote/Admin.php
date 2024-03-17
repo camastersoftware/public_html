@@ -1987,6 +1987,7 @@ class Admin extends BaseController
         $validationRulesArr['userCV']=['label' => 'CV', 'rules' => 'trim'];
         $validationRulesArr['isCostCenter']=['label' => 'Cost Centre', 'rules' => 'trim'];
         $validationRulesArr['userStaffType']=['label' => 'Employee Type', 'rules' => 'required|trim'];
+        $validationRulesArr['fkUserCatId']=['label' => 'User Type', 'rules' => 'required|trim'];
         $validationRulesArr['userDesgn']=['label' => 'Designation', 'rules' => 'trim'];
         $validationRulesArr['userEmpNo']=['label' => 'Employee No', 'rules' => 'trim'];
         $validationRulesArr['userDOJ']=['label' => 'Date of Joining', 'rules' => 'trim'];
@@ -2063,6 +2064,7 @@ class Admin extends BaseController
                     $userCV=$this->request->getFile('userCV');
                     $isCostCenter=$this->request->getPost('isCostCenter');
                     $userStaffType=$this->request->getPost('userStaffType');
+                    $fkUserCatId=$this->request->getPost('fkUserCatId');
                     $userDesgn=$this->request->getPost('userDesgn');
                     $userEmpNo=$this->request->getPost('userEmpNo');
                     $userDOJ=$this->request->getPost('userDOJ');
@@ -2255,6 +2257,7 @@ class Admin extends BaseController
                         'userCV'=>$userCVPath,
                         'isCostCenter'=>$isCostCenter,
                         'userStaffType'=>$userStaffType,
+                        'fkUserCatId'=>$fkUserCatId,
                         'userDesgn'=>$userDesgn,
                         'userEmpNo'=>$userEmpNo,
                         'userDOJ'=>$userDOJ,
@@ -2423,6 +2426,7 @@ class Admin extends BaseController
         $validationRulesArr['userCV']=['label' => 'CV', 'rules' => 'trim'];
         $validationRulesArr['isCostCenter']=['label' => 'Cost Centre', 'rules' => 'trim'];
         $validationRulesArr['userStaffType']=['label' => 'Employee Type', 'rules' => 'required|trim'];
+        $validationRulesArr['fkUserCatId']=['label' => 'User Type', 'rules' => 'required|trim'];
         $validationRulesArr['userDesgn']=['label' => 'Designation', 'rules' => 'trim'];
         $validationRulesArr['userEmpNo']=['label' => 'Employee No', 'rules' => 'trim'];
         $validationRulesArr['userDOJ']=['label' => 'Date of Joining', 'rules' => 'trim'];
@@ -2512,6 +2516,7 @@ class Admin extends BaseController
                     $userOldCV=$this->request->getPost('userOldCV');
                     $isCostCenter=$this->request->getPost('isCostCenter');
                     $userStaffType=$this->request->getPost('userStaffType');
+                    $fkUserCatId=$this->request->getPost('fkUserCatId');
                     $userDesgn=$this->request->getPost('userDesgn');
                     $userEmpNo=$this->request->getPost('userEmpNo');
                     $userDOJ=$this->request->getPost('userDOJ');
@@ -2750,6 +2755,7 @@ class Admin extends BaseController
                         'userCV'=>$userCVPath,
                         'isCostCenter'=>$isCostCenter,
                         'userStaffType'=>$userStaffType,
+                        'fkUserCatId'=>$fkUserCatId,
                         'userDesgn'=>$userDesgn,
                         'userEmpNo'=>$userEmpNo,
                         'userDOJ'=>$userDOJ,
