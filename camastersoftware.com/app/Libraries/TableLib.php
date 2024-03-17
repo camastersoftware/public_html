@@ -59,6 +59,7 @@ class TableLib
         $tableArr['sub_menu_tbl']=$superAdminDB.".sub_menu_tbl";
         $tableArr['sms_config']=$superAdminDB.".sms_config";
         $tableArr['otp_tbl']=$superAdminDB.".otp_tbl";
+        $tableArr['user_category_tbl']=$superAdminDB.".user_category_tbl";
 
         //Admin
         $tableArr['client_act_map_tbl']=$adminDB.".client_act_map_tbl";

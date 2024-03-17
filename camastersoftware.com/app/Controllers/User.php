@@ -21,6 +21,7 @@ class User extends BaseController
         $this->Mdocument = new \App\Models\Mdocument();
         $this->Mact = new \App\Models\Mact();
         $this->MstaffTypes = new \App\Models\MstaffTypes();
+        $this->MuserCategoryType = new \App\Models\MuserCategoryType();
         $this->TableLib = new \App\Libraries\TableLib();
         $this->session = \Config\Services::session();
 
@@ -122,6 +123,11 @@ class User extends BaseController
 
         $this->data['staffTypeList']=$staffTypeList;
 
+        $userCategoryList=$this->MuserCategoryType->where('user_category_tbl.status', 1)
+        ->findAll();
+
+        $this->data['userCategoryList']=$userCategoryList;
+
         return view('firm_panel/user/create_user', $this->data);
 	}
 
@@ -167,6 +173,11 @@ class User extends BaseController
                         ->findAll();
 
         $this->data['staffTypeList']=$staffTypeList;
+
+        $userCategoryList=$this->MuserCategoryType->where('user_category_tbl.status', 1)
+        ->findAll();
+
+        $this->data['userCategoryList']=$userCategoryList;
 
         return view('firm_panel/user/edit_user', $this->data);
 	}
