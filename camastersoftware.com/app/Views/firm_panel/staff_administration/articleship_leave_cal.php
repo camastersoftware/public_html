@@ -248,13 +248,13 @@ if (!empty($leaveCalDataArr)) {
                                                 <div class="col-md-6 col-lg-6 text-left">
                                                     <span class="font-weight-bold">Start Date :&nbsp;</span>
                                                     <span class="font-weight-bold">
-                                                        <?php echo $start_date; ?>
+                                                        <?php echo date("d-m-Y",strtotime($start_date)); ?>
                                                     </span>
                                                 </div>
                                                 <div class="col-md-6 col-lg-6 text-right">
                                                     <span class="font-weight-bold">Completion Date :&nbsp;</span>
                                                     <span class="font-weight-bold">
-                                                        <?php echo $completion_date; ?>
+                                                        <?php echo date("d-m-Y",strtotime($completion_date)); ?>
                                                     </span>
                                                 </div>
                                             </div>
@@ -490,7 +490,7 @@ if (!empty($leaveCalDataArr)) {
                                             </div>
                                             <div class="col-md-6 col-lg-6 text-center mt-2 mb-2">
                                                 <div class="form-group offset-md-3 col-md-7">
-                                                    <input type="text" class="form-control net_leave_takenabove   inputRTL" name="net_leave_takenabove" id="net_leave_takenabove" onkeypress="validateNum(event);getAllowableExcessLeave()" value="<?php echo $netLeaveTaken; ?>" readonly>
+                                                    <input type="text" class="form-control net_leave_takenabove   inputRTL" name="net_leave_takenabove" id="net_leave_takenabove" onkeypress="validateNum(event);getAllowableExcessLeave()" value="<?php echo $less_net_leave_taken; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-lg-6 mt-2 mb-2">
