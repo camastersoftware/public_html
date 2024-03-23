@@ -150,6 +150,7 @@
                                                     <div class="dropdown-menu" style="will-change: transform;">
                                                         <a class="dropdown-item" href="<?php echo base_url('employee-salary-payable/'.$e_row['userId']); ?>" >Salary Payable</a>
                                                         <a class="dropdown-item" href="<?php echo base_url('employee-salary-payable-details/'.$e_row['userId']); ?>" >Salary Payable Details</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('payslip/'.$e_row['userId']); ?>" >Payslip</a>
                                                     </div>
                                                 </div>
                                             </td>

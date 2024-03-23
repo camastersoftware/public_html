@@ -144,6 +144,9 @@
                                                     <div class="dropdown-menu" style="will-change: transform;">
                                                         <a class="dropdown-item" href="<?php echo base_url('user/edit_user/'.$e_row['userId']); ?>" ><i class="fa fa-pencil"></i>&nbsp;Edit</a>
                                                         <a class="dropdown-item" href="<?php echo base_url('user/view_user/'.$e_row['userId']); ?>" ><i class="fa fa-file"></i>&nbsp;View Documents</a>
+                                                        <?php if($e_row['userStaffType']==7):  ?>
+                                                        <a class="dropdown-item" href="<?php echo base_url('articleship-leave-cal/'.$e_row['userId']); ?>" ><i class="fa fa-file"></i>&nbsp;Articleship Leave Calculator</a>
+                                                        <?php endif;?>
                                                         <a class="dropdown-item markAsOld" href="javascript:void(0);" data-toggle="tooltip" data-original-title="Mark As Left" data-rowId="<?php echo $e_row['userId']; ?>"><i class="fa fa-ban"></i>&nbsp;Mark As Left</a>
                                                         <a class="dropdown-item delUser" href="javascript:void(0);" data-toggle="tooltip" data-original-title="Delete" data-rowId="<?php echo $e_row['userId']; ?>"><i class="fa fa-trash"></i>&nbsp;Delete</a>
                                                     </div>
