@@ -435,6 +435,16 @@ class Client extends BaseController
 
         $this->data['clientPartnerList']=$clientPartnerList;
 
+        $actArr = $this->Mact->where('status', 1)
+                    ->findAll();
+
+        $this->data['actArr']=$actArr;
+
+        $periodArr = $this->Mperiodicity->where('status', 1)
+                    ->findAll();
+
+        $this->data['periodArr']=$periodArr;
+
         return view('firm_panel/client/edit_client', $this->data);
     }
 
