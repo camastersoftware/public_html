@@ -112,12 +112,13 @@ class TableLib
         $tableArr['bill_description_tbl']=$adminDB.".bill_description_tbl";
         $tableArr['user_chat_connection_tbl']=$adminDB.".user_chat_connection_tbl";
         $tableArr['user_message_tbl']=$adminDB.".user_message_tbl";
-        $tableArr['chartered_accuntant_tbl']=$adminDB.".chartered_accuntant_tbl";
+		$tableArr['chartered_accuntant_tbl']=$adminDB.".chartered_accuntant_tbl";
         $tableArr['articleship_staff_tbl']=$adminDB.".articleship_staff_tbl";
         $tableArr['expense_voucher_tbl']=$adminDB.".expense_voucher_tbl";
         $tableArr['articleship_leave_tbl']=$adminDB.".articleship_leave_tbl";
+		$tableArr['non_regular_due_date_tbl']=$adminDB.".non_regular_due_date_tbl";
+        $tableArr['non_regular_due_date_for_tbl']=$adminDB.".non_regular_due_date_for_tbl";
         
-           
         return $tableArr;
 	}
 }

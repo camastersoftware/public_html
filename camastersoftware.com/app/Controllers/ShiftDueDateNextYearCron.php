@@ -18,21 +18,24 @@ class ShiftDueDateNextYearCron extends BaseController
         $currMth=date('n');
         $currYr=date('Y');
         
-        if($currMth<=3)
-            $prevYear=$currYr;
-        else
-            $prevYear=$currYr-1;
+        // if($currMth<=3)
+        //     $prevYear=$currYr;
+        // else
+        //     $prevYear=$currYr-1;
+
+        $prevYear=$currYr-1;
         
         $this->dueYear=$prevYear."-".(substr($prevYear+1, 2));
     }
 
 	public function index()
 	{
-	    echo "Cron Started...";
+        // die("Access Denied");
+	    echo "Cron Started for ".$this->dueYear." ...";
 	    
 	    $this->db->transBegin();
 	    
-	    log_message('error', 'Cron Start');
+	    log_message('error', 'Cron Start for '.$this->dueYear);
 	   
         $taxCalFinYearAdminCookie=$this->dueYear;
             
@@ -119,7 +122,7 @@ class ShiftDueDateNextYearCron extends BaseController
                 $e_dd['createdDatetime']=$this->currTimeStamp;
                 
                 $nextYrDueDateInsertArr[]=$e_dd;
-                               
+                
                 $query=$this->Mcommon->insert($tableName=$this->due_date_master_tbl, $nextYrDueDateInsertArr, $returnType="");
                 
                 if($query['status']==TRUE)
@@ -234,7 +237,7 @@ class ShiftDueDateNextYearCron extends BaseController
 	    $ca_firm_db_user=FIRM_DB_USERNAME;
         $ca_firm_db_pass=FIRM_DB_PASSWORD;
         // $ca_firm_db_name='camaster_ca_firm_'.$caFirmId;
-        $ca_firm_db_name='camastersoftware_ca_firm_'.$caFirmId;
+        $ca_firm_db_name=FIRM_DB_NAME.$caFirmId;
         
 	    $this->adminDB = [
             'DSN'      => '',

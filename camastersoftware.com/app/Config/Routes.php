@@ -775,6 +775,8 @@ $routes->post('/edit-client-se-password', 'ClientAdministration::edit_se_passwor
 $routes->get('/partnership-password', 'ClientAdministration::partnership_password');
 $routes->post('/edit-client-partnership-password', 'ClientAdministration::edit_partnership_password');
 
+$routes->get('/custom-due-dates', 'ClientAdministration::custom_due_dates');
+
 // Office Management
 $routes->get('/office-administration', 'OfficeAdministration::index');
 
@@ -850,6 +852,19 @@ $routes->get('/edit-bill/(:any)', 'Bill::edit/$1');
 $routes->post('/update-bill', 'Bill::update');
 $routes->get('/view-bill/(:any)', 'Bill::view/$1');
 $routes->post('/delete-bill', 'Bill::delete');
+
+// Non-Regular Due Date For
+$routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
+$routes->post('/add-non-regular-due-date-for', 'NonRegularDueDateFor::add');
+$routes->post('/edit-non-regular-due-date-for', 'NonRegularDueDateFor::updateData');
+$routes->post('/delete-non-regular-due-date-for', 'NonRegularDueDateFor::deleteData');
+
+// Non-Regular Due Dates
+$routes->get('non-regular-due-dates', 'NonRegularDueDates::index');
+$routes->get('/add-non-regular-due-date', 'NonRegularDueDates::add');
+$routes->post('/insert-non-regular-due-date', 'NonRegularDueDates::insertData');
+$routes->post('/edit-non-regular-due-date', 'NonRegularDueDates::updateData');
+$routes->post('/delete-non-regular-due-date', 'NonRegularDueDates::deleteData');
 
 //Utility
 $routes->post('/remote/utility/changeTheme', 'Remote/Utility::changeTheme');
