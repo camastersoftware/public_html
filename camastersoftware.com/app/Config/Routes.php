@@ -131,6 +131,7 @@ $routes->post('/superadmin/delete_periodicity', 'SuperAdmin/Periodicity::delete'
 $routes->post('/remote/getCities', 'Remote/Sync::getCities');
 $routes->post('/remote/getAreas', 'Remote/Sync::getAreas');
 $routes->post('/getOptions', 'Remote/Extra::getOptions');
+$routes->post('/getFirmOptions', 'Remote/Extra::getFirmOptions');
 
 $routes->get('/superadmin/master_data', 'SuperAdmin/Main::master_data');
 $routes->match(['get', 'post'], '/superadmin/tax_calendar', 'SuperAdmin/Main::tax_calendar');
@@ -863,7 +864,8 @@ $routes->post('/delete-non-regular-due-date-for', 'NonRegularDueDateFor::deleteD
 $routes->get('non-regular-due-dates', 'NonRegularDueDates::index');
 $routes->get('/add-non-regular-due-date', 'NonRegularDueDates::add');
 $routes->post('/insert-non-regular-due-date', 'NonRegularDueDates::insertData');
-$routes->post('/edit-non-regular-due-date', 'NonRegularDueDates::updateData');
+$routes->get('/edit-non-regular-due-date/(:any)', 'NonRegularDueDates::edit');
+$routes->post('/update-non-regular-due-date', 'NonRegularDueDates::updateData');
 $routes->post('/delete-non-regular-due-date', 'NonRegularDueDates::deleteData');
 
 //Utility
