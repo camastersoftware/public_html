@@ -80,7 +80,7 @@ table.dataTable {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20 table-responsive">
+                                    <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer mt-20">
                                         <thead>
                                             <tr class="row-1">
                                                 <th class="column-1">Due Date</th>
@@ -100,8 +100,8 @@ table.dataTable {
                                                     <tr class="row-3" style="background-color:#96c7f242;">
                                                         <td class="column-1 column_date" nowrap><?php echo date('d-m-Y', strtotime($e_row['non_rglr_due_date'])); ?></td>
                                                         <td class="column-2" nowrap>
-                                                            <?php if(!empty($e_row['act_option_name1'])): ?>
-                                                                <?php $dueDateForStr=$e_row['act_option_name1']; ?>
+                                                            <?php if(!empty($e_row['non_regular_due_date_for_name'])): ?>
+                                                                <?php $dueDateForStr=$e_row['non_regular_due_date_for_name']; ?>
                                                                     
                                                                 <?php if(strlen($dueDateForStr)>50): ?>
                                                                 
@@ -170,10 +170,11 @@ table.dataTable {
                                                             <div class="btn-group mb-5">
                                                                 <button type="button" class="waves-effect waves-light btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
                                                                 <div class="dropdown-menu" style="will-change: transform;">
+                                                                    <a class="dropdown-item" href="<?= base_url('edit-non-regular-due-date/'.$e_row['non_rglr_due_date_id']);?>" >Edit</a>
                                                                     <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?php echo $k_row; ?>">View Note</a>
                                                                     <?php if(!empty($e_row['non_rglr_doc_file'])): ?>
                                                                         <?php $non_rglr_doc_file_path = base_url("uploads/ca_firm_".$sessCaFirmId."/non_regular_due_dates/".$e_row['non_rglr_doc_file']); ?>
-                                                                        <a class="dropdown-item" href="<?php echo base_url("uploads/admin/non_rglr_due_date/".$non_rglr_doc_file_path); ?>" target="_blank">View Document</a>
+                                                                        <a class="dropdown-item" href="<?php echo $non_rglr_doc_file_path; ?>" target="_blank">View Document</a>
                                                                     <?php endif; ?>
                                                                 </div>
                                                             </div>

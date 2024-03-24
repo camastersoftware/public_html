@@ -36,7 +36,7 @@
                 <div class="box-header with-border flexbox">
                     <h4 class="box-title font-weight-bold"><?= $pageTitle; ?></h4>
                     <div class="text-right flex-grow">
-                        <a href="<?php echo base_url('superadmin/due_dates'); ?>" >
+                        <a href="<?php echo base_url('non-regular-due-dates'); ?>" >
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark">Back</button>
                         </a>
                     </div>
@@ -213,7 +213,7 @@
                                                             <div class="col-md-12 mt-30 text-center">
                                                                 <input type="hidden" name="due_state" value="12" />
                                                                 <button type="submit" name="submit" class="waves-effect waves-light btn btn-submit">Submit</button>
-                                                                <a href="<?php echo base_url('add-non-regular-due-date'); ?>" >
+                                                                <a href="<?php echo base_url('non-regular-due-dates'); ?>" >
                                                                     <button type="button" class="btn btn-dark">Back</button>
                                                                 </a>
                                                             </div>
@@ -280,11 +280,10 @@
                 var base_url = "<?php echo base_url(); ?>";
 
                 $.ajax({
-                    url : base_url+'/getOptions',
+                    url : base_url+'/getFirmOptions',
                     type : 'POST',
                     data : { 
                         'due_act' : due_act,
-                        'option_type' : 1,
                         "<?= csrf_token() ?>" : "<?= csrf_hash() ?>"
                     },
                     dataType: 'html',
