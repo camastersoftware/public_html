@@ -785,12 +785,98 @@
                                                                             <input type="date" class="form-control" name="userICAIComplDate" id="userICAIComplDate" placeholder="Enter Intimation to ICAI-Completion Date" value="<?php echo $userICAIComplDate; ?>">
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="userArtComplTerminationDate">Actual Date of Completion/Termination:</label>
+                                                                            <?php
+                                                                            if (check_valid_date($userDataArr['userArtComplTerminationDate']))
+                                                                                $userArtComplTerminationDate = date("Y-m-d", strtotime($userDataArr['userArtComplTerminationDate']));
+                                                                            else
+                                                                                $userArtComplTerminationDate = "";
+                                                                            ?>
+                                                                            <input type="date" onchange="isCompleteArticleship()" class="form-control" name="userArtComplTerminationDate" id="userArtComplTerminationDate" placeholder="Enter Actual Date of Completion/Termination" value="<?php echo $userArtComplTerminationDate; ?>">
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6 isArticleShipContinue_div" id="isArticleShipContinue_div">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="text">Does this user want to continue as Employee ?</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <input name="isArticleShipContinue" type="radio" id="isArticleShipContinueYes" class="radio-col-success" value="1" <?php if ($userDataArr['isArticleShipContinue'] == 1) : echo "checked";
+                                                                                                                                                                                                        endif; ?> />
+                                                                                    <label for="isArticleShipContinueYes">Yes</label>
+                                                                                    <input name="isArticleShipContinue" type="radio" id="isArticleShipContinueNo" class="radio-col-danger" value="2" <?php if ($userDataArr['isArticleShipContinue'] == 2) : echo "checked";
+                                                                                                                                                                                                        endif; ?> />
+                                                                                    <label for="isArticleShipContinueNo">No</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 isArticleShipContinue_div">
+                                                                        <div class="form-group">
+                                                                            <label for="art_staff_name_of_principle"> Name Of the Principal:<small class="text-danger">*</small></label>
+                                                                            <input type="text" class="form-control" name="art_staff_name_of_principle" id="art_staff_name_of_principle" placeholder="Enter Name Of the Principal" value="<?php echo $userDataArr['art_staff_name_of_principle']; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 isArticleShipContinue_div">
+                                                                        <div class="form-group">
+                                                                            <label for="art_staff_membership_no">Membership Number: </label>
+                                                                            <input type="text" class="form-control" name="art_staff_membership_no" id="art_staff_membership_no" placeholder="Enter Membership Number" value="<?php echo $userDataArr['art_staff_membership_no']; ?>">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6 isArticleShipContinue_div">
+                                                                        <div class="form-group">
+                                                                            <label for="art_staff_date_suppl_art">Date Of Supplementary Of Articleship:</label>
+                                                                            <?php
+                                                                            if (check_valid_date($userDataArr['art_staff_date_suppl_art']))
+                                                                                $art_staff_date_suppl_art = date("Y-m-d", strtotime($userDataArr['art_staff_date_suppl_art']));
+                                                                            else
+                                                                                $art_staff_date_suppl_art = "";
+                                                                            ?>
+                                                                            <input type="date" class="form-control" name="art_staff_date_suppl_art" id="art_staff_date_suppl_art" placeholder="Enter Date Of Supplementary Of Articleship" value="<?php echo $art_staff_date_suppl_art; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 isArticleShipContinue_div">
+                                                                        <div class="form-group">
+                                                                            <label for="art_staff_date_suppl_art_icai">Date Of Intimation to ICAI:</label>
+                                                                            <?php
+                                                                            if (check_valid_date($userDataArr['art_staff_date_suppl_art_icai']))
+                                                                                $art_staff_date_suppl_art_icai = date("Y-m-d", strtotime($userDataArr['art_staff_date_suppl_art_icai']));
+                                                                            else
+                                                                                $art_staff_date_suppl_art_icai = "";
+                                                                            ?>
+                                                                            <input type="date" class="form-control" name="art_staff_date_suppl_art_icai" id="art_staff_date_suppl_art_icai" placeholder="Enter Date Of Intimation to ICAI" value="<?php echo $art_staff_date_suppl_art_icai; ?>">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6 isArticleShipContinue_div">
+                                                                        <div class="form-group">
+                                                                            <label for="art_staff_year_completion_inter_ca">Year Of Completion Of Inter CA:</label>
+                                                                            <input type="text" class="form-control" name="art_staff_year_completion_inter_ca" id="art_staff_year_completion_inter_ca" placeholder="Enter Year Of Completion Of Inter CA" value="<?php echo $userDataArr['art_staff_year_completion_inter_ca']; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 isArticleShipContinue_div">
+                                                                        <div class="form-group">
+                                                                            <label for="art_staff_year_completion_final_ca">Year Of Completion Of Final CA:</label>
+
+                                                                            <input type="text" class="form-control" name="art_staff_year_completion_final_ca" id="art_staff_year_completion_final_ca" placeholder="Enter Year Of Completion Of Final CA" value="<?php echo $userDataArr['art_staff_year_completion_final_ca']; ?>">
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label for="userArticleAsstRemark">Remarks:</label>
                                                                             <textarea type="text" class="form-control" name="userArticleAsstRemark" id="userArticleAsstRemark" placeholder="Enter Remarks" rows="3"><?php echo $userDataArr['userArticleAsstRemark']; ?></textarea>
                                                                         </div>
                                                                     </div>
+
                                                                 </div>
                                                                 <hr class="mt-0">
                                                             </div>
@@ -965,6 +1051,19 @@
 </script>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        isCompleteArticleship();
+    });
+
+    function isCompleteArticleship() {
+        var userArtComplTerminationDate = $('#userArtComplTerminationDate').val();
+        if (userArtComplTerminationDate) {
+            $('.isArticleShipContinue_div').show();
+        } else {
+            $('.isArticleShipContinue_div').hide();
+        }
+    }
+
     function disableArticleship() {
         $('.articleship_section_div input, .articleship_section_div select, .articleship_section_div textarea').prop('disabled', true);
     }
@@ -979,7 +1078,7 @@
     }
 
     function changeUserCategoryType() {
-       
+
         disableGeneral();
         var selectedVal = $('#fkUserCatId').val();
 
