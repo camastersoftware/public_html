@@ -21,6 +21,8 @@ class Admin extends BaseController
         $this->Mdue_date = new \App\Models\Mdue_date();
         $this->Mcontsubgroup = new \App\Models\Mcontsubgroup();
         $this->Mcontact = new \App\Models\Mcontact();
+        $this->MArticleshipStaff = new \App\Models\MArticleshipStaff();
+        $this->MCharterAccountant = new \App\Models\MCharterAccountant();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -44,6 +46,8 @@ class Admin extends BaseController
         $this->rectification_tbl=$tableArr['rectification_tbl'];
         $this->tax_payment_tbl=$tableArr['tax_payment_tbl'];
         $this->client_act_map_tbl=$tableArr['client_act_map_tbl'];
+        $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
+        $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
     }
 
     public function getGroups()
@@ -1997,6 +2001,7 @@ class Admin extends BaseController
         $validationRulesArr['userArtRegNo']=['label' => 'Articleship Registration No', 'rules' => 'trim'];
         $validationRulesArr['userArtStartDate']=['label' => 'Date of Start of Articleship', 'rules' => 'trim'];
         $validationRulesArr['userArtEndDate']=['label' => 'Date of End of Articleship', 'rules' => 'trim'];
+    
         $validationRulesArr['userICAICommDate']=['label' => 'Intimation to ICAI-Commencemene', 'rules' => 'trim'];
         $validationRulesArr['userICAIComplDate']=['label' => 'Intimation to ICAI-Completion', 'rules' => 'trim'];
         $validationRulesArr['userCAMemNo']=['label' => 'CA Membership No', 'rules' => 'trim'];
@@ -2436,8 +2441,18 @@ class Admin extends BaseController
         $validationRulesArr['userArtRegNo']=['label' => 'Articleship Registration No', 'rules' => 'trim'];
         $validationRulesArr['userArtStartDate']=['label' => 'Date of Start of Articleship', 'rules' => 'trim'];
         $validationRulesArr['userArtEndDate']=['label' => 'Date of End of Articleship', 'rules' => 'trim'];
+        $validationRulesArr['userArtEndDate']=['label' => 'Date of End of Articleship', 'rules' => 'trim'];
         $validationRulesArr['userICAICommDate']=['label' => 'Intimation to ICAI-Commencemene', 'rules' => 'trim'];
-        $validationRulesArr['userICAIComplDate']=['label' => 'Intimation to ICAI-Completion', 'rules' => 'trim'];
+        $validationRulesArr['userArtComplTerminationDate']=['label' => 'Actual Date of Completion/Termination', 'rules' => 'trim'];
+        $validationRulesArr['isArticleShipContinue']=['label' => 'Articleship Continue', 'rules' => 'trim'];
+
+        $validationRulesArr['art_staff_name_of_principle']=['label' => 'Name Of the Principal', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_membership_no']=['label' => 'Membership Number', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_date_suppl_art_icai']=['label' => 'Date Of Supplementary Intimation to ICAI', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_date_suppl_art']=['label' => 'Date Of Supplementary Of Articleship', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_year_completion_inter_ca']=['label' => 'Year Of Completion Of Inter CA', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_year_completion_final_ca']=['label' => 'Year Of Completion Of Final CA', 'rules' => 'trim'];
+
         $validationRulesArr['userCAMemNo']=['label' => 'CA Membership No', 'rules' => 'trim'];
         $validationRulesArr['userCADOJ']=['label' => 'Date of Joining (CA)', 'rules' => 'trim'];
         $validationRulesArr['userCADOL']=['label' => 'Date of Leaving (CA)', 'rules' => 'trim'];
@@ -2527,6 +2542,15 @@ class Admin extends BaseController
                     $userArtStartDate=$this->request->getPost('userArtStartDate');
                     $userArtEndDate=$this->request->getPost('userArtEndDate');
                     $userICAICommDate=$this->request->getPost('userICAICommDate');
+                    $userArtComplTerminationDate=$this->request->getPost('userArtComplTerminationDate');
+                    $isArticleShipContinue=$this->request->getPost('isArticleShipContinue');
+                    $art_staff_name_of_principle=$this->request->getPost('art_staff_name_of_principle');
+                    $art_staff_membership_no=$this->request->getPost('art_staff_membership_no');
+                    $art_staff_date_suppl_art_icai=$this->request->getPost('art_staff_date_suppl_art_icai');
+                    $art_staff_date_suppl_art=$this->request->getPost('art_staff_date_suppl_art');
+                    $art_staff_year_completion_inter_ca=$this->request->getPost('art_staff_year_completion_inter_ca');
+                    $art_staff_year_completion_final_ca=$this->request->getPost('art_staff_year_completion_final_ca');
+
                     $userICAIComplDate=$this->request->getPost('userICAIComplDate');
                     $userCAMemNo=$this->request->getPost('userCAMemNo');
                     $userCADOJ=$this->request->getPost('userCADOJ');
@@ -2765,6 +2789,16 @@ class Admin extends BaseController
                         'userArtRegNo'=>$userArtRegNo,
                         'userArtStartDate'=>$userArtStartDate,
                         'userArtEndDate'=>$userArtEndDate,
+                        'userArtComplTerminationDate'=>$userArtComplTerminationDate,
+                        'isArticleShipContinue'=>$isArticleShipContinue,
+                        
+                        'art_staff_year_completion_inter_ca'=>$art_staff_year_completion_inter_ca,
+                        'art_staff_year_completion_final_ca'=>$art_staff_year_completion_final_ca,
+                        'art_staff_name_of_principle'=>$art_staff_name_of_principle,
+                        'art_staff_membership_no'=>$art_staff_membership_no,
+                        'art_staff_date_suppl_art_icai'=>$art_staff_date_suppl_art_icai,
+                        'art_staff_date_suppl_art'=>$art_staff_date_suppl_art,
+
                         'userICAICommDate'=>$userICAICommDate,
                         'userICAIComplDate'=>$userICAIComplDate,
                         'userCAMemNo'=>$userCAMemNo,
@@ -2789,12 +2823,70 @@ class Admin extends BaseController
                     }
         
                     $userCondtnArr['user_tbl.userId']=$userId;
+
+                    // Articleship Code Start
+                    if($isArticleShipContinue==2 || $isArticleShipContinue==1){
+                        $upsertArticleshipArr=[];
+
+                        $upsertArticleshipArr=[
+                            'art_staff_name'=>$userFullName,
+                            'art_staff_img'=>$userImgPath,
+                            'art_staff_name_of_principle'=>$art_staff_name_of_principle,
+                            'art_staff_reg_no'=>$userArtRegNo,
+                            'art_staff_membership_no'=>$art_staff_membership_no,
+                            'art_staff_date_commencement'=>$userArtStartDate,
+                            'art_staff_date_intimation_icai'=>$userICAICommDate,
+                            'art_staff_date_suppl_art_icai'=>$art_staff_date_suppl_art_icai,
+                            'art_staff_date_completion_art_icai'=>$userICAIComplDate,
+                            'art_staff_date_suppl_art'=>$art_staff_date_suppl_art,
+                            'art_staff_date_completion_art'=>$userArtEndDate,
+                            'art_staff_year_completion_inter_ca'=>$art_staff_year_completion_inter_ca,
+                            'art_staff_year_completion_final_ca'=>$art_staff_year_completion_final_ca,
+                            'art_staff_job_status'=>"",
+                            'art_staff_remark'=>"",
+                            'fkUserId'=>$userId,
+                        ];
+
+                        $articleShipCondtnArr['articleship_staff_tbl.fkUserId'] = $userId;
+                        $articleShipOrderByArr['articleship_staff_tbl.art_staff_name'] = "ASC";
+                
+                        $articleShipQuery = $this->Mquery->getRecords($tableName = $this->articleship_staff_tbl, $colNames = "articleship_staff_tbl.*", $articleShipCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $articleShipOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+                
+                        $getArticleShipUserData = $articleShipQuery['userData'];
+                     
+                        if(!empty($getArticleShipUserData)){
+
+                            $articleShipUpdateCondtn = array(
+                                'fkUserId' =>  $userId,
+                            );
+                            $upsertArticleshipArr["status"]=1;
+                            $upsertArticleshipArr["updatedBy"]=$this->adminId;
+                            $upsertArticleshipArr["updatedDatetime"]=$this->currTimeStamp;
+                                
+                            $response = $this->MArticleshipStaff->set($upsertArticleshipArr)->where($articleShipUpdateCondtn)->update();
+                        }else{
+                           
+                            $upsertArticleshipArr["status"]=1;
+                            $upsertArticleshipArr["createdBy"]=$this->adminId;
+                            $upsertArticleshipArr["createdDatetime"]=$this->currTimeStamp;
+
+                            $this->MArticleshipStaff->save($upsertArticleshipArr);
+                        }
+                    }
                     
+                    if($isArticleShipContinue==2){//Incactive User No
+                        $userUpdateArr['user_tbl.status']=2;
+                    }else if($isArticleShipContinue==1){
+                        $userUpdateArr['user_tbl.status']=1;//Contnnue Yes
+                    }
+                    // Articleship Code End
                     // print_r($userPassword);
                     // print_r($userUpdateArr);
                     // die();
         
                     $query=$this->Mquery->updateData($tableName=$this->user_tbl, $userUpdateArr, $userCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+                   
                     
                     $sbGrpArr=$this->Mcontsubgroup->where('fk_cont_group_id', 2)->findAll();
         	    

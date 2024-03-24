@@ -124,6 +124,7 @@ class User extends BaseController
         $this->data['staffTypeList']=$staffTypeList;
 
         $userCategoryList=$this->MuserCategoryType->where('user_category_tbl.status', 1)
+        ->orderBy('user_category_tbl.seqNo',"ASC")
         ->findAll();
 
         $this->data['userCategoryList']=$userCategoryList;
@@ -175,6 +176,7 @@ class User extends BaseController
         $this->data['staffTypeList']=$staffTypeList;
 
         $userCategoryList=$this->MuserCategoryType->where('user_category_tbl.status', 1)
+        ->orderBy('user_category_tbl.seqNo',"ASC")
         ->findAll();
 
         $this->data['userCategoryList']=$userCategoryList;

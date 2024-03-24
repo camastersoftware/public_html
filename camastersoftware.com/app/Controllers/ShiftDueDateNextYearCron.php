@@ -30,7 +30,7 @@ class ShiftDueDateNextYearCron extends BaseController
 
 	public function index()
 	{
-        // die("Access Denied");
+        die("Access Denied");
 	    echo "Cron Started for ".$this->dueYear." ...";
 	    
 	    $this->db->transBegin();
