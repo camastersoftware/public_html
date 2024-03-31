@@ -333,41 +333,72 @@ class ShiftDueDateNextYearCron extends BaseController
                     }
                 }
                 
-                if(!empty($clientWorkInsertArr))
-                {
-                    // $query=$this->Mcommon->cronInsert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="", $connectionArr=$connectionArray);
-                    $query=$this->Mcommon->insert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="");
+                // if(!empty($clientWorkInsertArr))
+                // {
+                //     // $query=$this->Mcommon->cronInsert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="", $connectionArr=$connectionArray);
+                //     // $query=$this->Mcommon->insert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="");
                     
-                    if($query['status']==TRUE)
-                    {
-                        $caFirmMsg='Work has been shifted successfully for Firm : '.$caFirmId;
+                //     if($query['status']==TRUE)
+                //     {
+                //         $caFirmMsg='Work has been shifted successfully for Firm : '.$caFirmId;
                         
-                        log_message('error', $caFirmMsg);
+                //         log_message('error', $caFirmMsg);
                         
-                        $insertLogArr['section']=$this->section;
-                        $insertLogArr['message']=$caFirmMsg;
-                        $insertLogArr['ip']=$this->IPAddress;
-                        $insertLogArr['createdBy']=$this->adminId;
-                        $insertLogArr['createdDatetime']=$this->currTimeStamp;
+                //         $insertLogArr['section']=$this->section;
+                //         $insertLogArr['message']=$caFirmMsg;
+                //         $insertLogArr['ip']=$this->IPAddress;
+                //         $insertLogArr['createdBy']=$this->adminId;
+                //         $insertLogArr['createdDatetime']=$this->currTimeStamp;
             
-                        $this->Mcommon->insertLog($insertLogArr);
+                //         $this->Mcommon->insertLog($insertLogArr);
                         
-                        echo "<br>";
-                        echo "<br>".$caFirmMsg;
-                    }
-                    else
-                    {
-                        $caFirmMsg='Work has not Shifted for Firm : '.$caFirmId;
+                //         echo "<br>";
+                //         echo "<br>".$caFirmMsg;
+                //     }
+                //     else
+                //     {
+                //         $caFirmMsg='Work has not Shifted for Firm : '.$caFirmId;
                         
-                        log_message('error', $caFirmMsg);
+                //         log_message('error', $caFirmMsg);
                         
-                        echo "<br>";
-                        echo "<br>".$caFirmMsg;
-                    }
-                }
+                //         echo "<br>";
+                //         echo "<br>".$caFirmMsg;
+                //     }
+                // }
             }
 	    }
 	    
+        if($this->adminDBConn->transStatus() === FALSE){
+            
+            $this->adminDBConn->transRollback();
+            
+            $caFirmMsg='Work has not Shifted for Firm : '.$caFirmId;
+                        
+            log_message('error', $caFirmMsg);
+            
+            echo "<br>";
+            echo "<br>".$caFirmMsg;
+
+        }else{
+
+            $this->adminDBConn->transCommit();
+
+            $caFirmMsg='Work has been shifted successfully for Firm : '.$caFirmId;
+                        
+            log_message('error', $caFirmMsg);
+            
+            $insertLogArr['section']=$this->section;
+            $insertLogArr['message']=$caFirmMsg;
+            $insertLogArr['ip']=$this->IPAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mcommon->insertLog($insertLogArr);
+            
+            echo "<br>";
+            echo "<br>".$caFirmMsg;
+        }
+
 	    $this->adminDBConn->close();
 	    
 	    $workCondtnArr=array();

@@ -27,6 +27,56 @@ class Staff extends BaseController
         $userId = $this->request->getPost('userId');
         $userLeftReason = $this->request->getPost('userLeftReason');
 
+        // Chartered Accountant Code Start
+        $userCondtnArr['user_tbl.userId'] = $userId;
+        $userCondtnArr['user_tbl.fkUserCatId'] = 3;//Chartered Accountant
+        $userCondtnArr['user_tbl.status'] = 1;
+        $userOrderByArr['user_tbl.userFullName'] = "ASC";
+
+        $userQuery = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.*", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+        $getuserUserData = $userQuery['userData'];
+        if(!empty($getuserUserData)){
+            if($getuserUserData['fkUserCatId']==3){
+                $upsertCAArr=[];
+
+                $upsertCAArr=[
+                    'ca_name'=>$getuserUserData['userFullName'],
+                    'ca_membership_no'=>$getuserUserData['userCAMemNo'],
+                    'ca_img'=>$getuserUserData['userImg'],
+                    'ca_date_commencement'=>$getuserUserData['userCADOJ'],
+                    'ca_date_intimation_icai'=>$getuserUserData['userICAIJoin'],
+                    'ca_date_termination'=>$getuserUserData['userCADOL'],
+                    'ca_date_intimation_icai_termination'=>$getuserUserData['userICAILeave'],
+                    'ca_remark'=>$getuserUserData["userCARemark"],
+                    'fkUserId'=>$userId,
+                    'isAddedFromUser'=>2,
+                ];
+
+                $charteredAccountentCondtnArr['chartered_accuntant_tbl.fkUserId'] = $userId;
+                $charteredAccountentOrderByArr['chartered_accuntant_tbl.ca_name'] = "ASC";
+        
+                $charteredAccountentQuery = $this->Mquery->getRecords($tableName = $this->chartered_accuntant_tbl, $colNames = "chartered_accuntant_tbl.*", $charteredAccountentCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $charteredAccountentOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+        
+                $getcharteredAccountentUserData = $charteredAccountentQuery['userData'];
+                if(!empty($getcharteredAccountentUserData)){
+                    $caUpdateCondtn = array(
+                        'fkUserId' =>  $userId,
+                    );
+                    $upsertCAArr["status"]=1;
+                    $upsertCAArr["updatedBy"]=$this->adminId;
+                    $upsertCAArr["updatedDatetime"]=$this->currTimeStamp;
+                        
+                    $response = $this->MCharterAccountant->set($upsertCAArr)->where($caUpdateCondtn)->update();
+                }else{
+                    $upsertCAArr["status"]=1;
+                    $upsertCAArr["createdBy"]=$this->adminId;
+                    $upsertCAArr["createdDatetime"]=$this->currTimeStamp;
+                    $this->MCharterAccountant->save($upsertCAArr);
+                }
+            }
+        }
+         // Chartered Accountant Code End
+
         $dataArray = [
             'userId' => $userId,
             'userLeftReason' => $userLeftReason,
@@ -381,21 +431,21 @@ class Staff extends BaseController
                 'fk_user_id' => $fk_user_id,
                 'status' => 1
             ];
-            $titleMSG= "";
+            $titleMSG = "";
             if ($exp_idData > 0) {
-                $expCondtnArr['expense_voucher_tbl.exp_id']=$exp_idData;
-                $expUpsertArr[0]['updatedBy']=$this->adminId;
-                $expUpsertArr[0]['updatedDatetime']=$this->currTimeStamp;
-                $query = $this->Mquery->updateData($tableName=$this->expense_voucher_tbl, $updateArr=$expUpsertArr[0],  $condtnArr =$expCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
-                $exp_id =$exp_idData;
-                $titleMSG= "Updated";
+                $expCondtnArr['expense_voucher_tbl.exp_id'] = $exp_idData;
+                $expUpsertArr[0]['updatedBy'] = $this->adminId;
+                $expUpsertArr[0]['updatedDatetime'] = $this->currTimeStamp;
+                $query = $this->Mquery->updateData($tableName = $this->expense_voucher_tbl, $updateArr = $expUpsertArr[0],  $condtnArr = $expCondtnArr, $likeCondtnArr = array(), $whereInArray = array());
+                $exp_id = $exp_idData;
+                $titleMSG = "Updated";
             } else {
-                $expUpsertArr[0]['createdBy']=$this->adminId;
-                $expUpsertArr[0]['createdDatetime']=$this->currTimeStamp;
+                $expUpsertArr[0]['createdBy'] = $this->adminId;
+                $expUpsertArr[0]['createdDatetime'] = $this->currTimeStamp;
                 $query = $this->Mquery->insert($tableName = $this->expense_voucher_tbl, $expUpsertArr, $returnType = "");
 
                 $exp_id = $query['lastID'];
-                $titleMSG= "Added";
+                $titleMSG = "Added";
             }
         }
 
@@ -404,7 +454,7 @@ class Staff extends BaseController
             $this->db->transRollback();
 
             $responseArr['status'] = FALSE;
-            $responseArr['message'] = "Expense has not ".$titleMSG." :(";
+            $responseArr['message'] = "Expense has not " . $titleMSG . " :(";
             $responseArr['userdata'] = $errorArr;
         } else {
 
@@ -420,10 +470,10 @@ class Staff extends BaseController
             $this->Mquery->insertLog($insertLogArr);
 
             $responseArr['status'] = TRUE;
-            $responseArr['message'] = "Expense has been ".$titleMSG." successfully :)";
+            $responseArr['message'] = "Expense has been " . $titleMSG . " successfully :)";
             $responseArr['userdata'] = $errorArr;
 
-            $this->session->setFlashdata('successMsg', "Expense has been ".$titleMSG." successfully :)");
+            $this->session->setFlashdata('successMsg', "Expense has been " . $titleMSG . " successfully :)");
         }
 
         echo json_encode($responseArr);

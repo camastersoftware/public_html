@@ -752,18 +752,6 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <?php
-                                                                            if (check_valid_date($userDataArr['userArtEndDate']))
-                                                                                $userArtEndDate = date("Y-m-d", strtotime($userDataArr['userArtEndDate']));
-                                                                            else
-                                                                                $userArtEndDate = "";
-                                                                            ?>
-                                                                            <label for="userArtEndDate">Date of End of Articleship:</label>
-                                                                            <input type="date" class="form-control" name="userArtEndDate" id="userArtEndDate" placeholder="Enter End Date of Articleship" value="<?php echo $userArtEndDate; ?>">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <?php
                                                                             if (check_valid_date($userDataArr['userICAICommDate']))
                                                                                 $userICAICommDate = date("Y-m-d", strtotime($userDataArr['userICAICommDate']));
                                                                             else
@@ -771,6 +759,18 @@
                                                                             ?>
                                                                             <label for="userICAICommDate">Intimation to ICAI-Commencemene:</label>
                                                                             <input type="date" class="form-control" name="userICAICommDate" id="userICAICommDate" placeholder="Intimation to ICAI-Commencemene Date" value="<?php echo $userICAICommDate; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <?php
+                                                                            if (check_valid_date($userDataArr['userArtEndDate']))
+                                                                                $userArtEndDate = date("Y-m-d", strtotime($userDataArr['userArtEndDate']));
+                                                                            else
+                                                                                $userArtEndDate = "";
+                                                                            ?>
+                                                                            <label for="userArtEndDate">Date of End of Articleship:</label>
+                                                                            <input type="date" class="form-control" name="userArtEndDate" id="userArtEndDate" placeholder="Enter End Date of Articleship" value="<?php echo $userArtEndDate; ?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
@@ -911,18 +911,7 @@
                                                                             <input type="date" class="form-control" name="userCADOJ" id="userCADOJ" placeholder="Enter Date of Joining" value="<?php echo $userCADOJ; ?>">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <?php
-                                                                            if (check_valid_date($userDataArr['userCADOL']))
-                                                                                $userCADOL = date("Y-m-d", strtotime($userDataArr['userCADOL']));
-                                                                            else
-                                                                                $userCADOL = "";
-                                                                            ?>
-                                                                            <label for="userCADOL">Date of Leaving:</label>
-                                                                            <input type="date" class="form-control" name="userCADOL" id="userCADOL" placeholder="Enter Date of Leaving" value="<?php echo $userCADOL; ?>">
-                                                                        </div>
-                                                                    </div>
+
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <?php
@@ -933,6 +922,18 @@
                                                                             ?>
                                                                             <label for="userICAIJoin">Intimation to ICAI-Joining:</label>
                                                                             <input type="date" class="form-control" name="userICAIJoin" id="userICAIJoin" placeholder="Enter Intimation to ICAI-Joining Date" value="<?php echo $userICAIJoin; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <?php
+                                                                            if (check_valid_date($userDataArr['userCADOL']))
+                                                                                $userCADOL = date("Y-m-d", strtotime($userDataArr['userCADOL']));
+                                                                            else
+                                                                                $userCADOL = "";
+                                                                            ?>
+                                                                            <label for="userCADOL">Date of Leaving:</label>
+                                                                            <input type="date" class="form-control" name="userCADOL" id="userCADOL" placeholder="Enter Date of Leaving" value="<?php echo $userCADOL; ?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
