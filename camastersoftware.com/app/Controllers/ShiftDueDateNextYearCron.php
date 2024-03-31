@@ -30,7 +30,7 @@ class ShiftDueDateNextYearCron extends BaseController
 
 	public function index()
 	{
-        die("Access Denied");
+        // die("Access Denied");
 	    echo "Cron Started for ".$this->dueYear." ...";
 	    
 	    $this->db->transBegin();
@@ -266,6 +266,7 @@ class ShiftDueDateNextYearCron extends BaseController
         if($this->adminDBConn)
 	    {
             $this->work_tbl=$ca_firm_db_name.".work_tbl";
+            $this->work_junior_map_tbl=$ca_firm_db_name.".work_junior_map_tbl";
             
     	    $workCondtnArr['work_tbl.fk_due_date_id']=$ddId;
             $workCondtnArr['work_tbl.status']=1;
@@ -282,16 +283,54 @@ class ShiftDueDateNextYearCron extends BaseController
                     $uniqueId=strtoupper(substr(str_shuffle(uniqid()), 0, 4));
     
                     $workCode="WORKID_".$uniqueId;
+
+                    $clientWorkInsertArr=array();
     
                     $clientWorkInsertArr[] = [
                         'workCode'=>$workCode,
                         'fk_due_date_id'=>$due_date_id,
                         'fkClientId'=>$e_wrk['fkClientId'],
+                        'juniors'=>$e_wrk['juniors'],
+                        'seniorId'=>$e_wrk['seniorId'],
                         'byCron' => 1,
                         'status' => 1,
                         'createdBy' => $this->adminId,
                         'createdDatetime' => $this->currTimeStamp
                     ];
+
+                    $query=$this->Mcommon->insert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="");
+
+                    if($query['status']==TRUE)
+                    {
+                        $workId=$query['lastID'];
+
+                        $jnrCondtnArr=array();
+
+                        $jnrCondtnArr['work_junior_map_tbl.fkWorkId']=$workId;
+                        $jnrCondtnArr['work_junior_map_tbl.status']="1";
+                        
+                        $query=$this->Mcommon->getRecords($tableName=$this->work_junior_map_tbl, $colNames="work_junior_map_tbl.fkWorkId, work_junior_map_tbl.fkUserId", $jnrCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+                        
+                        $jnrList=$query['userData'];
+
+                        if(!empty($jnrList))
+                        {
+                            $junrInsertArr=array();
+
+                            foreach($jnrList AS $e_jnr)
+                            {
+                                $junrInsertArr[] = [
+                                    'fkWorkId'=>$e_jnr['fkWorkId'],
+                                    'fkUserId'=>$e_jnr['fkUserId'],
+                                    'status' => 1,
+                                    'createdBy' => $this->adminId,
+                                    'createdDatetime' => $this->currTimeStamp
+                                ];
+                            }
+
+                            $this->Mcommon->insert($tableName=$this->work_junior_map_tbl, $junrInsertArr, $returnType="");
+                        }
+                    }
                 }
                 
                 if(!empty($clientWorkInsertArr))
