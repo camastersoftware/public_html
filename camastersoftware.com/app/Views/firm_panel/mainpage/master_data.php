@@ -63,11 +63,38 @@
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-12">
+                            <!-- <div class="col-md-3 col-12">
                                 <a href="<?php echo base_url('getMasterOldStaffData'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
                                             <p class="font-weight-500">Staff Left</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div> -->
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('all-staff'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p>All Staff</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('articleship-staff'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p>Articleship Staff</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('ca-staff'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p>CA Staff</p>
                                         </div>
                                     </div>
                                 </a>
