@@ -15,7 +15,7 @@ class MCharterAccountant extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['ca_name', 'ca_membership_no', 'ca_date_commencement', 'ca_date_intimation_icai', 'ca_date_termination', 'ca_remark', 'ca_img', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['ca_name', 'ca_membership_no', 'ca_date_commencement', 'ca_date_intimation_icai', 'ca_date_termination','ca_date_intimation_icai_termination', 'ca_remark', 'ca_img', 'fkUserId','isAddedFromUser',  'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';

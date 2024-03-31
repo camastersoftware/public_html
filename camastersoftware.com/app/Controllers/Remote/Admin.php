@@ -2845,6 +2845,7 @@ class Admin extends BaseController
                             'art_staff_job_status'=>"",
                             'art_staff_remark'=>"",
                             'fkUserId'=>$userId,
+                            'isAddedFromUser'=>2,
                         ];
 
                         $articleShipCondtnArr['articleship_staff_tbl.fkUserId'] = $userId;
@@ -2874,10 +2875,12 @@ class Admin extends BaseController
                         }
                     }
                     
-                    if($isArticleShipContinue==2){//Incactive User No
-                        $userUpdateArr['user_tbl.status']=2;
+                    if($isArticleShipContinue==2){//Inactive User No
+                        // $userUpdateArr['status']=2;
+                        $upsertArticleshipArr["isOldUser"]=1;
                     }else if($isArticleShipContinue==1){
-                        $userUpdateArr['user_tbl.status']=1;//Contnnue Yes
+                        // $userUpdateArr['status']=1;//Continue Yes
+                        $upsertArticleshipArr["isOldUser"]=2;
                     }
                     // Articleship Code End
                     // print_r($userPassword);

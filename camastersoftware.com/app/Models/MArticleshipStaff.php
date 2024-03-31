@@ -15,7 +15,7 @@ class MArticleshipStaff extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['art_staff_name', 'art_staff_name_of_principle', 'art_staff_reg_no', 'art_staff_membership_no', 'art_staff_img', 'art_staff_date_commencement', 'art_staff_date_intimation_icai', 'art_staff_date_suppl_art', 'art_staff_date_completion_art', 'art_staff_year_completion_inter_ca', 'art_staff_year_completion_final_ca', 'art_staff_job_status', 'art_staff_remark', 'fkUserId', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['art_staff_name', 'art_staff_name_of_principle', 'art_staff_reg_no', 'art_staff_membership_no', 'art_staff_img', 'art_staff_date_commencement', 'art_staff_date_intimation_icai', 'art_staff_date_suppl_art', 'art_staff_date_completion_art', 'art_staff_year_completion_inter_ca', 'art_staff_year_completion_final_ca', 'art_staff_job_status', 'art_staff_remark', 'fkUserId','isAddedFromUser', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';
