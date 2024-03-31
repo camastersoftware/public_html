@@ -66,6 +66,9 @@
                        <a href="<?php echo base_url('staff-administration'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right" style="">Back</button>
                         </a>
+                        <a href="<?php echo base_url('employee-payable-summary'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1 mr-1" style="">Payable Summary</button>
+                        </a>
                     </div>
                 </div>
                 <div class="box-body">

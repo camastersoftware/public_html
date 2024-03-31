@@ -1688,7 +1688,7 @@ class StaffAdministration extends BaseController
         $getCAData = [];
 
         $caCondtnArr['chartered_accuntant_tbl.status'] = 1;
-        $caOrderByArr['chartered_accuntant_tbl.ca_name'] = "ASC";
+        $caOrderByArr['chartered_accuntant_tbl.ca_date_commencement'] = "DESC";
 
         $caQuery = $this->Mquery->getRecords($tableName = $this->chartered_accuntant_tbl, $colNames = "chartered_accuntant_tbl.ca_id as userId, chartered_accuntant_tbl.ca_name as userFullName, chartered_accuntant_tbl.ca_membership_no, chartered_accuntant_tbl.ca_img, chartered_accuntant_tbl.ca_date_commencement, chartered_accuntant_tbl.ca_date_intimation_icai, chartered_accuntant_tbl.ca_date_termination, chartered_accuntant_tbl.ca_remark,chartered_accuntant_tbl.ca_date_intimation_icai_termination", $caCondtnArr, $likeCondtnArr = array(), $JoinArr = array(), $singleRow = FALSE, $caOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
@@ -1731,7 +1731,7 @@ class StaffAdministration extends BaseController
 
         $articlehshipCondtnArr['articleship_staff_tbl.status'] = 1;
 
-        $articlehshipOrderByArr['articleship_staff_tbl.art_staff_name'] = "ASC";
+        $articlehshipOrderByArr['articleship_staff_tbl.art_staff_date_commencement'] = "DESC";
 
         $articlehshipQuery = $this->Mquery->getRecords($tableName = $this->articleship_staff_tbl, $colNames = "articleship_staff_tbl.art_staff_id as userId,articleship_staff_tbl.art_staff_name as userFullName, articleship_staff_tbl.art_staff_name_of_principle, articleship_staff_tbl.art_staff_reg_no, articleship_staff_tbl.art_staff_membership_no, articleship_staff_tbl.art_staff_img, articleship_staff_tbl.art_staff_date_commencement, articleship_staff_tbl.art_staff_date_intimation_icai, articleship_staff_tbl.art_staff_date_suppl_art, articleship_staff_tbl.art_staff_date_completion_art, articleship_staff_tbl.art_staff_year_completion_inter_ca, articleship_staff_tbl.art_staff_year_completion_final_ca, articleship_staff_tbl.art_staff_job_status, articleship_staff_tbl.art_staff_remark", $articlehshipCondtnArr, $likeCondtnArr = array(), $JoinArr = array(), $singleRow = FALSE, $articlehshipOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 

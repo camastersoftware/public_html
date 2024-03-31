@@ -71,7 +71,7 @@
                     </h4>
                     <div class="text-right flex-grow">
 
-                        <a href="<?php echo base_url('staff-administration'); ?>">
+                        <a href="<?php echo base_url('master_data'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Back</button>
                         </a>
                         <!-- <a href="<?php echo base_url('create-chartered-accountant/0'); ?>">
