@@ -97,22 +97,22 @@ defined('PROJ_PREFIX')              ||  define('PROJ_PREFIX', "camastersoftware"
 if($_SERVER['SERVER_NAME']=='ca_master.loc')
 {
     defined('PROJ_BASE_URL')              ||  define('PROJ_BASE_URL', "http://ca_master.loc");
-    defined('ADMIN_DB_NAME')             ||  define('ADMIN_DB_NAME', PROJ_PREFIX."_admin_cron"); // Admin Database Name
+    defined('ADMIN_DB_NAME')             ||  define('ADMIN_DB_NAME', PROJ_PREFIX."_admin"); // Admin Database Name
     defined('ADMIN_DB_USERNAME')         ||  define('ADMIN_DB_USERNAME', "root"); // Admin Database User Name
     defined('ADMIN_DB_PASSWORD')         ||  define('ADMIN_DB_PASSWORD', ""); // Admin Database Password
 
-    defined('FIRM_DB_NAME')             ||  define('FIRM_DB_NAME', PROJ_PREFIX."_ca_firm_cron_"); // Firms Database Name
+    defined('FIRM_DB_NAME')             ||  define('FIRM_DB_NAME', PROJ_PREFIX."_ca_firm_"); // Firms Database Name
     defined('FIRM_DB_USERNAME')         ||  define('FIRM_DB_USERNAME', "root"); // Firms Database User Name
     defined('FIRM_DB_PASSWORD')         ||  define('FIRM_DB_PASSWORD', ""); // Firms Database Password
 }
 else
 {
     defined('PROJ_BASE_URL')              ||  define('PROJ_BASE_URL', "https://camastersoftware.com");
-    defined('ADMIN_DB_NAME')             ||  define('ADMIN_DB_NAME', PROJ_PREFIX."_admin_cron"); // Admin Database Name
+    defined('ADMIN_DB_NAME')             ||  define('ADMIN_DB_NAME', PROJ_PREFIX."_admin"); // Admin Database Name
     defined('ADMIN_DB_USERNAME')         ||  define('ADMIN_DB_USERNAME', "camastersoftware_adm_usr"); // Admin Database User Name
     defined('ADMIN_DB_PASSWORD')         ||  define('ADMIN_DB_PASSWORD', "^,57k}ab-0+^"); // Admin Database Password
 
-    defined('FIRM_DB_NAME')             ||  define('FIRM_DB_NAME', PROJ_PREFIX."_ca_firm_cron_"); // Firms Database Name
+    defined('FIRM_DB_NAME')             ||  define('FIRM_DB_NAME', PROJ_PREFIX."_ca_firm_"); // Firms Database Name
     defined('FIRM_DB_USERNAME')         ||  define('FIRM_DB_USERNAME', "camastersoftware_firm_user"); // Firms Database User Name
     defined('FIRM_DB_PASSWORD')         ||  define('FIRM_DB_PASSWORD', "_W8_16dQ$;)S"); // Firms Database Password
 }
