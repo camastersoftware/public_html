@@ -634,14 +634,14 @@
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label for="userArtEndDate">Date of End of Articleship:</label>
-                                                                            <input type="date" class="form-control" name="userArtEndDate" id="userArtEndDate" placeholder="Enter End Date of Articleship">
+                                                                            <label for="userICAICommDate">Intimation to ICAI-Commencemene:</label>
+                                                                            <input type="date" class="form-control" name="userICAICommDate" id="userICAICommDate" placeholder="Intimation to ICAI-Commencemene Date">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label for="userICAICommDate">Intimation to ICAI-Commencemene:</label>
-                                                                            <input type="date" class="form-control" name="userICAICommDate" id="userICAICommDate" placeholder="Intimation to ICAI-Commencemene Date">
+                                                                            <label for="userArtEndDate">Date of End of Articleship:</label>
+                                                                            <input type="date" class="form-control" name="userArtEndDate" id="userArtEndDate" placeholder="Enter End Date of Articleship">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
@@ -686,14 +686,14 @@
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label for="userCADOL">Date of Leaving:</label>
-                                                                            <input type="date" class="form-control" name="userCADOL" id="userCADOL" placeholder="Enter Date of Leaving">
+                                                                            <label for="userICAIJoin">Intimation to ICAI-Joining:</label>
+                                                                            <input type="date" class="form-control" name="userICAIJoin" id="userICAIJoin" placeholder="Enter Intimation to ICAI-Joining Date">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label for="userICAIJoin">Intimation to ICAI-Joining:</label>
-                                                                            <input type="date" class="form-control" name="userICAIJoin" id="userICAIJoin" placeholder="Enter Intimation to ICAI-Joining Date">
+                                                                            <label for="userCADOL">Date of Leaving:</label>
+                                                                            <input type="date" class="form-control" name="userCADOL" id="userCADOL" placeholder="Enter Date of Leaving">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
