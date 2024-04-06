@@ -40,6 +40,8 @@ class Mdue_date extends Model
         'ext_due_date',
         'doc_file',
         'due_notes',
+        'byCron',
+        'last_due_date_id',
         'status',
         'createdBy',
         'createdDatetime',
