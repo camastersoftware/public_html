@@ -30,7 +30,19 @@ class ShiftDueDateNextYearCron extends BaseController
 
 	public function index()
 	{
-        // die("Access Denied");
+	    $this->MTestCron = new \App\Models\MTestCron();
+
+        $cronRunMsg = "Cron run successfully at - ".$this->currTimeStamp;
+	    
+	    $testCronInsertArr=array(
+            'testDesc' => $cronRunMsg
+        );
+        
+        $this->MTestCron->save($testCronInsertArr);
+        
+        die($cronRunMsg);
+        
+        die("Access Denied");
 	    echo "Cron Started for ".$this->dueYear." ...";
 	    
 	    $this->db->transBegin();
