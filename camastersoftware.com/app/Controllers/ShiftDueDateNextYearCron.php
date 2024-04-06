@@ -318,7 +318,7 @@ class ShiftDueDateNextYearCron extends BaseController
 
                         $jnrCondtnArr=array();
 
-                        $jnrCondtnArr['work_junior_map_tbl.fkWorkId']=$workId;
+                        $jnrCondtnArr['work_junior_map_tbl.fkWorkId']=$e_wrk['workId'];
                         $jnrCondtnArr['work_junior_map_tbl.status']="1";
                         
                         $query=$this->Mcommon->getRecords($tableName=$this->work_junior_map_tbl, $colNames="work_junior_map_tbl.fkWorkId, work_junior_map_tbl.fkUserId", $jnrCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
@@ -332,7 +332,7 @@ class ShiftDueDateNextYearCron extends BaseController
                             foreach($jnrList AS $e_jnr)
                             {
                                 $junrInsertArr[] = [
-                                    'fkWorkId'=>$e_jnr['fkWorkId'],
+                                    'fkWorkId'=>$workId,
                                     'fkUserId'=>$e_jnr['fkUserId'],
                                     'status' => 1,
                                     'createdBy' => $this->adminId,
