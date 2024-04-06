@@ -6,7 +6,7 @@ class Extra extends BaseController
     public function __construct()
     {
         $this->Mact_option = new \App\Models\Mact_option();
-        $this->MNonRegularDueDateFor = new \App\Models\MNonRegularDueDateFor();
+        // $this->MNonRegularDueDateFor = new \App\Models\MNonRegularDueDateFor();
     }
 
     public function getOptions()
@@ -31,6 +31,8 @@ class Extra extends BaseController
 
     public function getFirmOptions()
     {
+        $this->MNonRegularDueDateFor = new \App\Models\MNonRegularDueDateFor();
+        
         $due_act=$this->request->getPost('due_act');
         $set_value=$this->request->getPost('set_value');
         
