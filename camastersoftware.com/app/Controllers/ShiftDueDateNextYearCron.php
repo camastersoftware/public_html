@@ -131,6 +131,7 @@ class ShiftDueDateNextYearCron extends BaseController
                 $e_dd['due_date']=$nextDueDate;
                 $e_dd['isExt']=2;
                 $e_dd['byCron']=1;
+                $e_dd['last_due_date_id']=$ddId;
                 $e_dd['createdDatetime']=$this->currTimeStamp;
                 
                 $nextYrDueDateInsertArr[]=$e_dd;
