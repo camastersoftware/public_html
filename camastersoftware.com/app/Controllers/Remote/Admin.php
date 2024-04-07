@@ -48,6 +48,7 @@ class Admin extends BaseController
         $this->client_act_map_tbl=$tableArr['client_act_map_tbl'];
         $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
         $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
+        $this->non_regular_due_date_tbl = $tableArr['non_regular_due_date_tbl'];
     }
 
     public function getGroups()
@@ -1146,6 +1147,25 @@ class Admin extends BaseController
             $clientContactRemark=$this->request->getPost('edit_clientContactRemark');
             $clientContactDesgtn=$this->request->getPost('edit_clientContactDesgtn');
 
+            $cust_actId_arr=$this->request->getPost('cust_actId[]');
+            $non_rglr_due_state_arr=$this->request->getPost('non_rglr_due_state[]');
+            $non_rglr_due_act_arr=$this->request->getPost('non_rglr_due_act[]');
+            $non_rglr_due_date_for_arr=$this->request->getPost('non_rglr_due_date_for[]');
+            $non_rglr_applicable_form_arr=$this->request->getPost('non_rglr_applicable_form[]');
+            $non_rglr_under_section_arr=$this->request->getPost('non_rglr_under_section[]');
+            $non_rglr_periodicity_arr=$this->request->getPost('non_rglr_periodicity[]');
+            $non_rglr_daily_date_arr=$this->request->getPost('non_rglr_daily_date[]');
+            $non_rglr_period_month_arr=$this->request->getPost('non_rglr_period_month[]');
+            $non_rglr_period_year_arr=$this->request->getPost('non_rglr_period_year[]');
+            $non_rglr_f_period_month_arr=$this->request->getPost('non_rglr_f_period_month[]');
+            $non_rglr_f_period_year_arr=$this->request->getPost('non_rglr_f_period_year[]');
+            $non_rglr_t_period_month_arr=$this->request->getPost('non_rglr_t_period_month[]');
+            $non_rglr_t_period_year_arr=$this->request->getPost('non_rglr_t_period_year[]');
+            $non_rglr_finYear_arr=$this->request->getPost('non_rglr_finYear[]');
+            $non_rglr_due_date_arr=$this->request->getPost('non_rglr_due_date[]');
+            $non_rglr_event_date_arr=$this->request->getPost('non_rglr_event_date[]');
+            $non_rglr_due_notes_arr=$this->request->getPost('non_rglr_due_notes[]');
+
             // print_r($clientRegDocumentFile);
             // print_r($client_document_file);
             // print_r($edit_client_document_old_file);
@@ -1755,6 +1775,60 @@ class Admin extends BaseController
         	    
         	    $this->Mcontact->save($contactUpdateArr);
     	    }
+
+            $non_rglr_due_date_insert_array=array();
+
+            if(!empty($cust_actId_arr))
+            {
+                foreach($cust_actId_arr AS $k_cust_act=>$e_cust_act)
+                {
+                    $non_rglr_due_state=(isset($non_rglr_due_state_arr[$k_cust_act])) ? $non_rglr_due_state_arr[$k_cust_act] : "";
+                    $non_rglr_due_act=(isset($non_rglr_due_act_arr[$k_cust_act])) ? $non_rglr_due_act_arr[$k_cust_act] : "";
+                    $non_rglr_due_date_for=(isset($non_rglr_due_date_for_arr[$k_cust_act])) ? $non_rglr_due_date_for_arr[$k_cust_act] : "";
+                    $non_rglr_applicable_form=(isset($non_rglr_applicable_form_arr[$k_cust_act])) ? $non_rglr_applicable_form_arr[$k_cust_act] : "";
+                    $non_rglr_under_section=(isset($non_rglr_under_section_arr[$k_cust_act])) ? $non_rglr_under_section_arr[$k_cust_act] : "";
+                    $non_rglr_periodicity=(isset($non_rglr_periodicity_arr[$k_cust_act])) ? $non_rglr_periodicity_arr[$k_cust_act] : "";
+                    $non_rglr_daily_date=(isset($non_rglr_daily_date_arr[$k_cust_act])) ? $non_rglr_daily_date_arr[$k_cust_act] : "";
+                    $non_rglr_period_month=(isset($non_rglr_period_month_arr[$k_cust_act])) ? $non_rglr_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_period_year=(isset($non_rglr_period_year_arr[$k_cust_act])) ? $non_rglr_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_f_period_month=(isset($non_rglr_f_period_month_arr[$k_cust_act])) ? $non_rglr_f_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_f_period_year=(isset($non_rglr_f_period_year_arr[$k_cust_act])) ? $non_rglr_f_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_t_period_month=(isset($non_rglr_t_period_month_arr[$k_cust_act])) ? $non_rglr_t_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_t_period_year=(isset($non_rglr_t_period_year_arr[$k_cust_act])) ? $non_rglr_t_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_finYear=(isset($non_rglr_finYear_arr[$k_cust_act])) ? $non_rglr_finYear_arr[$k_cust_act] : "";
+                    $non_rglr_due_date=(isset($non_rglr_due_date_arr[$k_cust_act])) ? $non_rglr_due_date_arr[$k_cust_act] : "";
+                    $non_rglr_event_date=(isset($non_rglr_event_date_arr[$k_cust_act])) ? $non_rglr_event_date_arr[$k_cust_act] : "";
+                    $non_rglr_due_notes=(isset($non_rglr_due_notes_arr[$k_cust_act])) ? $non_rglr_due_notes_arr[$k_cust_act] : "";
+
+                    $non_rglr_due_date_insert_array[]=array(
+                        "non_rglr_due_state" => $non_rglr_due_state,
+                        "non_rglr_due_act" => $non_rglr_due_act,
+                        "non_rglr_due_date_for" => $non_rglr_due_date_for,
+                        "non_rglr_applicable_form" => $non_rglr_applicable_form,
+                        "non_rglr_under_section" => $non_rglr_under_section,
+                        "non_rglr_periodicity" => $non_rglr_periodicity,
+                        "non_rglr_daily_date" => $non_rglr_daily_date,
+                        "non_rglr_period_month" => $non_rglr_period_month,
+                        "non_rglr_period_year" => $non_rglr_period_year,
+                        "non_rglr_f_period_month" => $non_rglr_f_period_month,
+                        "non_rglr_f_period_year" => $non_rglr_f_period_year,
+                        "non_rglr_t_period_month" => $non_rglr_t_period_month,
+                        "non_rglr_t_period_year" => $non_rglr_t_period_year,
+                        "non_rglr_finYear" => $non_rglr_finYear,
+                        "non_rglr_due_date" => $non_rglr_due_date,
+                        "non_rglr_event_date" => $non_rglr_event_date,
+                        "non_rglr_due_notes" => $non_rglr_due_notes,
+                        'fkClientId'=>$clientId,
+                        'status' => 1,
+                        'createdBy' => $this->adminId,
+                        'createdDatetime' => $this->currTimeStamp
+                    );
+                }
+            }
+
+            if(!empty($non_rglr_due_date_insert_array)){
+                $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+            }
         }
 
         if($this->db->transStatus() === FALSE || !empty($errorArr)){
@@ -3270,6 +3344,43 @@ class Admin extends BaseController
         $this->data['dueDatesArr']=$dueDatesArr;
 
         return view('remote/admin/search_due_date', $this->data);
+    }
+
+    public function set_cust_due_date()
+    {
+        $this->data['due_date_for']=$due_date_for=$this->request->getPost('due_date_for');
+        $this->data['applicable_form']=$applicable_form=$this->request->getPost('applicable_form');
+        $this->data['under_section']=$under_section=$this->request->getPost('under_section');
+        $this->data['periodicity']=$periodicity=$this->request->getPost('periodicity');
+        $this->data['daily_date']=$daily_date=$this->request->getPost('daily_date');
+        $this->data['period_month']=$period_month=$this->request->getPost('period_month');
+        $this->data['period_year']=$period_year=$this->request->getPost('period_year');
+        $this->data['f_period_month']=$f_period_month=$this->request->getPost('f_period_month');
+        $this->data['f_period_year']=$f_period_year=$this->request->getPost('f_period_year');
+        $this->data['t_period_month']=$t_period_month=$this->request->getPost('t_period_month');
+        $this->data['t_period_year']=$t_period_year=$this->request->getPost('t_period_year');
+        $this->data['finYear']=$finYear=$this->request->getPost('finYear');
+        $this->data['event_date']=$event_date=$this->request->getPost('event_date');
+        $this->data['due_date']=$due_date=$this->request->getPost('due_date');
+        $this->data['due_notes']=$due_notes=$this->request->getPost('due_notes');
+        $this->data['due_act']=$due_act=$this->request->getPost('due_act');
+        $this->data['due_act_name']=$due_act_name=$this->request->getPost('due_act_name');
+        $this->data['due_state']=$due_state=$this->request->getPost('due_state');
+        $prevCustActs=$this->request->getPost('prevCustActs');
+
+        $prevCustActArr=array();
+        
+        if(!empty($prevCustActs))
+            $prevCustActArr=explode(',', $prevCustActs);
+
+        $isActSel="";
+        
+        if(in_array($due_act, $prevCustActArr))
+            $isActSel="selected";
+            
+        $this->data['isActSel']=$isActSel;
+        
+        return view('remote/admin/set_cust_due_date', $this->data);
     }
 
     public function delete_client_due_date()

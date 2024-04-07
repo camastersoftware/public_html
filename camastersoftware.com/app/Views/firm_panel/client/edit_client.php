@@ -69,7 +69,7 @@
     .tab_body_div .nav-item .nav-link{
         border-radius: 12px !important;
         display: inline-block !important;
-        width: 75% !important;
+        width: 80% !important;
         font-size: 18px !important;
     }
     
@@ -165,6 +165,10 @@
     }
     
     .getActModal .box{
+        cursor: pointer !important;
+    }
+
+    .getCustActModal .box{
         cursor: pointer !important;
     }
     
@@ -295,12 +299,12 @@
                                         </li>	
                                         <li class="nav-item"> 
                                             <a class="nav-link" data-toggle="tab" id="act_applicable_tab_head" href="#act_applicable_tab" role="tab" aria-controls="profile">
-                                                <span class="hidden-xs-down year-color">Act Applicable</span>
+                                                <span class="hidden-xs-down year-color">Regular Due Dates</span>
                                             </a>
                                         </li>	
                                         <li class="nav-item"> 
                                             <a class="nav-link" data-toggle="tab" id="non_regular_due_date_tab_head" href="#non_regular_due_date_tab" role="tab" aria-controls="profile">
-                                                <span class="hidden-xs-down year-color">Non-Regular Due Dates</span>
+                                                <span class="hidden-xs-down year-color">Event Based Due Dates</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -981,7 +985,7 @@
                                                                     <div class="form-group row">
                                                                         <div class="col-md-12">
                                                                             <div class="state due-month">
-                                                                                <h4 class="text-white font-weight-bold m-0"> Select Act</h4>
+                                                                                <h4 class="text-white font-weight-bold m-0">Select Regular Due Dates</h4>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1224,182 +1228,65 @@
                                                         <!------------------------------------------------ Non-Regular Due Dates - Start ------------------------------------------------>
                                                         <div class="tab-pane fade" id="non_regular_due_date_tab" role="tabpanel" aria-labelledby="non_regular_due_date_tab">
                                                             <div class="row">
-                                                                <div class="col-md-12 col-lg-12 mt-3">
+                                                                <div class="col-md-12">
+                                                                    <div class="row clientNameLabelDiv">
+                                                                        <div class="col-md-12 text-center">
+                                                                            <span class="font-weight-bold clientNameLabelVal"></span>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <hr>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12 col-lg-12">
                                                                     <div class="form-group row">
                                                                         <div class="col-md-12">
                                                                             <div class="state sec_heading">
-                                                                                <h4 class="text-white font-weight-bold m-0">Non-Regular Due Dates</h4>
+                                                                                <h4 class="text-white font-weight-bold m-0">Create Event Based Due Dates</h4>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <hr>
                                                                 </div>
                                                                 <div class="col-md-12 col-lg-12">
-                                                                    <div class="form-group row mb-0">
-                                                                        <div class="col-md-12">
-                                                                            <div class="row">
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="due_act">Act:</label>
-                                                                                        <select class="custom-select form-control" id="due_act" name="due_act">
-                                                                                            <option value="">Select Act</option>
-                                                                                            <?php if(!empty($actArr)): ?>
-                                                                                                <?php foreach($actArr AS $e_act): ?>
-                                                                                                    <option value="<?php echo $e_act['act_id']; ?>" <?= set_select('due_act', $e_act['act_id']) ?>><?php echo $e_act['act_name']; ?></option>
-                                                                                                <?php endforeach; ?>
-                                                                                            <?php endif; ?>
-                                                                                        </select>
+                                                                    <div class="demo-checkbox mb-10 actDivClass">
+                                                                        <div class="row">
+                                                                            <?php if(!empty($actList)): ?>
+                                                                                <?php foreach($actList AS $e_act): ?>
+                                                                                    <div class="col-md-4">
+                                                                                        <input type="checkbox" name='edit_cust_actId[]' id="edit_cust_actId<?php echo $e_act['act_id']; ?>" class="filled-in edit_cust_acts_checkbox" value="<?php echo $e_act['act_id']; ?>" data-act_name="<?php echo $e_act['act_name']; ?>" />
+                                                                                        <label for="edit_cust_actId<?php echo $e_act['act_id']; ?>" ><?php echo $e_act['act_name']; ?></label>	
                                                                                     </div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="due_date_for">Due Date For:</label>
-                                                                                        <select class="custom-select form-control" id="due_date_for" name="due_date_for">
-                                                                                            <option value="">Select Due Date For</option>
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="periodicity">Periodicity:</label>
-                                                                                        <select class="custom-select form-control" id="periodicity" name="periodicity">
-                                                                                            <option value="">Select Periodicity</option>
-                                                                                            <?php if(!empty($periodArr)): ?>
-                                                                                                <?php foreach($periodArr AS $e_prd): ?>
-                                                                                                    <option value="<?php echo $e_prd['periodicity_id']; ?>" <?= set_select('periodicity', $e_prd['periodicity_id']) ?>><?php echo $e_prd['periodicity_name']; ?></option>
-                                                                                                <?php endforeach; ?>
-                                                                                            <?php endif; ?>
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-6" id="period_div">
-                                                                                    <div class="form-group">
-                                                                                        <label for="period_label">Period:</label>
-                                                                                        <div id="daily_div">
-                                                                                            <input type="date" name="daily_date" id="period_daily">
-                                                                                        </div>
-                                                                                        <div id="monthly_div">
-                                                                                            <div class="row">
-                                                                                                <div class="col-md-3">
-                                                                                                    <select class="custom-select form-control" id="period_month" name="period_month">
-                                                                                                        <option value="">Select Month</option>
-                                                                                                        <?php for($m_no=1;$m_no<13;$m_no++): ?>
-                                                                                                        <?php
-                                                                                                            if($m_no<=9)
-                                                                                                                $m=$m_no+3;
-                                                                                                            else
-                                                                                                                $m=$m_no-9;
-                                                                                                        ?>
-                                                                                                            <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
-                                                                                                        <?php endfor; ?>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="col-md-3">
-                                                                                                    <select class="custom-select form-control" id="period_year" name="period_year">
-                                                                                                        <option value="">Select Year</option>
-                                                                                                        <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
-                                                                                                            <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-                                                                                                        <?php endfor; ?>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div id="range_div">
-                                                                                            <div class="row">
-                                                                                                <div class="col-md-3">
-                                                                                                    <div class="form-group">
-                                                                                                        <span for="date" class="mt-5">From:</span>
-                                                                                                        <select class="custom-select form-control" id="f_period_month" name="f_period_month">
-                                                                                                            <option value="">Select Month</option>
-                                                                                                            <?php for($m_no=1;$m_no<13;$m_no++): ?>
-                                                                                                                <?php
-                                                                                                                    if($m_no<=9)
-                                                                                                                        $m=$m_no+3;
-                                                                                                                    else
-                                                                                                                        $m=$m_no-9;
-                                                                                                                ?>
-                                                                                                                <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
-                                                                                                            <?php endfor; ?>
-                                                                                                        </select>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="col-md-3">
-                                                                                                    <div class="form-group mt-20">
-                                                                                                        <select class="custom-select form-control" id="f_period_year" name="f_period_year">
-                                                                                                            <option value="">Select Year</option>
-                                                                                                            <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
-                                                                                                                <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-                                                                                                            <?php endfor; ?>
-                                                                                                        </select>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="col-md-3">
-                                                                                                    <div class="form-group">
-                                                                                                        <span for="date" class="mt-5">To:</span>
-                                                                                                        <select class="custom-select form-control" id="t_period_month" name="t_period_month">
-                                                                                                            <option value="">Select Month</option>
-                                                                                                            <?php for($m_no=1;$m_no<13;$m_no++): ?>
-                                                                                                                <?php
-                                                                                                                    if($m_no<=9)
-                                                                                                                        $m=$m_no+3;
-                                                                                                                    else
-                                                                                                                        $m=$m_no-9;
-                                                                                                                ?>
-                                                                                                                <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
-                                                                                                            <?php endfor; ?>
-                                                                                                        </select>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="col-md-3">
-                                                                                                    <div class="form-group mt-20">
-                                                                                                        <select class="custom-select form-control" id="t_period_year" name="t_period_year">
-                                                                                                            <option value="">Select Year</option>
-                                                                                                            <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
-                                                                                                                <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-                                                                                                            <?php endfor; ?>
-                                                                                                        </select>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="finYear">Financial Year:</label>
-                                                                                        <select class="custom-select form-control" id="finYear" name="finYear">
-                                                                                            <option value="">Select Financial Year</option>
-                                                                                            <?php for($d=(date('Y')+2); $d>=2011; $d--): ?>
-                                                                                                <?php $dueYr=$d."-".(substr($d+1, 2)); ?>
-                                                                                                <option value="<?php echo $dueYr; ?>" <?php echo set_select('finYear', $dueYr); ?> ><?php echo $dueYr; ?></option>
-                                                                                            <?php endfor; ?>
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="due_date">Due Date:</label><br>
-                                                                                        <input type="date" name="due_date" id="due_date">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="doc_file">Document : <small class="text-danger">(Only pdf is accepted)</small></label><br>
-                                                                                        <input type="file" name="doc_file" id="doc_file">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-12">
-                                                                                    <div class="form-group">
-                                                                                        <label for="due_notes">Notes:</label>
-                                                                                        <div id="ckeditor_textarea"></div>
-                                                                                        <textarea name="due_notes" id="due_notes" class="form-control textarea_input hide" rows="20" placeholder="Enter Notes"></textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                                <?php endforeach; ?>
+                                                                            <?php endif; ?>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>   
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-lg-12">
+                                                                    <div class="form-group row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="state due-month">
+                                                                                <h4 class="text-white font-weight-bold m-0">Allocate/Manage Due Dates</h4>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="demo-checkbox">
+                                                                        <div class="row text-center edit_selected_cust_acts_div">
+                                                                            <div class="col-md-12">
+                                                                                <h4>Acts not selected</h4>
+                                                                            </div>	
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row sel_cust_act_due_date">
+                                                            </div>
                                                         </div>
                                                         <!------------------------------------------------ Non-Regular Due Dates - End ------------------------------------------------>
                                                     </div>
@@ -1468,6 +1355,196 @@
     <div class="modal fade actsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="actFormDiv"></div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade custActsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="" method="POST" id="custActWiseForm">
+                    <div class="modal-header">
+                        <h4 class="modal-title selectedCustActTitle"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row mb-0">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="due_date_for">Due Date For:</label><br>
+                                            <input type="text" class="form-control" name="due_date_for" id="due_date_for" placeholder="Enter Due Date For">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="applicable_form">Applicable Form:</label><br>
+                                            <input type="text" class="form-control" name="applicable_form" id="applicable_form" placeholder="Enter Applicable Form">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="under_section">Under Section:</label><br>
+                                            <input type="text" class="form-control" name="under_section" id="under_section" placeholder="Enter Under Section">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 hide">
+                                        <div class="form-group">
+                                            <label for="periodicity">Periodicity:</label>
+                                            <select class="custom-select form-control" id="periodicity" name="periodicity">
+                                                <option value="">Select Periodicity</option>
+                                                <?php if(!empty($periodArr)): ?>
+                                                    <?php foreach($periodArr AS $e_prd): ?>
+                                                        <option value="<?php echo $e_prd['periodicity_id']; ?>" <?= set_select('periodicity', $e_prd['periodicity_id']) ?>><?php echo $e_prd['periodicity_name']; ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 hide" id="period_div">
+                                        <div class="form-group">
+                                            <label for="period_label">Period:</label>
+                                            <div id="daily_div">
+                                                <input type="date" class="form-control" name="daily_date" id="period_daily">
+                                            </div>
+                                            <div id="monthly_div">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <select class="custom-select form-control" id="period_month" name="period_month">
+                                                            <option value="">Select Month</option>
+                                                            <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                                            <?php
+                                                                if($m_no<=9)
+                                                                    $m=$m_no+3;
+                                                                else
+                                                                    $m=$m_no-9;
+                                                            ?>
+                                                                <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
+                                                            <?php endfor; ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <select class="custom-select form-control" id="period_year" name="period_year">
+                                                            <option value="">Select Year</option>
+                                                            <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
+                                                                <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                                                            <?php endfor; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="range_div">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <span for="date" class="mt-5">From:</span>
+                                                            <select class="custom-select form-control" id="f_period_month" name="f_period_month">
+                                                                <option value="">Select Month</option>
+                                                                <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                                                    <?php
+                                                                        if($m_no<=9)
+                                                                            $m=$m_no+3;
+                                                                        else
+                                                                            $m=$m_no-9;
+                                                                    ?>
+                                                                    <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
+                                                                <?php endfor; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group mt-20">
+                                                            <select class="custom-select form-control" id="f_period_year" name="f_period_year">
+                                                                <option value="">Select Year</option>
+                                                                <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
+                                                                    <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                                                                <?php endfor; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <span for="date" class="mt-5">To:</span>
+                                                            <select class="custom-select form-control" id="t_period_month" name="t_period_month">
+                                                                <option value="">Select Month</option>
+                                                                <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                                                    <?php
+                                                                        if($m_no<=9)
+                                                                            $m=$m_no+3;
+                                                                        else
+                                                                            $m=$m_no-9;
+                                                                    ?>
+                                                                    <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
+                                                                <?php endfor; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group mt-20">
+                                                            <select class="custom-select form-control" id="t_period_year" name="t_period_year">
+                                                                <option value="">Select Year</option>
+                                                                <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
+                                                                    <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                                                                <?php endfor; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="finYear">Financial Year:</label>
+                                            <select class="custom-select form-control" id="finYear" name="finYear">
+                                                <option value="">Select Financial Year</option>
+                                                <?php for($d=(date('Y')+2); $d>=2011; $d--): ?>
+                                                    <?php $dueYr=$d."-".(substr($d+1, 2)); ?>
+                                                    <option value="<?php echo $dueYr; ?>" <?php echo set_select('finYear', $dueYr); ?> ><?php echo $dueYr; ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="event_date">Date of Event:</label><br>
+                                            <input type="date" class="form-control" name="event_date" id="event_date" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="due_date">Due Date:</label><br>
+                                            <input type="date" class="form-control" name="due_date" id="due_date" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="doc_file">Document : <small class="text-danger">(Only pdf is accepted)</small></label><br>
+                                            <input type="file" class="form-control" name="doc_file" id="doc_file">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="due_notes">Notes:</label>
+                                            <div id="ckeditor_textarea"></div>
+                                            <textarea name="due_notes" id="due_notes" class="form-control textarea_input hide" rows="20" placeholder="Enter Notes"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-right" style="width: 100%;">
+                        <input type="hidden" name="due_act" id="due_act" value="" />
+                        <input type="hidden" name="due_act_name" id="due_act_name" class="selectedCustActInput" value="" />
+                        <input type="hidden" name="due_state" value="12" />
+                        <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                        <button type="submit" name="submit" class="btn btn-success text-left submitCustActData">Submit</button>
+                    </div>
+                </form>
+            </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
@@ -1736,6 +1813,42 @@
     
                 $('.edit_selected_acts_div').html(selectedActsText);
             });
+
+            var actCustClass="";
+            var selectedCustActsText = "";
+            var selectedCustActsArr = [];
+            var selectedCustActIdsArr = [];
+            $('.edit_cust_acts_checkbox').on('click', function(){
+    
+                selectedCustActsText = "";
+                selectedCustActsArr = [];
+                selectedCustActIdsArr = [];
+    
+                $(".edit_cust_acts_checkbox:checked").each(function(){
+    
+                    // var actText=$(this).siblings('label').text();
+                    var actText=$(this).data('act_name');
+                    var actId=$(this).val();
+    
+                    selectedCustActsArr.push(actText);
+                    selectedCustActIdsArr.push(actId);
+                });
+    
+                $(selectedCustActsArr).each(function(i, val){
+    
+                    var selActId=selectedCustActIdsArr[i];
+    
+                    if(search(selActId, workActIds))
+                        actCustClass="";
+                    else
+                        actCustClass="box-header";
+    
+                    selectedCustActsText+='<div class="col-md-4 getCustActModal" data-actid="'+selActId+'"><div class="box box-inverse box-primary"><div class="'+actCustClass+' box-head with-border"><h4 class="box-title"><strong>'+val+'</strong></h4></div></div></div>';
+                });
+    
+                $('.edit_selected_cust_acts_div').html(selectedCustActsText);
+            });
+            
     
             // $('.edit_acts_checkbox:checked').trigger('click');
     
@@ -1939,6 +2052,16 @@
                         // alert("Request: "+JSON.stringify(request));
                     }
                 });
+            });
+
+            $('body').on('click', '.getCustActModal', function(){
+    
+                var selAct = $(this).data('actid');
+                var selActName = $(this).find('strong').text();
+                $("#due_act").val(selAct);
+                $(".selectedCustActTitle").html(selActName);
+                $(".selectedCustActInput").val(selActName);
+                $('.custActsModal').modal('show');
             });
             
             checkedSelAct();
@@ -2577,6 +2700,73 @@
                         // alert("Request: "+JSON.stringify(request));
                     }
                 });
+            });
+
+            $('body').on('click', '.submitCustActData', function(e){
+    
+                e.preventDefault();
+
+                prevSelCustActArr = [];
+                prevSelCustActArray = [];
+                var prevCustActs="";
+                
+                $('input[name="cust_actId[]"]').each(function(ind, actInstance){
+                    prevSelCustActArr.push($(actInstance).val());
+                });
+                
+                prevSelCustActArray = prevSelCustActArr.filter(onlyUnique);
+                
+                if(prevSelCustActArray.length>0)
+                {
+                    prevCustActs=prevSelCustActArray.join(',');
+                }
+
+                var selectedActId = $('#due_act').val();
+                var actFormData = $('#custActWiseForm').serialize();
+
+                var actFormDataVar = actFormData+"&prevCustActs="+prevCustActs;
+
+                var actDataArr = $('#custActWiseForm').serializeArray();
+
+                console.log("actFormData", actFormData);
+                console.log("actDataArr", actDataArr);
+
+                $.ajax({
+                    url : base_url+'/set_cust_due_date',
+                    type : 'POST',
+                    data : actFormDataVar,
+                    dataType: 'html',
+                    success : function(response) {
+                        
+                        if(response!="")
+                        {
+                            if($(".act_tbody_"+selectedActId).length!="")
+                            {
+                                $('.sel_cust_act_due_date .act_tbody_'+selectedActId).append(response);
+                            }
+                            else
+                            {
+                                $('.sel_cust_act_due_date').append(response);
+                            }
+                        }
+                        else
+                        {
+                            swal("Something went wrong!", "", "error");
+                        }
+                        
+                        $('.custActsModal').modal('toggle');
+                        $('.modal-backdrop').remove();
+
+                        $('#custActWiseForm')[0].reset();
+                        $('#periodicity').trigger('change');
+                    },
+                    error : function(request, error)
+                    {
+                        // alert("Request: "+JSON.stringify(request));
+                    }
+                });
+
+
             });
     
             $('body').on('click', '.delete_due_date', function(){
