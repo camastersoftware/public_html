@@ -44,6 +44,7 @@ class Client extends BaseController
         $this->client_partner_tbl=$tableArr['client_partner_tbl'];
         $this->ext_due_date_master_tbl=$tableArr['ext_due_date_master_tbl'];
         $this->tax_payer_due_date_map_tbl=$tableArr['tax_payer_due_date_map_tbl'];
+        $this->non_regular_due_date_tbl=$tableArr['non_regular_due_date_tbl'];
 
         $this->sessCaFirmId=$this->session->get('caFirmId');
 
@@ -220,12 +221,14 @@ class Client extends BaseController
 	
 	public function edit_client($clientId)
     {
+        ini_set('memory_limit', '-1');
+
         $this->data['clientId']=$clientId;
 
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
-        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 
         $pageTitle="Edit Client";
@@ -444,6 +447,74 @@ class Client extends BaseController
                     ->findAll();
 
         $this->data['periodArr']=$periodArr;
+
+        $taxYearArr=explode('-', $this->sessDueDateYear);
+        
+        $taxFromYear=date('Y-m-d', strtotime("01-04-".$taxYearArr[0]));
+        $taxToYear=date('Y-m-d', strtotime("31-03-20".$taxYearArr[1]));
+        
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_date >=']=$taxFromYear;
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_date <=']=$taxToYear;
+        $eventCondtnArr['non_regular_due_date_tbl.status']=1;
+        $eventCondtnArr['non_regular_due_date_tbl.fkClientId']=$clientId;
+            
+        $eventOrderByArr['non_regular_due_date_tbl.non_rglr_due_date']="ASC";
+        $eventOrderByArr['non_regular_due_date_tbl.non_rglr_due_date_id']="ASC";
+
+        $eventJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=non_regular_due_date_tbl.non_rglr_due_act", "type"=>"left");
+ 
+        $eventColNames="
+            non_regular_due_date_tbl.non_rglr_due_date_id,
+            non_regular_due_date_tbl.non_rglr_due_state,
+            non_regular_due_date_tbl.non_rglr_due_act,
+            non_regular_due_date_tbl.non_rglr_due_date_for,
+            non_regular_due_date_tbl.non_rglr_applicable_form,
+            non_regular_due_date_tbl.non_rglr_under_section,
+            non_regular_due_date_tbl.non_rglr_event_date,
+            non_regular_due_date_tbl.non_rglr_periodicity,
+            non_regular_due_date_tbl.non_rglr_daily_date,
+            non_regular_due_date_tbl.non_rglr_period_month,
+            non_regular_due_date_tbl.non_rglr_period_year,
+            non_regular_due_date_tbl.non_rglr_f_period_month,
+            non_regular_due_date_tbl.non_rglr_f_period_year,
+            non_regular_due_date_tbl.non_rglr_t_period_month,
+            non_regular_due_date_tbl.non_rglr_t_period_year,
+            non_regular_due_date_tbl.non_rglr_finYear,
+            non_regular_due_date_tbl.non_rglr_due_date,
+            non_regular_due_date_tbl.non_rglr_due_notes,
+            non_regular_due_date_tbl.non_rglr_doc_file,
+            DATE_FORMAT(non_regular_due_date_tbl.non_rglr_due_date, '%c') AS act_due_month,
+            act_tbl.act_name,
+            act_tbl.act_short_name
+        ";
+
+        $query=$this->Mcommon->getRecords($tableName=$this->non_regular_due_date_tbl, $colNames=$eventColNames, $eventCondtnArr, $likeCondtnArr=array(), $eventJoinArr, $singleRow=FALSE, $eventOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $eventDueDatesArr=$query['userData'];
+
+        $this->data['eventDueDatesArr']=$eventDueDatesArr;
+
+        $evtDDActs=array();
+        $evtDueDatesArr=array();
+
+        if(!empty($eventDueDatesArr))
+        {
+            foreach($eventDueDatesArr AS $e_evt)
+            {
+                $evtDDActs[$e_evt['non_rglr_due_act']]=$e_evt['act_name'];
+                $evtDueDatesArr[$e_evt['non_rglr_due_act']][]=$e_evt;
+            }
+        }
+
+        $this->data['evtDDActs']=$evtDDActs;
+        $this->data['evtDueDatesArr']=$evtDueDatesArr;
+
+        $evtDDActArr=array();
+
+        if(!empty($eventDueDatesArr))
+            $evtDDActArr=array_unique(array_column($eventDueDatesArr, 'non_rglr_due_act'));
+
+        $this->data['evtDDActArr']=$evtDDActArr;
 
         return view('firm_panel/client/edit_client', $this->data);
     }
