@@ -17,7 +17,7 @@
         </thead>
         <tbody class="row-hover act_tbody_<?php echo $due_act; ?>">
 <?php endif; ?>
-            <tr class="row-3 row_<?php echo $due_act; ?>" style="background-color:#f6fbff;">
+            <tr class="row-3 row_<?php echo $due_act.$randomId; ?>" style="background-color:#f6fbff;">
                 <td class="column-1 text-left pl-25" style="width: 26% !important;">
                     <?php 
                         if(!empty($due_date_for))
@@ -126,12 +126,12 @@
                     <input type="hidden" name="non_rglr_event_date[]" value="<?php echo $event_date_val; ?>">
                     <input type="hidden" name="non_rglr_due_notes[]" value="<?php echo $due_notes; ?>">
                     
-                    <button type="button" class="waves-effect waves-light btn btn-sm btn-submit mb-5" data-toggle="modal" data-target="#modal_view<?php echo $due_act; ?>">
+                    <button type="button" class="waves-effect waves-light btn btn-sm btn-submit mb-5" data-toggle="modal" data-target="#modal_view<?php echo $due_act.$randomId; ?>">
                         Note
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal center-modal fade" id="modal_view<?php echo $due_act; ?>" tabindex="-1">
+                    <div class="modal center-modal fade" id="modal_view<?php echo $due_act.$randomId; ?>" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -152,7 +152,7 @@
                     <!-- /.modal -->
                 </td>
                 <td class="column-9 text-center" style="width: 5% !important;" nowrap>
-                    <a href="javascript:void(0);" class="delete_due_date" data-id="<?php echo $due_act; ?>" data-due="" data-client="">
+                    <a href="javascript:void(0);" class="delete_event_due_date" data-id="<?php echo $due_act.$randomId; ?>" data-due="" data-client="">
                         <i class="fa fa-trash fa-1x text-danger" style="font-size: 20px !important;"></i>
                     </a>
                 </td>

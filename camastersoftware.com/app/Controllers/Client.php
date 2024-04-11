@@ -221,6 +221,8 @@ class Client extends BaseController
 	
 	public function edit_client($clientId)
     {
+        ini_set('memory_limit', '-1');
+
         $this->data['clientId']=$clientId;
 
         $uri = service('uri');
@@ -463,6 +465,7 @@ class Client extends BaseController
  
         $eventColNames="
             non_regular_due_date_tbl.non_rglr_due_date_id,
+            non_regular_due_date_tbl.non_rglr_due_state,
             non_regular_due_date_tbl.non_rglr_due_act,
             non_regular_due_date_tbl.non_rglr_due_date_for,
             non_regular_due_date_tbl.non_rglr_applicable_form,
@@ -490,6 +493,28 @@ class Client extends BaseController
         $eventDueDatesArr=$query['userData'];
 
         $this->data['eventDueDatesArr']=$eventDueDatesArr;
+
+        $evtDDActs=array();
+        $evtDueDatesArr=array();
+
+        if(!empty($eventDueDatesArr))
+        {
+            foreach($eventDueDatesArr AS $e_evt)
+            {
+                $evtDDActs[$e_evt['non_rglr_due_act']]=$e_evt['act_name'];
+                $evtDueDatesArr[$e_evt['non_rglr_due_act']][]=$e_evt;
+            }
+        }
+
+        $this->data['evtDDActs']=$evtDDActs;
+        $this->data['evtDueDatesArr']=$evtDueDatesArr;
+
+        $evtDDActArr=array();
+
+        if(!empty($eventDueDatesArr))
+            $evtDDActArr=array_unique(array_column($eventDueDatesArr, 'non_rglr_due_act'));
+
+        $this->data['evtDDActArr']=$evtDDActArr;
 
         return view('firm_panel/client/edit_client', $this->data);
     }

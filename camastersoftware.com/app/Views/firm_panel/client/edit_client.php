@@ -1254,7 +1254,7 @@
                                                                             <?php if(!empty($actList)): ?>
                                                                                 <?php foreach($actList AS $e_act): ?>
                                                                                     <div class="col-md-4">
-                                                                                        <input type="checkbox" name='edit_cust_actId[]' id="edit_cust_actId<?php echo $e_act['act_id']; ?>" class="filled-in edit_cust_acts_checkbox" value="<?php echo $e_act['act_id']; ?>" data-act_name="<?php echo $e_act['act_name']; ?>" />
+                                                                                        <input type="checkbox" name='edit_cust_actId[]' id="edit_cust_actId<?php echo $e_act['act_id']; ?>" class="filled-in edit_cust_acts_checkbox" value="<?php echo $e_act['act_id']; ?>" data-act_name="<?php echo $e_act['act_name']; ?>" <?php if(in_array($e_act['act_id'], $evtDDActArr)): ?>checked<?php endif; ?> <?php if(in_array($e_act['act_id'], $evtDDActArr)): ?>disabled<?php endif; ?> />
                                                                                         <label for="edit_cust_actId<?php echo $e_act['act_id']; ?>" ><?php echo $e_act['act_name']; ?></label>	
                                                                                     </div>
                                                                                 <?php endforeach; ?>
@@ -1286,6 +1286,185 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row sel_cust_act_due_date">
+                                                                <?php if(!empty($evtDDActs)): ?>
+                                                                    <?php foreach($evtDDActs AS $k_evt_act_id=>$e_evt_act_name): ?>
+                                                                        <div class="col-lg-12 col-md-12 act_table_<?= $k_evt_act_id; ?>">
+                                                                            <h4 class="income-tax-head text-center"><?php echo $e_evt_act_name; ?></h4>
+                                                                            <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer allot_due_date">
+                                                                                <thead>
+                                                                                    <tr class="row-1">
+                                                                                        <th class="column-1" nowrap>Due Date For</th>
+                                                                                        <th class="column-3">Section</th>
+                                                                                        <th class="column-4">Form</th>
+                                                                                        <th class="column-5 hide">Periodicity</th>
+                                                                                        <th class="column-6 hide">Period</th>
+                                                                                        <th class="column-7" nowrap>Date of Event</th>
+                                                                                        <th class="column-7" nowrap>Due Date</th>
+                                                                                        <th class="column-8">Note</th>
+                                                                                        <th class="column-9">Action</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody class="row-hover act_tbody_<?php echo $k_evt_act_id; ?>">
+                                                                                <?php
+                                                                                    if(isset($evtDueDatesArr[$k_evt_act_id]))
+                                                                                        $evtDDListArr=$evtDueDatesArr[$k_evt_act_id];
+                                                                                    else
+                                                                                        $evtDDListArr=array();
+                                                                                ?>
+                                                                                <?php if(!empty($evtDDListArr)): ?>
+                                                                                    <?php foreach($evtDDListArr AS $k_evt=>$e_evt): ?>
+                                                                                        <tr class="row-3 row_<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" style="background-color:#f6fbff;">
+                                                                                            <td class="column-1 text-left pl-25" style="width: 26% !important;">
+                                                                                                <?php 
+                                                                                                    if(!empty($e_evt['non_rglr_due_date_for']))
+                                                                                                    {
+                                                                                                        $ddfValue=$e_evt['non_rglr_due_date_for'];
+                                                                                                        
+                                                                                                        if(strlen($e_evt['non_rglr_due_date_for'])>30)
+                                                                                                            $ddfVal=substr($e_evt['non_rglr_due_date_for'], 0, 30)."...";
+                                                                                                        else
+                                                                                                            $ddfVal=$e_evt['non_rglr_due_date_for'];
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        $ddfValue=$ddfVal="N/A";
+                                                                                                    }
+                                                                                                ?>
+                                                                                                <span data-toggle="tooltip" data-original-title="<?= $ddfValue; ?>" style="cursor: pointer;">
+                                                                                                    <?= $ddfVal;  ?>
+                                                                                                </span>
+                                                                                            </td>
+                                                                                            <td class="column-3 text-center" style="width: 10% !important;" nowrap>
+                                                                                                <?php 
+                                                                                                    if(!empty($e_evt['non_rglr_under_section']))
+                                                                                                        echo $e_evt['non_rglr_under_section']; 
+                                                                                                    else
+                                                                                                        echo "N/A"; 
+                                                                                                ?>
+                                                                                            </td>
+                                                                                            <td class="column-4 text-center" style="width: 7% !important;" nowrap>
+                                                                                                <?php 
+                                                                                                    if(!empty($e_evt['non_rglr_applicable_form']))
+                                                                                                        echo $e_evt['non_rglr_applicable_form']; 
+                                                                                                    else
+                                                                                                        echo "N/A"; 
+                                                                                                ?>
+                                                                                            </td>
+                                                                                            <td class="column-5 text-center hide" style="width: 5% !important;" nowrap>
+                                                                                                <?php 
+                                                                                                    if($e_evt['non_rglr_periodicity']=="1")
+                                                                                                    {
+                                                                                                        echo "Daily";
+                                                                                                    }
+                                                                                                    elseif($e_evt['non_rglr_periodicity']=="2")
+                                                                                                    {
+                                                                                                        echo "Monthly";
+                                                                                                    }
+                                                                                                    elseif($e_evt['non_rglr_periodicity']=="3")
+                                                                                                    {
+                                                                                                        echo "Quaterly";
+                                                                                                    }
+                                                                                                    elseif($e_evt['non_rglr_periodicity']=="4")
+                                                                                                    {
+                                                                                                        echo "Half Yearly";
+                                                                                                    }
+                                                                                                    elseif($e_evt['non_rglr_periodicity']=="5")
+                                                                                                    {
+                                                                                                        echo "Annually";
+                                                                                                    }
+                                                                                                ?>
+                                                                                            </td>
+                                                                                            <td class="column-6 text-center hide" style="width: 17% !important;" nowrap>
+                                                                                                <?php 
+                                                                                                    if($e_evt['non_rglr_periodicity']=="1")
+                                                                                                    {
+                                                                                                        echo date("d-M-Y", strtotime($e_evt['non_rglr_daily_date']));
+                                                                                                    }
+                                                                                                    elseif($e_evt['non_rglr_periodicity']=="2")
+                                                                                                    {
+                                                                                                        echo date("M", strtotime("2021-".$e_evt['non_rglr_period_month']."-01"))."-".$e_evt['non_rglr_period_year'];
+                                                                                                    }
+                                                                                                    elseif($e_evt['non_rglr_periodicity']>="3")
+                                                                                                    {
+                                                                                                        echo date("M", strtotime("2021-".$e_evt['non_rglr_f_period_month']."-01"))."-".$e_evt['non_rglr_f_period_year']." - ".date("M", strtotime("2021-".$e_evt['non_rglr_t_period_month']."-01"))."-".$e_evt['non_rglr_t_period_year'];
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        echo "N/A";
+                                                                                                    }
+                                                                                                ?>
+                                                                                            </td>
+                                                                                            <td class="column-7 text-center" style="width: 5% !important;" nowrap>
+                                                                                                <?php echo (check_valid_date($e_evt['non_rglr_event_date'])) ? date('d-m-Y', strtotime($e_evt['non_rglr_event_date'])) : "N/A"; ?>
+                                                                                            </td>
+                                                                                            <td class="column-7 text-center" style="width: 5% !important;" nowrap>
+                                                                                                <?php echo (check_valid_date($e_evt['non_rglr_due_date'])) ? date('d-m-Y', strtotime($e_evt['non_rglr_due_date'])) : "N/A"; ?>
+                                                                                            </td>
+                                                                                            <td class="column-8 text-center" style="width: 5% !important;" nowrap>
+                                                                                                <?php $due_date_val=(check_valid_date($e_evt['non_rglr_due_date'])) ? date('Y-m-d', strtotime($e_evt['non_rglr_due_date'])) : ""; ?>
+                                                                                                <?php $event_date_val=(check_valid_date($e_evt['non_rglr_event_date'])) ? date('Y-m-d', strtotime($e_evt['non_rglr_event_date'])) : ""; ?>
+                                                                                                <input type="hidden" name="non_rglr_due_date_id[]" value="<?php echo $e_evt['non_rglr_due_date_id']; ?>">
+                                                                                                <input type="hidden" name="cust_actId[]" value="<?php echo $e_evt['non_rglr_due_act']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_due_state[]" value="<?php echo $e_evt['non_rglr_due_state']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_due_act[]" value="<?php echo $e_evt['non_rglr_due_act']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_due_date_for[]" value="<?php echo $e_evt['non_rglr_due_date_for']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_applicable_form[]" value="<?php echo $e_evt['non_rglr_applicable_form']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_under_section[]" value="<?php echo $e_evt['non_rglr_under_section']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_periodicity[]" value="<?php echo $e_evt['non_rglr_periodicity']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_daily_date[]" value="<?php echo $e_evt['non_rglr_daily_date']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_period_month[]" value="<?php echo $e_evt['non_rglr_period_month']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_period_year[]" value="<?php echo $e_evt['non_rglr_period_year']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_f_period_month[]" value="<?php echo $e_evt['non_rglr_f_period_month']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_f_period_year[]" value="<?php echo $e_evt['non_rglr_f_period_year']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_t_period_month[]" value="<?php echo $e_evt['non_rglr_t_period_month']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_t_period_year[]" value="<?php echo $e_evt['non_rglr_t_period_year']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_finYear[]" value="<?php echo $e_evt['non_rglr_finYear']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_due_date[]" value="<?php echo $e_evt['non_rglr_due_date']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_event_date[]" value="<?php echo $e_evt['non_rglr_event_date']; ?>">
+                                                                                                <input type="hidden" name="non_rglr_due_notes[]" value="<?php echo $e_evt['non_rglr_due_notes']; ?>">
+                                                                                                
+                                                                                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit mb-5" data-toggle="modal" data-target="#modal_view<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>">
+                                                                                                    Note
+                                                                                                </button>
+
+                                                                                                <!-- Modal -->
+                                                                                                <div class="modal center-modal fade" id="modal_view<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" tabindex="-1">
+                                                                                                    <div class="modal-dialog">
+                                                                                                        <div class="modal-content">
+                                                                                                            <div class="modal-header">
+                                                                                                                <h5 class="modal-title">Acts Details</h5>
+                                                                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                            <div class="modal-body">
+                                                                                                                <p><?php echo $e_evt['non_rglr_due_notes']; ?></p>
+                                                                                                            </div>
+                                                                                                            <div class="modal-footer modal-footer-uniform text-right">
+                                                                                                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <!-- /.modal -->
+                                                                                            </td>
+                                                                                            <td class="column-9 text-center" style="width: 5% !important;" nowrap>
+                                                                                                <a href="javascript:void(0);" class="delete_event_due_date" data-id="<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" data-due="<?php echo $e_evt['non_rglr_due_date_id']; ?>" data-client="<?php echo $clientId; ?>" data-act="<?= $k_act_id; ?>">
+                                                                                                    <i class="fa fa-trash fa-1x text-danger" style="font-size: 20px !important;"></i>
+                                                                                                </a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <?php endforeach; ?>
+                                                                                    <?php else: ?>
+                                                                                        <tr>
+                                                                                            <td colspan="9"><center>No Records</center></td>
+                                                                                        </tr>
+                                                                                    <?php endif; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
                                                             </div>
                                                         </div>
                                                         <!------------------------------------------------ Non-Regular Due Dates - End ------------------------------------------------>
@@ -1774,6 +1953,7 @@
     <script type="text/javascript">
     
         var workActIds=<?php echo json_encode($workActArr); ?>;
+        var workEventActIds=<?php echo json_encode($evtDDActArr); ?>;
                 
         $(document).ready(function(){
     
@@ -2065,6 +2245,7 @@
             });
             
             checkedSelAct();
+            checkedSelEventAct();
         });
     
         function checkedSelAct()
@@ -2098,6 +2279,43 @@
             });
     
             $('.edit_selected_acts_div').html(selectedActsText);
+        }
+
+        function checkedSelEventAct()
+        {
+            var eventActClass="";
+            var selectedEventActsText = "";
+            var selectedEventActsArr = [];
+            var selectedEventActIdsArr = [];
+    
+            $(".edit_cust_acts_checkbox:checked").each(function(){
+    
+                // var actText=$(this).siblings('label').text();
+                var actText=$(this).data('act_name');
+                var actId=$(this).val();
+    
+                selectedEventActsArr.push(actText);
+                selectedEventActIdsArr.push(actId);
+            });
+
+            console.log("workEventActIds", workEventActIds);
+            console.log("selectedEventActsArr", selectedEventActsArr);
+            console.log("selectedEventActIdsArr", selectedEventActIdsArr);
+    
+            $(selectedEventActsArr).each(function(i, val){
+    
+                var selEventActId=selectedEventActIdsArr[i];
+    
+                // if(jQuery.inArray(selActId, workActIds) !== -1)
+                if(search(selEventActId, workEventActIds))
+                    eventActClass="";
+                else
+                    eventActClass="box-header";
+    
+                selectedEventActsText+='<div class="col-md-4 getCustActModal" data-actid="'+selEventActId+'"><div class="box box-inverse box-primary"><div class="box_head_cl '+eventActClass+' box-head with-border"><h4 class="box-title"><strong>'+val+'</strong></h4></div></div></div>';
+            });
+    
+            $('.edit_selected_cust_acts_div').html(selectedEventActsText);
         }
     
         function search(nameKey, myArray){
@@ -2678,7 +2896,7 @@
                         
                         if(response!="")
                         {
-                            if($(".act_tbody_"+selectedActId).length!="")
+                            if($(".sel_act_due_date .act_tbody_"+selectedActId).length!="")
                             {
                                 $('.sel_act_due_date .act_tbody_'+selectedActId).append(response);
                             }
@@ -2740,7 +2958,7 @@
                         
                         if(response!="")
                         {
-                            if($(".act_tbody_"+selectedActId).length!="")
+                            if($(".sel_cust_act_due_date .act_tbody_"+selectedActId).length!="")
                             {
                                 $('.sel_cust_act_due_date .act_tbody_'+selectedActId).append(response);
                             }
@@ -2834,6 +3052,75 @@
                         {
                             $('.row_'+row_id).remove();
     
+                            swal("Deleted!", "", "success");
+                        }
+                    }
+                });
+            });
+
+            $('body').on('click', '.delete_event_due_date', function(){
+    
+                var row_id=$(this).data('id');
+                var due_date_id=$(this).data('due');
+                var client_id=$(this).data('client');
+                var act_id=$(this).data('act');
+
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you really want to delete this client's event due date ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function(isConfirm){
+                    if (isConfirm) {
+
+                        if(due_date_id!="")
+                        {
+                            $.ajax({
+                                url : base_url+'/delete_client_event_due_date',
+                                type : 'POST',
+                                data : {
+                                    'due_date_id':due_date_id,
+                                    'client_id':client_id,
+                                    'act_id':act_id,
+                                },
+                                dataType: 'json',
+                                success : function(response) {
+
+                                    var resStatus = response['status'];
+                                    var resMsg = response['message'];
+                                    var resUserData = response['userdata'];
+                                    var resEnableAct = response['enableAct'];
+
+                                    if(resStatus==true)
+                                    {
+                                        $('.row_'+row_id).remove();
+                                        
+                                        if(resEnableAct==true)
+                                        {
+                                            $('#edit_cust_actId'+act_id).prop('disabled', false);
+                                        }
+                                        
+                                        swal("Deleted", resMsg, "success");
+                                    }
+                                    else
+                                    {
+                                        swal("Error!", resMsg, "error");
+                                    }
+                                },
+                                error : function(request, error) {
+                                    // alert("Request: "+JSON.stringify(request));
+                                }
+                            });
+                        }
+                        else
+                        {
+                            $('.row_'+row_id).remove();
+
                             swal("Deleted!", "", "success");
                         }
                     }
