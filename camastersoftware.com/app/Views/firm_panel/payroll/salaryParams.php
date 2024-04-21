@@ -256,7 +256,7 @@
     }
 
     function getParamsEffectedBy() {
-        $("#title").text("Edit");
+        
         var salaryParameterEffectBy = $("#salaryParameterEffectBy").val();
         if (salaryParameterEffectBy == 1) {
             $("#salaryParameterAmountDiv").show();
@@ -273,6 +273,8 @@
     }
 
     function getParamDetails(item) {
+        $("#title").text("Edit");
+        
         var ItemDetails = JSON.parse(item);
         $("#salaryParameterId").val(ItemDetails.salaryParameterId);
         $("#salaryParameter").val(ItemDetails.salaryParameter);
