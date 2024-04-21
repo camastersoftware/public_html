@@ -104,7 +104,27 @@
             }
           }
         });
+
+        console.log("$('.ckeditor_textarea_elem').length", $('.ckeditor_textarea_elem').length);
+
+        if ($('.ckeditor_textarea_elem').length > 0) {
+            // Initialize CKEditor for each textarea
+            $('.ckeditor_textarea_elem').each(function(index) {
+                var textarea = $(this).next('.textarea_input_elem');
+                CKEDITOR.replace($(this).attr('id'), {
+                    on: {
+                        instanceReady: function (ev) {
+                            ev.editor.on('change', function () {
+                                textarea.val(ev.editor.getData());
+                            });
+                        }
+                    }
+                });
+            });
+        }
     });
+
+    
             // ClassicEditor
             // .create( document.querySelector( '#ckeditor_textarea' ) )
             // .then( editor => {

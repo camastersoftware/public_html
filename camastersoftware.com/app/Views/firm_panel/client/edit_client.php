@@ -1188,7 +1188,7 @@
                                                                                                     <div class="modal-dialog">
                                                                                                         <div class="modal-content">
                                                                                                             <div class="modal-header">
-                                                                                                                <h5 class="modal-title">Acts Details</h5>
+                                                                                                                <h5 class="modal-title">Note</h5>
                                                                                                                 <button type="button" class="close" data-dismiss="modal">
                                                                                                                     <span aria-hidden="true">&times;</span>
                                                                                                                 </button>
@@ -1313,7 +1313,7 @@
                                                                                 ?>
                                                                                 <?php if(!empty($evtDDListArr)): ?>
                                                                                     <?php foreach($evtDDListArr AS $k_evt=>$e_evt): ?>
-                                                                                        <tr class="row-3 row_<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" style="background-color:#f6fbff;">
+                                                                                        <tr class="row-3 row_<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" id="event_dd_row_<?= $e_evt['non_rglr_due_date_id']; ?>" style="background-color:#f6fbff;">
                                                                                             <td class="column-1 text-left pl-25" style="width: 26% !important;">
                                                                                                 <?php 
                                                                                                     if(!empty($e_evt['non_rglr_due_date_for']))
@@ -1330,11 +1330,11 @@
                                                                                                         $ddfValue=$ddfVal="N/A";
                                                                                                     }
                                                                                                 ?>
-                                                                                                <span data-toggle="tooltip" data-original-title="<?= $ddfValue; ?>" style="cursor: pointer;">
+                                                                                                <span data-toggle="tooltip" class="non_rglr_due_date_for" data-original-title="<?= $ddfValue; ?>" style="cursor: pointer;">
                                                                                                     <?= $ddfVal;  ?>
                                                                                                 </span>
                                                                                             </td>
-                                                                                            <td class="column-3 text-center" style="width: 10% !important;" nowrap>
+                                                                                            <td class="column-3 text-center non_rglr_under_section" style="width: 10% !important;" nowrap>
                                                                                                 <?php 
                                                                                                     if(!empty($e_evt['non_rglr_under_section']))
                                                                                                         echo $e_evt['non_rglr_under_section']; 
@@ -1342,7 +1342,7 @@
                                                                                                         echo "N/A"; 
                                                                                                 ?>
                                                                                             </td>
-                                                                                            <td class="column-4 text-center" style="width: 7% !important;" nowrap>
+                                                                                            <td class="column-4 text-center non_rglr_applicable_form" style="width: 7% !important;" nowrap>
                                                                                                 <?php 
                                                                                                     if(!empty($e_evt['non_rglr_applicable_form']))
                                                                                                         echo $e_evt['non_rglr_applicable_form']; 
@@ -1394,10 +1394,10 @@
                                                                                                     }
                                                                                                 ?>
                                                                                             </td>
-                                                                                            <td class="column-7 text-center" style="width: 5% !important;" nowrap>
+                                                                                            <td class="column-7 text-center non_rglr_event_date" style="width: 5% !important;" nowrap>
                                                                                                 <?php echo (check_valid_date($e_evt['non_rglr_event_date'])) ? date('d-m-Y', strtotime($e_evt['non_rglr_event_date'])) : "N/A"; ?>
                                                                                             </td>
-                                                                                            <td class="column-7 text-center" style="width: 5% !important;" nowrap>
+                                                                                            <td class="column-7 text-center non_rglr_due_date" style="width: 5% !important;" nowrap>
                                                                                                 <?php echo (check_valid_date($e_evt['non_rglr_due_date'])) ? date('d-m-Y', strtotime($e_evt['non_rglr_due_date'])) : "N/A"; ?>
                                                                                             </td>
                                                                                             <td class="column-8 text-center" style="width: 5% !important;" nowrap>
@@ -1432,13 +1432,13 @@
                                                                                                     <div class="modal-dialog">
                                                                                                         <div class="modal-content">
                                                                                                             <div class="modal-header">
-                                                                                                                <h5 class="modal-title">Acts Details</h5>
+                                                                                                                <h5 class="modal-title">Note</h5>
                                                                                                                 <button type="button" class="close" data-dismiss="modal">
                                                                                                                     <span aria-hidden="true">&times;</span>
                                                                                                                 </button>
                                                                                                             </div>
                                                                                                             <div class="modal-body">
-                                                                                                                <p><?php echo $e_evt['non_rglr_due_notes']; ?></p>
+                                                                                                                <p class="non_rglr_due_notes"><?php echo $e_evt['non_rglr_due_notes']; ?></p>
                                                                                                             </div>
                                                                                                             <div class="modal-footer modal-footer-uniform text-right">
                                                                                                                 <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
@@ -1449,7 +1449,10 @@
                                                                                                 <!-- /.modal -->
                                                                                             </td>
                                                                                             <td class="column-9 text-center" style="width: 5% !important;" nowrap>
-                                                                                                <a href="javascript:void(0);" class="delete_event_due_date" data-id="<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" data-due="<?php echo $e_evt['non_rglr_due_date_id']; ?>" data-client="<?php echo $clientId; ?>" data-act="<?= $k_act_id; ?>">
+                                                                                                <a href="javascript:void(0);" data-toggle="modal" data-target="#edit_event_dd_<?= $e_evt['non_rglr_due_date_id']; ?>">
+                                                                                                    <i class="fa fa-pencil fa-1x text-warning" style="font-size: 20px !important;"></i>
+                                                                                                </a>
+                                                                                                <a href="javascript:void(0);" class="delete_event_due_date" data-id="<?php echo $k_evt_act_id.$k_evt.$e_evt['non_rglr_due_date_id']; ?>" data-due="<?php echo $e_evt['non_rglr_due_date_id']; ?>" data-client="<?php echo $clientId; ?>" data-act="<?= $k_evt_act_id; ?>">
                                                                                                     <i class="fa fa-trash fa-1x text-danger" style="font-size: 20px !important;"></i>
                                                                                                 </a>
                                                                                             </td>
@@ -1698,12 +1701,6 @@
                                             <input type="date" class="form-control" name="due_date" id="due_date" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="doc_file">Document : <small class="text-danger">(Only pdf is accepted)</small></label><br>
-                                            <input type="file" class="form-control" name="doc_file" id="doc_file">
-                                        </div>
-                                    </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="due_notes">Notes:</label>
@@ -1728,6 +1725,209 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
+    <?php if(!empty($evtDDActs)): ?>
+        <?php foreach($evtDDActs AS $k_evt_act_id=>$e_evt_act_name): ?>
+            <?php if(isset($evtDueDatesArr[$k_evt_act_id])): ?>
+                <?php $eventDDListArray=$evtDueDatesArr[$k_evt_act_id]; ?>
+
+                <?php if(!empty($eventDDListArray)): ?>
+                    <?php foreach($eventDDListArray AS $k_evt_id=>$e_evt): ?>
+
+                        <?php $event_dd_id = $e_evt["non_rglr_due_date_id"]; ?>
+
+                        <div class="modal fade" id="edit_event_dd_<?= $event_dd_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <form action="" method="POST" id="custActWiseEditForm<?= $event_dd_id; ?>">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"><?= $e_evt["act_name"]; ?></h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group row mb-0">
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="due_date_for_evt_<?= $event_dd_id; ?>">Due Date For:</label><br>
+                                                                <input type="text" class="form-control" name="non_rglr_due_date_for" id="due_date_for_evt_<?= $event_dd_id; ?>" placeholder="Enter Due Date For" value="<?= $e_evt["non_rglr_due_date_for"]; ?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="applicable_form_evt_<?= $event_dd_id; ?>">Applicable Form:</label><br>
+                                                                <input type="text" class="form-control" name="non_rglr_applicable_form" id="applicable_form_evt_<?= $event_dd_id; ?>" placeholder="Enter Applicable Form" value="<?= $e_evt["non_rglr_applicable_form"]; ?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="under_section_evt_<?= $event_dd_id; ?>">Under Section:</label><br>
+                                                                <input type="text" class="form-control" name="non_rglr_under_section" id="under_section_evt_<?= $event_dd_id; ?>" placeholder="Enter Under Section" value="<?= $e_evt["non_rglr_under_section"]; ?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 hide">
+                                                            <div class="form-group">
+                                                                <label for="periodicity">Periodicity:</label>
+                                                                <select class="custom-select form-control" id="periodicity" name="periodicity">
+                                                                    <option value="">Select Periodicity</option>
+                                                                    <?php if(!empty($periodArr)): ?>
+                                                                        <?php foreach($periodArr AS $e_prd): ?>
+                                                                            <option value="<?php echo $e_prd['periodicity_id']; ?>" <?= set_select('periodicity', $e_prd['periodicity_id']) ?>><?php echo $e_prd['periodicity_name']; ?></option>
+                                                                        <?php endforeach; ?>
+                                                                    <?php endif; ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 hide" id="period_div">
+                                                            <div class="form-group">
+                                                                <label for="period_label">Period:</label>
+                                                                <div id="daily_div">
+                                                                    <input type="date" class="form-control" name="daily_date" id="period_daily">
+                                                                </div>
+                                                                <div id="monthly_div">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <select class="custom-select form-control" id="period_month" name="period_month">
+                                                                                <option value="">Select Month</option>
+                                                                                <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                                                                <?php
+                                                                                    if($m_no<=9)
+                                                                                        $m=$m_no+3;
+                                                                                    else
+                                                                                        $m=$m_no-9;
+                                                                                ?>
+                                                                                    <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
+                                                                                <?php endfor; ?>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <select class="custom-select form-control" id="period_year" name="period_year">
+                                                                                <option value="">Select Year</option>
+                                                                                <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
+                                                                                    <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                                                                                <?php endfor; ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="range_div">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <span for="date" class="mt-5">From:</span>
+                                                                                <select class="custom-select form-control" id="f_period_month" name="f_period_month">
+                                                                                    <option value="">Select Month</option>
+                                                                                    <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                                                                        <?php
+                                                                                            if($m_no<=9)
+                                                                                                $m=$m_no+3;
+                                                                                            else
+                                                                                                $m=$m_no-9;
+                                                                                        ?>
+                                                                                        <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
+                                                                                    <?php endfor; ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group mt-20">
+                                                                                <select class="custom-select form-control" id="f_period_year" name="f_period_year">
+                                                                                    <option value="">Select Year</option>
+                                                                                    <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
+                                                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                                                                                    <?php endfor; ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <span for="date" class="mt-5">To:</span>
+                                                                                <select class="custom-select form-control" id="t_period_month" name="t_period_month">
+                                                                                    <option value="">Select Month</option>
+                                                                                    <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                                                                        <?php
+                                                                                            if($m_no<=9)
+                                                                                                $m=$m_no+3;
+                                                                                            else
+                                                                                                $m=$m_no-9;
+                                                                                        ?>
+                                                                                        <option value="<?php echo $m; ?>"><?php echo date('F', strtotime("2021-".$m."-1")); ?></option>
+                                                                                    <?php endfor; ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group mt-20">
+                                                                                <select class="custom-select form-control" id="t_period_year" name="t_period_year">
+                                                                                    <option value="">Select Year</option>
+                                                                                    <?php for($y=(date('Y')+2);$y>=2011;$y--): ?>
+                                                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                                                                                    <?php endfor; ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="finYear_evt_<?= $event_dd_id; ?>">Financial Year:</label>
+                                                                <select class="custom-select form-control" id="finYear_evt_<?= $event_dd_id; ?>" name="non_rglr_finYear">
+                                                                    <option value="">Select Financial Year</option>
+                                                                    <?php for($d=(date('Y')+2); $d>=2011; $d--): ?>
+                                                                        <?php $dueYr=$d."-".(substr($d+1, 2)); ?>
+                                                                        <option value="<?php echo $dueYr; ?>" <?php echo set_select('finYear', $dueYr, $dueYr==$e_evt["non_rglr_finYear"] ? true:false); ?> ><?php echo $dueYr; ?></option>
+                                                                    <?php endfor; ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <?php $non_rglr_event_date=(check_valid_date($e_evt['non_rglr_event_date'])) ? date('Y-m-d', strtotime($e_evt['non_rglr_event_date'])) : ""; ?>
+                                                                <label for="event_date_evt_<?= $event_dd_id; ?>">Date of Event:</label><br>
+                                                                <input type="date" class="form-control" name="non_rglr_event_date" id="event_date_evt_<?= $event_dd_id; ?>" value="<?= $non_rglr_event_date; ?>" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <?php $non_rglr_due_date=(check_valid_date($e_evt['non_rglr_due_date'])) ? date('Y-m-d', strtotime($e_evt['non_rglr_due_date'])) : ""; ?>
+                                                                <label for="due_date_evt_<?= $event_dd_id; ?>">Due Date:</label><br>
+                                                                <input type="date" class="form-control" name="non_rglr_due_date" id="due_date_evt_<?= $event_dd_id; ?>" value="<?= $non_rglr_due_date; ?>" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="due_notes_evt_<?= $event_dd_id; ?>">Notes:</label>
+                                                                <?php $non_rglr_due_notes_data = htmlspecialchars_decode(html_entity_decode($e_evt['non_rglr_due_notes'])) ?>
+                                                                <div class="ckeditor_textarea_elem" id="due_notes_editor_evt_<?= $event_dd_id; ?>"><?= $non_rglr_due_notes_data; ?></div>
+                                                                <input type="hidden" name="non_rglr_due_notes" id="due_notes_evt_<?= $event_dd_id; ?>" class="textarea_input_elem" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer text-right" style="width: 100%;">
+                                            <input type="hidden" name="non_rglr_due_date_id" id="non_rglr_due_date_id" value="<?= $event_dd_id; ?>" />
+                                            <input type="hidden" name="non_rglr_due_state" value="<?= $e_evt["non_rglr_due_state"]; ?>" />
+                                            <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                                            <button type="submit" name="submit" class="btn btn-success text-left submitEditCustActData" data-id="<?= $event_dd_id; ?>">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
     
     <script type="text/javascript">
             
@@ -1942,6 +2142,8 @@
                                 }
                             });
                         }
+                    }  else {
+                        swal("Cancelled", "You cancelled :)", "error");
                     }
                 });
                 
@@ -1971,7 +2173,6 @@
     
                 $(".edit_acts_checkbox:checked").each(function(){
     
-                    // var actText=$(this).siblings('label').text();
                     var actText=$(this).data('act_name');
                     var actId=$(this).val();
     
@@ -2006,7 +2207,6 @@
     
                 $(".edit_cust_acts_checkbox:checked").each(function(){
     
-                    // var actText=$(this).siblings('label').text();
                     var actText=$(this).data('act_name');
                     var actId=$(this).val();
     
@@ -2018,7 +2218,7 @@
     
                     var selActId=selectedCustActIdsArr[i];
     
-                    if(search(selActId, workActIds))
+                    if(search(selActId, workEventActIds))
                         actCustClass="";
                     else
                         actCustClass="box-header";
@@ -2028,23 +2228,6 @@
     
                 $('.edit_selected_cust_acts_div').html(selectedCustActsText);
             });
-            
-    
-            // $('.edit_acts_checkbox:checked').trigger('click');
-    
-            // $(".tab-wizard").steps({
-            //     headerTag: "h6"
-            //     , bodyTag: "section"
-            //     , transitionEffect: "none"
-            //     , titleTemplate: '<span class="step">#index#</span> #title#'
-            //     , labels: {
-            //         finish: "Submit"
-            //     }
-            //     , onFinished: function (event, currentIndex) {
-            //         // swal("Your Order Submitted!", "Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor.");
-                        
-            //     }
-            // });
     
             $('body').on('click', '.getActModal', function(){
     
@@ -2220,7 +2403,6 @@
     
                         $('.actsModal').modal('show');
                         $('#actFormDiv').html(data);
-                        // $('#actTaxPayer').val(selAct);
                         
                         var actTaxPayer=$('#edit_clientBussOrganisationType').val();
                         
@@ -2257,7 +2439,6 @@
     
             $(".edit_acts_checkbox:checked").each(function(){
     
-                // var actText=$(this).siblings('label').text();
                 var actText=$(this).data('act_name');
                 var actId=$(this).val();
     
@@ -2269,7 +2450,6 @@
     
                 var selActId=selectedActIdsArr[i];
     
-                // if(jQuery.inArray(selActId, workActIds) !== -1)
                 if(search(selActId, workActIds))
                     actClass="";
                 else
@@ -2290,7 +2470,6 @@
     
             $(".edit_cust_acts_checkbox:checked").each(function(){
     
-                // var actText=$(this).siblings('label').text();
                 var actText=$(this).data('act_name');
                 var actId=$(this).val();
     
@@ -2306,7 +2485,6 @@
     
                 var selEventActId=selectedEventActIdsArr[i];
     
-                // if(jQuery.inArray(selActId, workActIds) !== -1)
                 if(search(selEventActId, workEventActIds))
                     eventActClass="";
                 else
@@ -2335,7 +2513,6 @@
         $(document).ready(function(){
     
             $('.edit_register_div').hide();
-            // $('.edit_register_div_1').html('<p class="text-danger text-center">Please Select Type of Organisation from Business Details...</p>');
             $('.edit_register_div_1').html('<p class="text-danger text-center"></p>');
             $('.register_label').text("N/A");
     
@@ -2411,9 +2588,6 @@
                     $('.edit_register_div').show();
                     $('#edit_clientRegDocument').attr('placeholder', 'Enter Regn No (if any)');
                     $('.edit_register_label').text("Regn No (if any):");
-                    
-                    // $('.edit_register_div').show();
-                    // $('.edit_register_label').text("As per Trust Deed:");
                 }
                 else if(orgType=="8")
                 {
@@ -2424,35 +2598,23 @@
                 {
                     $('.edit_register_div').hide();
                     $('.edit_register_label').text("N/A");
-                    
-                    // $('.edit_register_div').show();
-                    // $('.edit_register_label').text("As per HUF Deed:");
                 }
                 else if(orgType=="10")
                 {
                     $('.edit_register_div').hide();
                     $('.edit_register_label').text("N/A");
-                    
-                    // $('.edit_register_div').show();
-                    // $('.edit_register_label').text("As per JV Deed:");
                 }
                 else if(orgType=="11")
                 {
                     $('.edit_register_div').show();
                     $('#edit_clientRegDocument').attr('placeholder', 'Enter Regn No (if any)');
                     $('.edit_register_label').text("Regn No (if any):");
-                    
-                    // $('.edit_register_div').hide();
-                    // $('.edit_register_label').text("N/A");
                 }
                 else if(orgType=="12")
                 {
                     $('.edit_register_div').show();
                     $('#edit_clientRegDocument').attr('placeholder', 'Enter Regn No (if any)');
                     $('.edit_register_label').text("Regn No (if any):");
-                    
-                    // $('.edit_register_div').hide();
-                    // $('.edit_register_label').text("N/A");
                 }
                 else if(orgType=="13")
                 {
@@ -2477,13 +2639,6 @@
     
                 if(orgType=="9")
                 {
-                    // $('.steps ul li:nth-child(2)').removeClass('disabled');
-                    // $('.steps ul li:nth-child(2)').addClass('done');
-                    // $('.steps ul li:nth-child(2)').show();
-                    // $('.business_div input').prop('disabled', true);
-                    // $('#client_grp_row').hide();
-                    // $('.edit_register_div').hide();
-    
                     $(".doc_row").each(function(){
     
                         var docIdVal=$(this).data('id');
@@ -2496,26 +2651,12 @@
                 }
                 else if(orgType=="8" || orgType=="3" || orgType=="22" || orgType=="23")
                 {
-                    // $('.steps ul li:nth-child(2)').removeClass('disabled');
-                    // $('.steps ul li:nth-child(2)').addClass('done');
-                    // $('.steps ul li:nth-child(2)').show();
-                    // $('.business_div input').prop('disabled', false);
-                    // $('#client_grp_row').hide();
-                    // $('.edit_register_div').show();
-    
                     $(".doc_row").each(function(){
                         $(this).show();
                     });
                 }
                 else
                 {
-                    // $('.steps ul li:nth-child(2)').removeClass('done');
-                    // $('.steps ul li:nth-child(2)').addClass('disabled');
-                    // $('.steps ul li:nth-child(2)').hide();
-                    // $('.business_div input').prop('disabled', false);
-                    // $('#client_grp_row').show();
-                    // $('.edit_register_div').show();
-    
                     $(".doc_row").each(function(){
                         $(this).show();
                     });
@@ -2613,31 +2754,23 @@
     
                 e.preventDefault();    
                 var clientFormData = new FormData(this);
-    		    
-    		    // var clientFormData = $('.client_form').serialize();
-    
+
                 $.ajax({
-    				url : base_url+'/update_client',
-    				type : 'POST',
-    				data : clientFormData,
-    				dataType: 'json',
+                    url : base_url+'/update_client',
+                    type : 'POST',
+                    data : clientFormData,
+                    dataType: 'json',
                     cache: false,
                     contentType: false,
                     processData: false,
-    				success : function(response) {
+                    success : function(response) {
     
-    					var resStatus = response['status'];
+                        var resStatus = response['status'];
                         var resMsg = response['message'];
                         var resUserData = response['userdata'];
-    					
-    					if(resStatus==true)
-    					{
-    						// $('.client_form')[0].reset();
-                            // window.location.href=base_url+"/admin/clients";
-                            
-                            // swal("Updated", resMsg, "success");
-                            // window.location.reload();
-                            
+                        
+                        if(resStatus==true)
+                        {
                             swal({
                                     title: "Updated", 
                                     text: resMsg, 
@@ -2645,9 +2778,9 @@
                                     function(){
                                         location.reload();
                                 });
-    					}
-    					else
-    					{
+                        }
+                        else
+                        {
                             $.each(resUserData, function(index, value){
                                 
                                 $("#"+index).siblings('span').remove();
@@ -2657,13 +2790,13 @@
                             });
     
                             swal("Error!", resMsg, "error");
-    					}
-    				},
-    				error : function(request, error)
-    				{
+                        }
+                    },
+                    error : function(request, error)
+                    {
     					// alert("Request: "+JSON.stringify(request));
-    				}
-    			});
+                    }
+                });
             });
     
             $('#edit_clientGroup').on('change', function(){
@@ -2690,12 +2823,12 @@
                         var resStatus = response['status'];
                         var resMsg = response['message'];
                         var resUserData = response['userdata'];
-    					
-    					if(resStatus==true)
-    					{
+
+                        if(resStatus==true)
+                        {
                             $('#edit_clientCostCenter').val(resUserData['costCenter']);
                             $('#edit_clientCategory').val(resUserData['categoryName']);
-    					}
+                        }
     
                     },
                     error : function(request, error)
@@ -2709,8 +2842,6 @@
     
                 e.preventDefault();    
                 var clientGroupFormData = new FormData(this);
-    
-                // var clientFormData = $('#add_client_group_form').serialize();
     
                 var clientGroupDataArr = $('#edit_add_client_group_form').serializeArray();
     
@@ -2752,8 +2883,6 @@
                             $('#edit_addClientGrpModal').modal('toggle');
                             $('.modal-backdrop').remove();
     
-                            // $("#edit_addClientGrpModal").modal({backdrop: false});
-    
                             swal("Added", resMsg, "success");
                         }
                         else
@@ -2788,7 +2917,7 @@
         function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
         }
-                
+     
         $(document).ready(function(){
     
             var base_url = "<?php echo base_url(); ?>";
@@ -2813,9 +2942,6 @@
                     prevActs=prevSelActArray.join(',');
                 }
                 
-                // console.log(prevSelActArray);
-                
-                // var actFormData = new FormData($('#actWiseForm'));
                 var selectedActId = $('#selectedActId').val();
                 var actFormData = $('#actWiseForm').serialize();
                 
@@ -2986,6 +3112,95 @@
 
 
             });
+
+            $('body').on('click', '.submitEditCustActData', function(e){
+    
+                e.preventDefault();
+
+                let event_dd_id = $(this).data("id");
+
+                var custActWiseEditForm = $('#custActWiseEditForm'+event_dd_id).serialize();
+
+                var custActWiseEditFormArr = $('#custActWiseEditForm'+event_dd_id).serializeArray();
+
+                $.ajax({
+                    url : base_url+'/edit_cust_due_date',
+                    type : 'POST',
+                    data : custActWiseEditForm,
+                    dataType: 'json',
+                    success : function(response) {
+
+                        $('#edit_event_dd_'+event_dd_id).modal('hide');
+                        $('.modal-backdrop').remove();
+
+                        let resStatus = response.status;
+                        let resMsg = response.message;
+                        let resData = response.data;
+                        
+                        if(resStatus)
+                        {
+                            for(let e_event of custActWiseEditFormArr){
+    
+                                var fieldName=e_event['name'];
+                                var fieldValue=e_event['value'];
+                                var fieldElem = '#event_dd_row_'+event_dd_id+' .'+fieldName;
+
+                                console.log("fieldElem", fieldElem);
+
+                                if(fieldName=="non_rglr_event_date" || fieldName=="non_rglr_due_date"){
+
+                                    if(fieldValue!="")
+                                        fieldValue = fieldValue.split("-").reverse().join("-");
+                                    else
+                                        fieldValue = "N/A";
+
+                                    $(fieldElem).html(fieldValue);
+                                }
+                                else if(fieldName=="non_rglr_due_date_for")
+                                {
+                                    let ddfValue = ddfVal = "";
+                                    if (fieldValue !== null && fieldValue !== undefined) {
+                                        let ddfValue = fieldValue;
+                                        if (ddfValue.length > 30) {
+                                            ddfVal = ddfValue.substring(0, 30) + "...";
+                                        } else {
+                                            ddfVal = ddfValue;
+                                        }
+                                    } else {
+                                        ddfValue = ddfVal = "N/A";
+                                    }
+                                    $(fieldElem).attr("data-original-title", ddfValue);
+                                    $(fieldElem).html(ddfVal);
+                                    // $(fieldElem)
+                                    //     .attr("data-original-title", ddfValue) // Update data-original-title
+                                    //     .tooltip('dispose') // Dispose existing tooltip
+                                    //     .tooltip({ // Reinitialize tooltip with new content
+                                    //         title: ddfValue,
+                                    //         trigger: 'hover',
+                                    //         placement: 'top'
+                                    //     });
+                                }
+                                else
+                                {
+                                    $(fieldElem).html(fieldValue);
+                                }
+                            }
+
+                            swal("Success", resMsg, "success");
+                        }
+                        else
+                        {
+                            swal("Failed", resMsg, "error");
+                        }
+                    },
+                    error : function(request, error)
+                    {
+                        // alert("Request: "+JSON.stringify(request));
+                    }
+                });
+
+
+            });
     
             $('body').on('click', '.delete_due_date', function(){
     
@@ -3054,6 +3269,8 @@
     
                             swal("Deleted!", "", "success");
                         }
+                    } else {
+                        swal("Cancelled", "You cancelled :)", "error");
                     }
                 });
             });
@@ -3123,6 +3340,8 @@
 
                             swal("Deleted!", "", "success");
                         }
+                    } else {
+                        swal("Cancelled", "You cancelled :)", "error");
                     }
                 });
             });
@@ -3141,7 +3360,7 @@
     </script>
     
     <script type="text/javascript">
-    
+
         function showClientName()
         {
             var clientName = $('#edit_clientName').val();
@@ -3179,10 +3398,12 @@
                 $('.clientNameLabelVal').text("");
             }
         }
+
     </script>
 
     <script>
 
+        /*
         $(document).ready(function(){
             
             $('#period_div').hide();
@@ -3386,6 +3607,7 @@
             });
 
         });
+        */
 
     </script>
 <?= $this->endSection(); ?>
