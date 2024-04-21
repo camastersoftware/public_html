@@ -260,6 +260,7 @@ $routes->post('/search_due_date', 'Remote/Admin::search_due_date');
 $routes->post('/delete_client_due_date', 'Remote/Admin::delete_client_due_date');
 $routes->post('/delete_client_event_due_date', 'Remote/Admin::delete_client_event_due_date');
 $routes->post('/set_cust_due_date', 'Remote/Admin::set_cust_due_date');
+$routes->post('/edit_cust_due_date', 'Remote/Admin::edit_cust_due_date');
 
 $routes->get('/clients', 'Client::index');
 $routes->get('/create-client', 'Client::create_client');

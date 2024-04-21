@@ -23,6 +23,7 @@ class Admin extends BaseController
         $this->Mcontact = new \App\Models\Mcontact();
         $this->MArticleshipStaff = new \App\Models\MArticleshipStaff();
         $this->MCharterAccountant = new \App\Models\MCharterAccountant();
+        $this->MNonRegularDueDates = new \App\Models\MNonRegularDueDates();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -462,6 +463,25 @@ class Admin extends BaseController
             $clientBussRemark=$this->request->getPost('clientBussRemark');
             $clientContactRemark=$this->request->getPost('clientContactRemark');
             $clientContactDesgtn=$this->request->getPost('clientContactDesgtn');
+
+            $cust_actId_arr=$this->request->getPost('cust_actId[]');
+            $non_rglr_due_state_arr=$this->request->getPost('non_rglr_due_state[]');
+            $non_rglr_due_act_arr=$this->request->getPost('non_rglr_due_act[]');
+            $non_rglr_due_date_for_arr=$this->request->getPost('non_rglr_due_date_for[]');
+            $non_rglr_applicable_form_arr=$this->request->getPost('non_rglr_applicable_form[]');
+            $non_rglr_under_section_arr=$this->request->getPost('non_rglr_under_section[]');
+            $non_rglr_periodicity_arr=$this->request->getPost('non_rglr_periodicity[]');
+            $non_rglr_daily_date_arr=$this->request->getPost('non_rglr_daily_date[]');
+            $non_rglr_period_month_arr=$this->request->getPost('non_rglr_period_month[]');
+            $non_rglr_period_year_arr=$this->request->getPost('non_rglr_period_year[]');
+            $non_rglr_f_period_month_arr=$this->request->getPost('non_rglr_f_period_month[]');
+            $non_rglr_f_period_year_arr=$this->request->getPost('non_rglr_f_period_year[]');
+            $non_rglr_t_period_month_arr=$this->request->getPost('non_rglr_t_period_month[]');
+            $non_rglr_t_period_year_arr=$this->request->getPost('non_rglr_t_period_year[]');
+            $non_rglr_finYear_arr=$this->request->getPost('non_rglr_finYear[]');
+            $non_rglr_due_date_arr=$this->request->getPost('non_rglr_due_date[]');
+            $non_rglr_event_date_arr=$this->request->getPost('non_rglr_event_date[]');
+            $non_rglr_due_notes_arr=$this->request->getPost('non_rglr_due_notes[]');
 
             $documentFileArr=array();
             
@@ -938,6 +958,60 @@ class Admin extends BaseController
         	    
         	    $this->Mcontact->save($contactInsertArr);
     	    }
+
+            $non_rglr_due_date_insert_array=array();
+
+            if(!empty($cust_actId_arr))
+            {
+                foreach($cust_actId_arr AS $k_cust_act=>$e_cust_act)
+                {
+                    $non_rglr_due_state=(isset($non_rglr_due_state_arr[$k_cust_act])) ? $non_rglr_due_state_arr[$k_cust_act] : "";
+                    $non_rglr_due_act=(isset($non_rglr_due_act_arr[$k_cust_act])) ? $non_rglr_due_act_arr[$k_cust_act] : "";
+                    $non_rglr_due_date_for=(isset($non_rglr_due_date_for_arr[$k_cust_act])) ? $non_rglr_due_date_for_arr[$k_cust_act] : "";
+                    $non_rglr_applicable_form=(isset($non_rglr_applicable_form_arr[$k_cust_act])) ? $non_rglr_applicable_form_arr[$k_cust_act] : "";
+                    $non_rglr_under_section=(isset($non_rglr_under_section_arr[$k_cust_act])) ? $non_rglr_under_section_arr[$k_cust_act] : "";
+                    $non_rglr_periodicity=(isset($non_rglr_periodicity_arr[$k_cust_act])) ? $non_rglr_periodicity_arr[$k_cust_act] : "";
+                    $non_rglr_daily_date=(isset($non_rglr_daily_date_arr[$k_cust_act])) ? $non_rglr_daily_date_arr[$k_cust_act] : "";
+                    $non_rglr_period_month=(isset($non_rglr_period_month_arr[$k_cust_act])) ? $non_rglr_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_period_year=(isset($non_rglr_period_year_arr[$k_cust_act])) ? $non_rglr_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_f_period_month=(isset($non_rglr_f_period_month_arr[$k_cust_act])) ? $non_rglr_f_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_f_period_year=(isset($non_rglr_f_period_year_arr[$k_cust_act])) ? $non_rglr_f_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_t_period_month=(isset($non_rglr_t_period_month_arr[$k_cust_act])) ? $non_rglr_t_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_t_period_year=(isset($non_rglr_t_period_year_arr[$k_cust_act])) ? $non_rglr_t_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_finYear=(isset($non_rglr_finYear_arr[$k_cust_act])) ? $non_rglr_finYear_arr[$k_cust_act] : "";
+                    $non_rglr_due_date=(isset($non_rglr_due_date_arr[$k_cust_act])) ? $non_rglr_due_date_arr[$k_cust_act] : "";
+                    $non_rglr_event_date=(isset($non_rglr_event_date_arr[$k_cust_act])) ? $non_rglr_event_date_arr[$k_cust_act] : "";
+                    $non_rglr_due_notes=(isset($non_rglr_due_notes_arr[$k_cust_act])) ? $non_rglr_due_notes_arr[$k_cust_act] : "";
+
+                    $non_rglr_due_date_insert_array[]=array(
+                        "non_rglr_due_state" => $non_rglr_due_state,
+                        "non_rglr_due_act" => $non_rglr_due_act,
+                        "non_rglr_due_date_for" => $non_rglr_due_date_for,
+                        "non_rglr_applicable_form" => $non_rglr_applicable_form,
+                        "non_rglr_under_section" => $non_rglr_under_section,
+                        "non_rglr_periodicity" => $non_rglr_periodicity,
+                        "non_rglr_daily_date" => $non_rglr_daily_date,
+                        "non_rglr_period_month" => $non_rglr_period_month,
+                        "non_rglr_period_year" => $non_rglr_period_year,
+                        "non_rglr_f_period_month" => $non_rglr_f_period_month,
+                        "non_rglr_f_period_year" => $non_rglr_f_period_year,
+                        "non_rglr_t_period_month" => $non_rglr_t_period_month,
+                        "non_rglr_t_period_year" => $non_rglr_t_period_year,
+                        "non_rglr_finYear" => $non_rglr_finYear,
+                        "non_rglr_due_date" => $non_rglr_due_date,
+                        "non_rglr_event_date" => $non_rglr_event_date,
+                        "non_rglr_due_notes" => $non_rglr_due_notes,
+                        'fkClientId'=>$clientId,
+                        'status' => 1,
+                        'createdBy' => $this->adminId,
+                        'createdDatetime' => $this->currTimeStamp
+                    );
+                }
+            }
+
+            if(!empty($non_rglr_due_date_insert_array)){
+                $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+            }
         }
 
         if($this->db->transStatus() === FALSE || !empty($errorArr)){
@@ -3403,6 +3477,81 @@ class Admin extends BaseController
         $this->data['randomId']=$randomId;
         
         return view('remote/admin/set_cust_due_date', $this->data);
+    }
+
+    public function edit_cust_due_date()
+    {
+        $this->db->transBegin();
+
+        $non_rglr_due_date_id=$this->request->getPost('non_rglr_due_date_id');
+        $due_date_for=$this->request->getPost('non_rglr_due_date_for');
+        $applicable_form=$this->request->getPost('non_rglr_applicable_form');
+        $under_section=$this->request->getPost('non_rglr_under_section');
+        $periodicity=$this->request->getPost('periodicity');
+        $daily_date=$this->request->getPost('daily_date');
+        $period_month=$this->request->getPost('period_month');
+        $period_year=$this->request->getPost('period_year');
+        $f_period_month=$this->request->getPost('f_period_month');
+        $f_period_year=$this->request->getPost('f_period_year');
+        $t_period_month=$this->request->getPost('t_period_month');
+        $t_period_year=$this->request->getPost('t_period_year');
+        $finYear=$this->request->getPost('non_rglr_finYear');
+        $event_date=$this->request->getPost('non_rglr_event_date');
+        $due_date=$this->request->getPost('non_rglr_due_date');
+        $due_notes=$this->request->getPost('non_rglr_due_notes');
+        $due_state=$this->request->getPost('non_rglr_due_state');
+
+        $eventDDUpdateArr=[
+            'non_rglr_due_date_id'=>$non_rglr_due_date_id,
+            "non_rglr_due_state" => $due_state,
+            "non_rglr_due_date_for" => $due_date_for,
+            "non_rglr_applicable_form" => $applicable_form,
+            "non_rglr_under_section" => $under_section,
+            "non_rglr_periodicity" => $periodicity,
+            "non_rglr_daily_date" => $daily_date,
+            "non_rglr_period_month" => $period_month,
+            "non_rglr_period_year" => $period_year,
+            "non_rglr_f_period_month" => $f_period_month,
+            "non_rglr_f_period_year" => $f_period_year,
+            "non_rglr_t_period_month" => $t_period_month,
+            "non_rglr_t_period_year" => $t_period_year,
+            "non_rglr_finYear" => $finYear,
+            "non_rglr_due_date" => $due_date,
+            "non_rglr_event_date" => $event_date,
+            "non_rglr_due_notes" => $due_notes,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+        
+        $this->MNonRegularDueDates->save($eventDDUpdateArr);
+
+        if($this->db->transStatus() === FALSE){
+            
+            $this->db->transRollback();
+
+            $responseArr['status']=FALSE;
+            $responseArr['message']="Event Based Due Date details has not update :(";
+            $responseArr['userdata']=array();
+
+        }else{
+
+            $this->db->transCommit();
+
+            $insertLogArr['section']="Event Based Due Date";
+            $insertLogArr['message']="Event Based Due Date updated";
+            $insertLogArr['ip']=$this->IPAddress;
+            // $insertLogArr['macAddr']=strtok(exec('getmac'), ' ');
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $responseArr['status']=TRUE;
+            $responseArr['message']="Event Based Due Date details has been updated successfully :)";
+            $responseArr['userdata']=array();
+        }
+
+        echo json_encode($responseArr);
     }
 
     public function delete_client_due_date()

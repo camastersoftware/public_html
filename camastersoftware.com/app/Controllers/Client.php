@@ -148,7 +148,7 @@ class Client extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
-        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 
         $pageTitle="Create Client";
@@ -215,6 +215,11 @@ class Client extends BaseController
                         ->findAll();
 
         $this->data['actList']=$actList;
+
+        $periodArr = $this->Mperiodicity->where('status', 1)
+                    ->findAll();
+
+        $this->data['periodArr']=$periodArr;
 
         return view('firm_panel/client/create_client', $this->data);
 	}

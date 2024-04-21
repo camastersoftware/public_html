@@ -16,10 +16,13 @@ class MNonRegularDueDates extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
+        'non_rglr_due_state',
         'non_rglr_due_act',
         'non_rglr_due_date_for',
+        'non_rglr_applicable_form',
+        'non_rglr_under_section',
+        'non_rglr_event_date',
         'non_rglr_periodicity',
-        'non_rglr_due_notes',
         'non_rglr_daily_date',
         'non_rglr_period_month',
         'non_rglr_period_year',
@@ -30,7 +33,8 @@ class MNonRegularDueDates extends Model
         'non_rglr_finYear',
         'non_rglr_due_date',
         'non_rglr_doc_file',
-        'fk_client_id',
+        'non_rglr_due_notes',
+        'fkClientId',
         'status', 
         'createdBy', 
         'createdDatetime', 
