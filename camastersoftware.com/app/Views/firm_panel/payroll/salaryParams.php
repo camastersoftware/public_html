@@ -78,8 +78,8 @@
                                 <tr class="text-center">
                                     <th width="5%">SN</th>
                                     <th>Name</th>
-                                    <th width="10%" >Type</th>
-                                    <th width="10%"  nowrap>Affected By</th>
+                                    <th width="15%" >Type</th>
+                                    <th width="15%"  nowrap>Affected By</th>
                                     <th width="10%" >Amount</th>
                                     <th width="10%" >Percentage</th>
                                     <th width="5%">Action</th>
@@ -100,7 +100,7 @@
                                                     echo "N/A";
                                                 ?>
                                             </td>
-                                            <td class="text-center" width="10%"  nowrap>
+                                            <td class="text-center" width="15%"  nowrap>
                                                 <?php
                                                 if (!empty($e_row['ParameterType']))
                                                     echo $e_row['ParameterType'];
@@ -109,7 +109,7 @@
                                                 ?>
                                             </td>
 
-                                            <td class="text-center" width="10%"  nowrap>
+                                            <td class="text-center" width="15%"  nowrap>
                                                 <?php
                                                 if (!empty($e_row['ParameterEffectBy']))
                                                     echo $e_row['ParameterEffectBy'];
