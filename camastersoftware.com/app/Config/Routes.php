@@ -7,8 +7,7 @@ $routes = Services::routes();
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
-if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
-{
+if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
 	require SYSTEMPATH . 'Config/Routes.php';
 }
 
@@ -922,6 +921,13 @@ $routes->post('chat-get-all-users', 'ChatSection::getUserList');
 
 // Chat Code End
 
+// Payroll Code Start
+$routes->get('/staff-mgmt-payroll', 'Payroll::index');
+$routes->get('/salary-params', 'Payroll::salary_params');
+$routes->post('/add-salary-params', 'Payroll::add_salary_params');
+$routes->post('/edit-salary-params', 'Payroll::edit_salary_params');
+$routes->post('/get-salary-params', 'Payroll::get_salary_params');
+// Payroll Code End
 
 // Websocket Code Start
 $routes->get('websocket/startserver', 'WebSocketController::startServer');
@@ -940,7 +946,6 @@ $routes->get('websocket/startserver', 'WebSocketController::startServer');
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
-if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php'))
-{
+if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
