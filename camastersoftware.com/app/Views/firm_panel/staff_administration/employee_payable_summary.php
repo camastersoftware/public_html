@@ -155,7 +155,7 @@
                 <div class="box-header with-border flexbox text-center">
                     <h4 class="box-title font-weight-bold"><?php echo $pageTitle; ?></h4>
                     <div class="text-right flex-grow">
-                        <a href="<?php echo base_url('employees'); ?>">
+                        <a href="<?php echo base_url('payroll'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark">Back</button>
                         </a>
                     </div>
