@@ -25,8 +25,8 @@
                     <!-- /.box-header -->
                     <div class="box-body">
                         <div class="row"> 
-                            <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('emp-attendance'); ?>">
+                            <!-- <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php //echo base_url('emp-attendance'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
                                             <p>Attendance</p>
@@ -35,14 +35,14 @@
                                 </a>
                             </div>
                             <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('employees'); ?>">
+                                <a href="<?php //echo base_url('employees'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
                                             <p>Employees</p>
                                         </div>
                                     </div>
                                 </a>
-                            </div>
+                            </div> -->
                             <!-- <div class="col-md-3 col-12 text-justify-center">
                                 <a href="<?php //echo base_url('employee-payable-summary'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
@@ -52,6 +52,15 @@
                                     </div>
                                 </a>
                             </div> -->
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('staff-mgmt-payroll'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p>Payroll</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                             <div class="col-md-3 col-12 text-justify-center">
                                 <a href="<?php echo base_url('articleship-leave-cal/0'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
