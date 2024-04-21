@@ -105,15 +105,15 @@ class Payroll extends BaseController
         $salaryParameterAmount = $this->request->getPost('salaryParameterAmount');
         $salaryParameterPercentage = $this->request->getPost('salaryParameterPercentage');
 
-        $salPramMComCondtnArr['firm_salary_parameters_tbl.status'] = "1";
-        $salPramMComCondtnArr['firm_salary_parameters_tbl.salaryParameter'] = $salaryParameter;
-        $salPramMComCondtnArr['firm_salary_parameters_tbl.salaryParameterType'] = $salaryParameterType;
-        $salPramMComOrderByArr['firm_salary_parameters_tbl.salaryParameter'] = "ASC";
+        $salPramMComCondtnArr['salary_parameters_tbl.status'] = "1";
+        $salPramMComCondtnArr['salary_parameters_tbl.salaryParameter'] = $salaryParameter;
+        $salPramMComCondtnArr['salary_parameters_tbl.salaryParameterType'] = $salaryParameterType;
+        $salPramMComOrderByArr['salary_parameters_tbl.salaryParameter'] = "ASC";
 
-        $query = $this->Mcommon->getRecords($tableName = $this->firm_salary_parameters_tbl, $colNames = "firm_salary_parameters_tbl.salaryParameterId,firm_salary_parameters_tbl.salaryParameter, firm_salary_parameters_tbl.salaryParameterType", $salPramMComCondtnArr, $likeCondtnArr = array(), $salPramMComJoinArr = array(), $singleRow = TRUE, $salPramMComOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+        $query = $this->Mcommon->getRecords($tableName = $this->salary_parameters_tbl, $colNames = "salary_parameters_tbl.salaryParameterId,salary_parameters_tbl.salaryParameter, salary_parameters_tbl.salaryParameterType", $salPramMComCondtnArr, $likeCondtnArr = array(), $salPramMComJoinArr = array(), $singleRow = TRUE, $salPramMComOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
         $getMComFirmSalPramIdDetails = $query['userData'];
         if(!empty($getMComFirmSalPramIdDetails)){
-            $this->session->setFlashdata('errorMsg', $this->section . " This Name cannot be Accepted Please  Use Another Name : " . $salaryParameter . " :(");
+            $this->session->setFlashdata('errorMsg', "This Name cannot be Accepted, Please Use Another Name  :(");
             return redirect()->route('salary-params');
         }
 
@@ -126,7 +126,7 @@ class Payroll extends BaseController
         $getFirmSalPramIdDetails = $query['userData'];
 
         if (!empty($getFirmSalPramIdDetails['salaryParameter']) && $getFirmSalPramIdDetails['salaryParameterId'] != $salaryParameterId) {
-            $this->session->setFlashdata('errorMsg', $this->section . " Sorry This Parameter is Already Exist : " . $salaryParameter . " :(");
+            $this->session->setFlashdata('errorMsg', "This Name cannot be Accepted, Please Use Another Name :(");
             return redirect()->route('salary-params');
         }
 
