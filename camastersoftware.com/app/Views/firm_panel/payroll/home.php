@@ -67,7 +67,7 @@
                                 <a href="<?php echo base_url('salary-params'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p>Salary Parameter</p>
+                                            <p>Salary Parameters</p>
                                         </div>
                                     </div>
                                 </a>

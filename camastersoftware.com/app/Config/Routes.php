@@ -926,7 +926,7 @@ $routes->get('/staff-mgmt-payroll', 'Payroll::index');
 $routes->get('/salary-params', 'Payroll::salary_params');
 $routes->post('/add-salary-params', 'Payroll::add_salary_params');
 $routes->post('/edit-salary-params', 'Payroll::edit_salary_params');
-$routes->post('/get-salary-params', 'Payroll::get_salary_params');
+$routes->post('/delete-salary-params', 'Payroll::delete_salary_params');
 // Payroll Code End
 
 // Websocket Code Start
