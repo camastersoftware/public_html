@@ -236,6 +236,12 @@
                                                 <?php foreach($eventDueDatesArr AS $e_inc_row): ?>
                                                 
                                                     <?php 
+                                                        $eFillingDate="-";
+                                                        if(check_valid_date($e_inc_row['eFillingDate']))
+                                                            $eFillingDate=date('d-m-Y', strtotime($e_inc_row['eFillingDate'])); 
+                                                    ?>
+
+                                                    <?php 
                                                         $non_rglr_due_date="-";
                                                         if(check_valid_date($e_inc_row['non_rglr_due_date']))
                                                             $non_rglr_due_date=date('d-m-Y', strtotime($e_inc_row['non_rglr_due_date'])); 
@@ -245,6 +251,26 @@
                                                         $non_rglr_event_date="-";
                                                         if(check_valid_date($e_inc_row['non_rglr_event_date']))
                                                             $non_rglr_event_date=date('d-m-Y', strtotime($e_inc_row['non_rglr_event_date'])); 
+                                                    ?>
+
+                                                    <?php 
+                                                        $isBillingDone="-";
+                                                        if($e_inc_row['isBillingDone']==1)
+                                                            $isBillingDone="Yes";
+                                                        elseif($e_inc_row['isBillingDone']==2)
+                                                            $isBillingDone="No"; 
+                                                        else
+                                                            $isBillingDone="-"; 
+                                                    ?>
+                                                    
+                                                    <?php 
+                                                        $isReceiptDone="-";
+                                                        if($e_inc_row['isReceiptDone']==1)
+                                                            $isReceiptDone="Yes";
+                                                        elseif($e_inc_row['isReceiptDone']==2)
+                                                            $isReceiptDone="No"; 
+                                                        else
+                                                            $isReceiptDone="-"; 
                                                     ?>
                                                 
                                                     <tr class="row-1 tbl_row_clr" >
@@ -283,7 +309,7 @@
                                                                             <span class="fs_14">Info</span>
                                                                         </button>
                                                                     </a>
-                                                                    <a href="javascript:void(0);">
+                                                                    <a href="<?= base_url("inc-event-based-work/".$e_inc_row['event_based_work_id']) ?>">
                                                                         <button type="button" class="waves-effect waves-light btn btn-sm btn-success">
                                                                             <i class="fa fa-file fa-2x"></i>
                                                                             <span class="fs_14">Work</span>
@@ -313,16 +339,16 @@
                                                             </span>
                                                         </td>
                                                         <td class="column-6 text-center" width="7%" nowrap>
-                                                            -
+                                                            <?= (!empty($e_inc_row['juniorName'])) ? $e_inc_row['juniorName'] : "-" ?>
                                                         </td>
-                                                        <td class="column-7 text-center" width="7%">
-                                                            -
-                                                        </td>
-                                                        <td class="column-8 text-center" width="5%">
-                                                            -
+                                                        <td class="column-7 text-center" width="7%" nowrap>
+                                                            <?= (!empty($e_inc_row['seniorName'])) ? $e_inc_row['seniorName'] : "-" ?>
                                                         </td>
                                                         <td class="column-8 text-center" width="5%">
-                                                            -
+                                                            <?= (!empty($e_inc_row['workDone'])) ? $e_inc_row['workDone'] : "-" ?>
+                                                        </td>
+                                                        <td class="column-8 text-center" width="5%">
+                                                            <?= $eFillingDate ?>
                                                         </td>
                                                         <td class="column-2" width="10%" nowrap>
                                                             <?= $non_rglr_due_date; ?>
@@ -331,10 +357,10 @@
                                                             <?= $non_rglr_event_date; ?>
                                                         </td>
                                                         <td class="column-10 text-center" width="10%">
-                                                            -
+                                                            <?= $isBillingDone ?>
                                                         </td>
                                                         <td class="column-11 text-center" width="7%">
-                                                            -
+                                                            <?= $isReceiptDone ?>
                                                         </td>
                                                     </tr>
                                                     <?php $sr++; ?>
