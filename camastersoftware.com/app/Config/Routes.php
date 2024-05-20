@@ -408,6 +408,8 @@ $routes->match(['get', 'post'], '/inc-tax-forms-filed', 'ComplianceSection/Incom
 $routes->post('/search-inc-tax-forms', 'ComplianceSection/Income_tax2::search_inc_tax_forms'); // removed
 $routes->get('/reset-inc-tax-forms', 'ComplianceSection/Income_tax2::reset_inc_tax_forms'); // removed
 $routes->get('/inc-event-based-due-dates', 'ComplianceSection/Income_tax3::event_based_due_dates');
+$routes->get('/inc-event-based-work/(:any)', 'ComplianceSection\Income_tax3::event_based_work_form/$1');
+$routes->post('/update-inc-event-based-work', 'ComplianceSection/Income_tax3::update_event_based_work_form');
 
 //------------------------------Rectification-----------------------------//
 $routes->get('/rectification', 'ComplianceSection/Income_tax::rectification');
