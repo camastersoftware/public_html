@@ -45,6 +45,7 @@ class Income_tax3 extends BaseController
         $this->refund_tbl=$tableArr['refund_tbl'];
         $this->rectification_tbl=$tableArr['rectification_tbl'];
         $this->periodicity_tbl=$tableArr['periodicity_tbl'];
+        $this->non_regular_due_date_tbl=$tableArr['non_regular_due_date_tbl'];
         
         $this->actIdVal = 1;
         
@@ -803,6 +804,89 @@ class Income_tax3 extends BaseController
             return redirect()->to(base_url($this->secPrefixUrl."-ddf-pending/".$ddfId));
         elseif($ftr_type==2)
             return redirect()->to(base_url($this->secPrefixUrl."-ddf-filed/".$ddfId));
+    }
+
+    public function event_based_due_dates()
+    {
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+        
+        $cssArr=array('tooltip');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        
+        $this->data['cssArr']=$cssArr;
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="Income Tax - Event Based Due Dates";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $taxYearArr=explode('-', $this->sessDueDateYear);
+        
+        $taxFromYear=date('Y-m-d', strtotime("01-04-".$taxYearArr[0]));
+        $taxToYear=date('Y-m-d', strtotime("31-03-20".$taxYearArr[1]));
+        
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_date >=']=$taxFromYear;
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_date <=']=$taxToYear;
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_act']=1;
+        $eventCondtnArr['non_regular_due_date_tbl.status']=1;
+            
+        $eventOrderByArr['non_regular_due_date_tbl.non_rglr_due_date']="ASC";
+        $eventOrderByArr['non_regular_due_date_tbl.non_rglr_due_date_id']="ASC";
+
+        $eventJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=non_regular_due_date_tbl.non_rglr_due_act", "type"=>"left");
+        $eventJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=non_regular_due_date_tbl.fkClientId", "type"=>"left");
+        $eventJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $eventJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+ 
+        $eventColNames="
+            non_regular_due_date_tbl.non_rglr_due_date_id,
+            non_regular_due_date_tbl.non_rglr_due_state,
+            non_regular_due_date_tbl.non_rglr_due_act,
+            non_regular_due_date_tbl.non_rglr_due_date_for,
+            non_regular_due_date_tbl.non_rglr_applicable_form,
+            non_regular_due_date_tbl.non_rglr_under_section,
+            non_regular_due_date_tbl.non_rglr_event_date,
+            non_regular_due_date_tbl.non_rglr_periodicity,
+            non_regular_due_date_tbl.non_rglr_daily_date,
+            non_regular_due_date_tbl.non_rglr_period_month,
+            non_regular_due_date_tbl.non_rglr_period_year,
+            non_regular_due_date_tbl.non_rglr_f_period_month,
+            non_regular_due_date_tbl.non_rglr_f_period_year,
+            non_regular_due_date_tbl.non_rglr_t_period_month,
+            non_regular_due_date_tbl.non_rglr_t_period_year,
+            non_regular_due_date_tbl.non_rglr_finYear,
+            non_regular_due_date_tbl.non_rglr_due_date,
+            non_regular_due_date_tbl.non_rglr_due_notes,
+            non_regular_due_date_tbl.non_rglr_doc_file,
+            DATE_FORMAT(non_regular_due_date_tbl.non_rglr_due_date, '%c') AS act_due_month,
+            act_tbl.act_name,
+            act_tbl.act_short_name,
+            client_group_tbl.client_group_number,
+            client_tbl.clientId,
+            client_tbl.clientTitle,
+            client_tbl.clientName,
+            client_tbl.clientBussOrganisation,
+            client_tbl.clientBussOrganisationType AS orgType,
+            organisation_type_tbl.shortName AS client_org_short_name
+        ";
+
+        $query=$this->Mcommon->getRecords($tableName=$this->non_regular_due_date_tbl, $colNames=$eventColNames, $eventCondtnArr, $likeCondtnArr=array(), $eventJoinArr, $singleRow=FALSE, $eventOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $eventDueDatesArr=$query['userData'];
+
+        $this->data['eventDueDatesArr']=$eventDueDatesArr;
+
+        // print_r($eventDueDatesArr);
+        // die();
+
+        return view('firm_panel/compliance/income_tax/event_based_due_dates', $this->data);
     }
 }
 ?>
