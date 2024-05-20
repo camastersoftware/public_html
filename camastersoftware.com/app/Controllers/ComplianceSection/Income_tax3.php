@@ -21,6 +21,7 @@ class Income_tax3 extends BaseController
         $this->Mperiodicity = new \App\Models\Mperiodicity();
         $this->Mact_option = new \App\Models\Mact_option();
         $this->MDueDateType = new \App\Models\MDueDateType();
+        $this->MVerificationMode = new \App\Models\MVerificationMode();
         $this->TableLib = new \App\Libraries\TableLib();
         $this->DueDueLib = new \App\Libraries\DueDueLib();
 
@@ -46,6 +47,7 @@ class Income_tax3 extends BaseController
         $this->rectification_tbl=$tableArr['rectification_tbl'];
         $this->periodicity_tbl=$tableArr['periodicity_tbl'];
         $this->non_regular_due_date_tbl=$tableArr['non_regular_due_date_tbl'];
+        $this->event_based_work_tbl=$tableArr['event_based_work_tbl'];
         
         $this->actIdVal = 1;
         
@@ -844,7 +846,10 @@ class Income_tax3 extends BaseController
         $eventJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=non_regular_due_date_tbl.fkClientId", "type"=>"left");
         $eventJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
         $eventJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
- 
+        $eventJoinArr[]=array("tbl"=>$this->event_based_work_tbl, "condtn"=>"event_based_work_tbl.fk_event_based_due_date_id=non_regular_due_date_tbl.non_rglr_due_date_id", "type"=>"left");
+        $eventJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=event_based_work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $eventJoinArr[]=array("tbl"=>$this->user_tbl." AS junior_tbl", "condtn"=>"junior_tbl.userId=event_based_work_tbl.juniorId AND junior_tbl.status=1", "type"=>"left");
+
         $eventColNames="
             non_regular_due_date_tbl.non_rglr_due_date_id,
             non_regular_due_date_tbl.non_rglr_due_state,
@@ -874,7 +879,14 @@ class Income_tax3 extends BaseController
             client_tbl.clientName,
             client_tbl.clientBussOrganisation,
             client_tbl.clientBussOrganisationType AS orgType,
-            organisation_type_tbl.shortName AS client_org_short_name
+            organisation_type_tbl.shortName AS client_org_short_name,
+            event_based_work_tbl.event_based_work_id,
+            event_based_work_tbl.workDone,
+            event_based_work_tbl.eFillingDate,
+            event_based_work_tbl.isBillingDone,
+            event_based_work_tbl.isReceiptDone,
+            user_tbl.userShortName AS seniorName,
+            junior_tbl.userShortName AS juniorName,
         ";
 
         $query=$this->Mcommon->getRecords($tableName=$this->non_regular_due_date_tbl, $colNames=$eventColNames, $eventCondtnArr, $likeCondtnArr=array(), $eventJoinArr, $singleRow=FALSE, $eventOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
@@ -883,10 +895,293 @@ class Income_tax3 extends BaseController
 
         $this->data['eventDueDatesArr']=$eventDueDatesArr;
 
-        // print_r($eventDueDatesArr);
-        // die();
-
         return view('firm_panel/compliance/income_tax/event_based_due_dates', $this->data);
+    }
+
+    public function event_based_work_form()
+	{
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $workId=$uri->getSegment(2);
+
+        $this->data['workId']=$workId;
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="Event Based Income Tax Work";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $workCondtnArr['event_based_work_tbl.event_based_work_id']=$workId;
+        $workCondtnArr['event_based_work_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=event_based_work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=event_based_work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl." AS junior_tbl", "condtn"=>"junior_tbl.userId=event_based_work_tbl.juniorId AND junior_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->non_regular_due_date_tbl, "condtn"=>"non_regular_due_date_tbl.non_rglr_due_date_id=event_based_work_tbl.fk_event_based_due_date_id AND non_regular_due_date_tbl.status=1", "type"=>"left");
+
+        $columnNames = "
+                    event_based_work_tbl.event_based_work_id,
+                    event_based_work_tbl.workCode,
+                    event_based_work_tbl.fk_event_based_due_date_id,
+                    event_based_work_tbl.fkClientId,
+                    event_based_work_tbl.juniorId,
+                    event_based_work_tbl.seniorId,
+                    event_based_work_tbl.isDocRecvd,
+                    event_based_work_tbl.docRecvdDate,
+                    event_based_work_tbl.workDone,
+                    event_based_work_tbl.isUrgentWork,
+                    event_based_work_tbl.eFillingDate,
+                    event_based_work_tbl.verificationDoneBy,
+                    event_based_work_tbl.verificationMode,
+                    event_based_work_tbl.acknowledgmentNo,
+                    event_based_work_tbl.verificationDate,
+                    event_based_work_tbl.ackUploadFile,
+                    event_based_work_tbl.isBillingDone,
+                    event_based_work_tbl.isReceiptDone,
+                    event_based_work_tbl.billNo,
+                    event_based_work_tbl.billDate,
+                    event_based_work_tbl.billAmt,
+                    event_based_work_tbl.receiptDate,
+                    event_based_work_tbl.receiptAmt,
+                    event_based_work_tbl.billingComment,
+                    event_based_work_tbl.receiptComment,
+                    event_based_work_tbl.workRemark,
+                    client_tbl.clientName,
+                    client_tbl.clientBussOrganisation,
+                    client_tbl.clientBussOrganisationType,
+                    client_tbl.clientPanNumber,
+                    client_tbl.clientDob,
+                    client_tbl.clientBussIncorporationDate,
+                    user_tbl.userFullName,
+                    junior_tbl.userFullName AS juniorName,
+                    non_regular_due_date_tbl.non_rglr_event_date
+                ";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->event_based_work_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=TRUE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workArr=$query['userData'];
+
+        $this->data['workArr']=$workArr;
+        
+        $clientPanNo="N/A";
+        $asmtYear="N/A";
+        
+        if(!empty($workArr))
+        {
+            $clientBussOrgType=$workArr['clientBussOrganisationType'];
+            
+            if(in_array($clientBussOrgType, INDIVIDUAL_ARRAY))
+            {
+                $workClientName=(!empty($workArr['clientName'])) ? $workArr['clientName']:"";
+                $clientDobDoi=(check_valid_date($workArr['clientDob'])) ? date("d-m-Y", strtotime($workArr['clientDob'])):"";
+            }
+            else
+            {
+                $workClientName=(!empty($workArr['clientBussOrganisation'])) ? $workArr['clientBussOrganisation']:"";
+                $clientDobDoi=(check_valid_date($workArr['clientBussIncorporationDate'])) ? date("d-m-Y", strtotime($workArr['clientBussIncorporationDate'])):"";
+            }
+            
+            if(!empty($workArr['clientPanNumber']))
+                $clientPanNo=$workArr['clientPanNumber'];
+        }
+        
+        $workClientName = (!empty($workClientName)) ? $workClientName : "N/A";
+        $clientDobDoi = (!empty($clientDobDoi)) ? $clientDobDoi : "N/A";
+        $eventDate = (check_valid_date($workArr['non_rglr_event_date'])) ? date("d-m-Y", strtotime($workArr['non_rglr_event_date'])) : "N/A";
+        
+        $this->data['workClientName']=$workClientName;
+        $this->data['clientPanNo']=$clientPanNo;
+        $this->data['clientDobDoi']=$clientDobDoi;
+        $this->data['eventDate']=$eventDate;
+
+        $userCondtnArr['user_tbl.status']="1";
+        $userCondtnArr['user_tbl.isOldUser']=2;
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userStaffType", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getUserList=$query['userData'];
+
+        $this->data['getUserList']=$getUserList;
+        
+        $verificationModeCondtn = array(
+            'fkActId' => 1,
+            'status' => 1
+        );
+        
+        $verificationModeData = $this->MVerificationMode->where($verificationModeCondtn)->findAll();
+        
+        $this->data['verificationModeData']=$verificationModeData;
+
+        return view('firm_panel/compliance/event_based_due_dates/work_form', $this->data);
+    }
+
+    function update_event_based_work_form()
+    {
+        $this->db->transBegin();
+        
+        $workId=$this->request->getPost('workId');
+        $isDocRecvd=$this->request->getPost('isDocRecvd');
+        $docRecvdDate=$this->request->getPost('docRecvdDate');
+        $workDone=$this->request->getPost('workDone');
+        $juniorId=$this->request->getPost('juniorId');
+        $seniorId=$this->request->getPost('seniorId');
+        $isUrgentWork=$this->request->getPost('isUrgentWork');
+        $eFillingDate=$this->request->getPost('eFillingDate');
+        $acknowledgmentNo=$this->request->getPost('acknowledgmentNo');
+        $verificationDoneBy=$this->request->getPost('verificationDoneBy');
+        $verificationMode=$this->request->getPost('verificationMode');
+        $verificationDate=$this->request->getPost('verificationDate');
+        $workRemark=$this->request->getPost('workRemark');
+        $isBillingDone=$this->request->getPost('isBillingDone'); 
+        $billNo=$this->request->getPost('billNo'); 
+        $billDate=$this->request->getPost('billDate');
+        $billAmt=$this->request->getPost('billAmt');
+        $billingComment=$this->request->getPost('billingComment');
+        $isReceiptDone=$this->request->getPost('isReceiptDone');
+        $receiptDate=$this->request->getPost('receiptDate');
+        $receiptAmt=$this->request->getPost('receiptAmt');
+        $receiptComment=$this->request->getPost('receiptComment');
+        $ackUploadFile=$this->request->getFile('ackUploadFile');
+        $ackUploadFileHidden=$this->request->getPost('ackUploadFileHidden');
+
+        $ack_upload_file="";
+        if(!empty($ackUploadFile->getTempName()))
+        {
+            if($ackUploadFile->isValid() && ! $ackUploadFile->hasMoved())
+            {
+                $ext=$ackUploadFile->guessExtension();
+                
+                if($ext=="pdf")
+                {
+                    $uploadPath=FCPATH.'uploads/ca_firm_'.$this->sessCaFirmId;
+
+                    if(!is_dir($uploadPath))
+                        mkdir($uploadPath, 0777, TRUE);
+
+                    $uploadPath1=$uploadPath.'/compliance';
+
+                    if(!is_dir($uploadPath1))
+                        mkdir($uploadPath1, 0777, TRUE);
+                        
+                    $uploadPath2=$uploadPath1.'/income_tax';
+
+                    if(!is_dir($uploadPath2))
+                        mkdir($uploadPath2, 0777, TRUE);
+    
+                    $ack_upload_file = $ackUploadFile->getRandomName();
+                    $ackUploadFile->move($uploadPath2, $ack_upload_file);
+                    
+                    if(!empty($ackUploadFileHidden))
+                    {
+                        $delUploadFilePath=$uploadPath2."/".$ackUploadFileHidden;
+                        unlink($delUploadFilePath);
+                    }
+                }
+                else
+                {
+                    $this->session->setFlashdata('errorMsg', "Only pdf document is accepted");
+                    return redirect()->back();
+                }
+            }
+            else
+            {
+                $this->session->setFlashdata('errorMsg', "Invalid file uploaded");
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            $ack_upload_file = $ackUploadFileHidden;
+        }
+        
+        if($isDocRecvd==1)
+            $docRecvdDateVal=$docRecvdDate;
+        else
+            $docRecvdDateVal="";
+            
+        if($isBillingDone!=1)
+        {
+            $billNo=""; 
+            $billDate=""; 
+            $billAmt="";
+            $billingComment=""; 
+        }
+        
+        if($isReceiptDone!=1)
+        {
+            $receiptDate=""; 
+            $receiptAmt=""; 
+            $receiptComment="";
+        }
+        
+        if(!empty($eFillingDate))
+        {
+            $workDone=100;
+        }
+
+        $wkUpdateArr = [
+            'isDocRecvd'=>$isDocRecvd,
+            'docRecvdDate'=>$docRecvdDateVal,
+            'workDone'=>$workDone,
+            'juniorId'=>$juniorId,
+            'seniorId'=>$seniorId,
+            'isUrgentWork'=>$isUrgentWork,
+            'eFillingDate'=>$eFillingDate,
+            'acknowledgmentNo'=>$acknowledgmentNo,
+            'verificationDoneBy'=>$verificationDoneBy,
+            'verificationMode'=>$verificationMode,
+            'verificationDate'=>$verificationDate,
+            'ackUploadFile'=>$ack_upload_file,
+            'workRemark'=>$workRemark,
+            'isBillingDone'=>$isBillingDone,
+            'billNo'=>$billNo,
+            'billDate'=>$billDate,
+            'billAmt'=>$billAmt,
+            'billingComment'=>$billingComment,
+            'isReceiptDone'=>$isReceiptDone,
+            'receiptDate'=>$receiptDate,
+            'receiptAmt'=>$receiptAmt,
+            'receiptComment'=>$receiptComment,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['event_based_work_tbl.event_based_work_id']=$workId;
+
+        $query=$this->Mcommon->updateData($tableName=$this->event_based_work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+        
+        if($this->db->transStatus() === FALSE)
+        {
+            $this->db->transRollback();
+
+            $this->session->setFlashdata('errorMsg', "Something went wrong!!, Event Based Work Information not updated :(");
+        }
+        else
+        {
+            $this->db->transCommit();
+
+            $insertLogArr['section']=$this->section;
+            $insertLogArr['message']="Event Based Work Information updated";
+            $insertLogArr['ip']=$this->IPAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $this->session->setFlashdata('successMsg', "Event Based Work Information updated successfully :)");
+        }
+        
+        return redirect()->back();
     }
 }
 ?>

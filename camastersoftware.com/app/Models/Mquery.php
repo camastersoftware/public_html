@@ -156,18 +156,27 @@ class Mquery extends Model
         $res=array();
         $res['query']=$lastQuery=$this->adminDB->getLastQuery();
 
+        $numberOfRowsInserted = count($insertArr);
+        $lastInsertId = $this->adminDB->insertID();
+
         if (empty($this->adminDB->insertID())){
             $res['status']=FALSE;
             $res['error']=$this->adminDB->error();
             $res['userData']=array();
             $res['message']="Unable to insert :(";
             $res['lastID']="";
+            $res['insertedIds'] = array();
         }else{
             $res['status']=TRUE;
             $res['error']=$this->adminDB->error();
             $res['userData']=array();
             $res['message']="Data inserted successfully :)";
-            $res['lastID']=$this->adminDB->insertID();
+            $res['lastID']=$lastInsertId;
+            // Calculate the range of inserted IDs
+            $firstInsertId = $lastInsertId - $numberOfRowsInserted + 1;
+            $insertedIds = range($firstInsertId, $lastInsertId);
+
+            $res['insertedIds'] = $insertedIds;
         }
 
         return $res;

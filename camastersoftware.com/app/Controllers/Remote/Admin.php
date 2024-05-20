@@ -50,6 +50,7 @@ class Admin extends BaseController
         $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
         $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
         $this->non_regular_due_date_tbl = $tableArr['non_regular_due_date_tbl'];
+        $this->event_based_work_tbl = $tableArr['event_based_work_tbl'];
     }
 
     public function getGroups()
@@ -1010,7 +1011,36 @@ class Admin extends BaseController
             }
 
             if(!empty($non_rglr_due_date_insert_array)){
-                $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+                $non_rglr_due_date_insert_query = $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+                
+                if($non_rglr_due_date_insert_query['status'] == true)
+                {
+                    $non_rglr_due_date_inserted_ids = $non_rglr_due_date_insert_query['insertedIds'];
+
+                    $event_based_work_insert_array = array();
+
+                    if(!empty($non_rglr_due_date_inserted_ids))
+                    {
+                        foreach($non_rglr_due_date_inserted_ids AS $e_non_rglr_dd)
+                        {
+                            $uniqueId=strtoupper(substr(str_shuffle(uniqid()), 0, 4));
+
+                            $workCode="WORKID_".$uniqueId;
+
+                            $event_based_work_insert_array[]=[
+                                'workCode'=>$workCode,
+                                'fk_event_based_due_date_id'=>$e_non_rglr_dd,
+                                'fkClientId'=>$clientId,
+                                'status' => 1,
+                                'createdBy' => $this->adminId,
+                                'createdDatetime' => $this->currTimeStamp
+                            ];
+                        }
+                    }
+                    if(!empty($event_based_work_insert_array)){
+                        $this->Mquery->insert($tableName=$this->event_based_work_tbl, $event_based_work_insert_array, $returnType="");
+                    }
+                }
             }
         }
 
@@ -1919,7 +1949,36 @@ class Admin extends BaseController
             }
 
             if(!empty($non_rglr_due_date_insert_array)){
-                $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+                $non_rglr_due_date_insert_query = $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+                
+                if($non_rglr_due_date_insert_query['status'] == true)
+                {
+                    $non_rglr_due_date_inserted_ids = $non_rglr_due_date_insert_query['insertedIds'];
+
+                    $event_based_work_insert_array = array();
+
+                    if(!empty($non_rglr_due_date_inserted_ids))
+                    {
+                        foreach($non_rglr_due_date_inserted_ids AS $e_non_rglr_dd)
+                        {
+                            $uniqueId=strtoupper(substr(str_shuffle(uniqid()), 0, 4));
+
+                            $workCode="WORKID_".$uniqueId;
+
+                            $event_based_work_insert_array[]=[
+                                'workCode'=>$workCode,
+                                'fk_event_based_due_date_id'=>$e_non_rglr_dd,
+                                'fkClientId'=>$clientId,
+                                'status' => 1,
+                                'createdBy' => $this->adminId,
+                                'createdDatetime' => $this->currTimeStamp
+                            ];
+                        }
+                    }
+                    if(!empty($event_based_work_insert_array)){
+                        $this->Mquery->insert($tableName=$this->event_based_work_tbl, $event_based_work_insert_array, $returnType="");
+                    }
+                }
             }
         }
 
@@ -3701,6 +3760,17 @@ class Admin extends BaseController
 
         $query=$this->Mquery->updateData($tableName=$this->non_regular_due_date_tbl, $eventActUpdateArr, $eventActCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
         
+        $evtWorkUpdateArr = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $evtWorkCondtnUpdateArr['event_based_work_tbl.fk_event_based_due_date_id']=$due_date_id;
+        $evtWorkCondtnUpdateArr['event_based_work_tbl.fkClientId']=$client_id;
+
+        $query=$this->Mquery->updateData($tableName=$this->event_based_work_tbl, $evtWorkUpdateArr, $evtWorkCondtnUpdateArr, $likeCondtnArr=array(), $whereInArray=array());
+
         $fin_year_arr=explode("-", $this->sessDueDateYear);
 
         $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
