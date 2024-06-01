@@ -20,6 +20,7 @@ class Income_tax extends BaseController
         $this->Mdemand = new \App\Models\Mdemand();
         $this->MRectification = new \App\Models\MRectification();
         $this->MVerificationMode = new \App\Models\MVerificationMode();
+        $this->Mscrutiny = new \App\Models\Mscrutiny();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -46,6 +47,7 @@ class Income_tax extends BaseController
         $this->refund_tbl=$tableArr['refund_tbl'];
         $this->demand_tbl=$tableArr['demand_tbl'];
         $this->notice_under_section_tbl=$tableArr['notice_under_section_tbl'];
+        $this->scrutiny_tbl=$tableArr['scrutiny_tbl'];
         
         $currMth=date('n');
         
@@ -306,7 +308,9 @@ class Income_tax extends BaseController
                 $this->db->transBegin();
                 
                 $workId=$this->request->getPost('workId');
+                $fkClientId=$this->request->getPost('fkClientId');
                 $refundId=$this->request->getPost('refundId');
+                $asmtYear=$this->request->getPost('asmtYear');
                 $stepData=$this->request->getPost('stepData');
                 $isDocRecvd=$this->request->getPost('isDocRecvd');
                 $docRecvdDate=$this->request->getPost('docRecvdDate');
@@ -582,6 +586,85 @@ class Income_tax extends BaseController
                     $refundCondtnArr['refund_tbl.fkWorkId']=$workId;
         
                     $query=$this->Mcommon->updateData($tableName=$this->refund_tbl, $updateIntiArr, $refundCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+                }
+
+                if($isScrutiny==1)
+                {
+                    $scrCondtn = array(
+                        'fkWorkId'  => $workId,
+                        'status'    => 1
+                    );
+                    
+                    $scrDataArr=$this->Mscrutiny->where($scrCondtn)->findAll();
+
+                    if(empty($scrDataArr))
+                    {
+                        $scrutinyInsertArr=array(
+                            'fkWorkId'          =>  $workId,
+                            'fkClientId'        =>  $fkClientId,
+                            'actType'           =>  1, 
+                            'finYear'           =>  $asmtYear, 
+                            'acknowledgmentNo'  =>  $acknowledgmentNo, 
+                            'eFillingDate'      =>  $eFillingDate, 
+                            'totalIncome'       =>  $totalIncome,
+                            'intiTotalIncome'   =>  0,
+                            'refundClaimed'     =>  $refundDue,
+                            'refundTotalAmt'    =>  0,
+                            'demandTotalAmt'    =>  0,
+                            'isExternal'        =>  2,
+                            'status'            =>  1, 
+                            'createdBy'         =>  $this->adminId,
+                            'createdDatetime'   =>  $this->currTimeStamp
+                        );
+
+                        $this->Mscrutiny->save($scrutinyInsertArr);
+                    }
+                    else
+                    {
+                        $updateSrcArr=array(
+                            'fkClientId'        =>  $fkClientId,
+                            'actType'           =>  1, 
+                            'finYear'           =>  $asmtYear, 
+                            'acknowledgmentNo'  =>  $acknowledgmentNo, 
+                            'eFillingDate'      =>  $eFillingDate, 
+                            'totalIncome'       =>  $totalIncome,
+                            'intiTotalIncome'   =>  0,
+                            'refundClaimed'     =>  $refundDue,
+                            'refundTotalAmt'    =>  0,
+                            'demandTotalAmt'    =>  0,
+                            'isExternal'        =>  2,
+                            'updatedBy'         =>  $this->adminId,
+                            'updatedDatetime'   =>  $this->currTimeStamp
+                        );
+            
+                        $srcCondtnArr['scrutiny_tbl.fkWorkId']=$workId;
+                        $srcCondtnArr['scrutiny_tbl.status']=1;
+            
+                        $this->Mcommon->updateData($tableName=$this->scrutiny_tbl, $updateSrcArr, $srcCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+                    }
+                }
+                elseif($isScrutiny==2)
+                {
+                    $scrCondtn = array(
+                        'fkWorkId'  => $workId,
+                        'status'    => 1
+                    );
+                    
+                    $scrDataArr=$this->Mscrutiny->where($scrCondtn)->findAll();
+
+                    if(!empty($scrDataArr))
+                    {
+                        $updateSrcArr=array(
+                            'status'            =>  2,
+                            'updatedBy'         =>  $this->adminId,
+                            'updatedDatetime'   =>  $this->currTimeStamp
+                        );
+            
+                        $srcCondtnArr['scrutiny_tbl.fkWorkId']=$workId;
+                        $srcCondtnArr['scrutiny_tbl.status']=1;
+            
+                        $this->Mcommon->updateData($tableName=$this->scrutiny_tbl, $updateSrcArr, $srcCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+                    }
                 }
                 
                 if($this->db->transStatus() === FALSE)
@@ -1332,7 +1415,9 @@ class Income_tax extends BaseController
         $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
         
-        $columnNames="work_tbl.workId,
+        $columnNames="
+            work_tbl.workId,
+            work_tbl.isScrutiny,
             client_tbl.clientName, 
             client_tbl.clientBussOrganisation, 
             client_tbl.clientPanNumber, 
@@ -1352,7 +1437,8 @@ class Income_tax extends BaseController
             demand_tbl.demandInterestAmt, 
             demand_tbl.demandTotalAmt, 
             refund_tbl.intiRemark, 
-            refund_tbl.intiIsRectification";
+            refund_tbl.intiIsRectification
+        ";
         
         $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=TRUE, $workOrderByArr, $groupByArr=array(), $workWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
@@ -1370,6 +1456,7 @@ class Income_tax extends BaseController
         $workId=$this->request->getPost('workId');
         $refundId=$this->request->getPost('refundId');
         $demandId=$this->request->getPost('demandId');
+        $isScrutiny=$this->request->getPost('isScrutiny');
         $intiTotalIncome=$this->request->getPost('intiTotalIncome');
         $refundPrincipalAmt=$this->request->getPost('refundPrincipalAmt');
         $refundInterestAmt=$this->request->getPost('refundInterestAmt');
@@ -1494,6 +1581,32 @@ class Income_tax extends BaseController
                 // die();
                     
                 $this->MRectification->update($rectificationUpdateCondtn, $updateRectificationArr);
+            }
+        }
+
+        if($isScrutiny==1)
+        {
+            $scrCondtn = array(
+                'fkWorkId'  => $workId,
+                'status'    => 1
+            );
+            
+            $scrDataArr=$this->Mscrutiny->where($scrCondtn)->findAll();
+
+            if(!empty($scrDataArr))
+            {
+                $updateSrcArr=array(
+                    'intiTotalIncome'   =>  $intiTotalIncome,
+                    'refundTotalAmt'    =>  $refundTotalAmt,
+                    'demandTotalAmt'    =>  $demandTotalAmt,
+                    'updatedBy'         =>  $this->adminId,
+                    'updatedDatetime'   =>  $this->currTimeStamp
+                );
+    
+                $srcCondtnArr['scrutiny_tbl.fkWorkId']=$workId;
+                $srcCondtnArr['scrutiny_tbl.status']=1;
+    
+                $this->Mcommon->updateData($tableName=$this->scrutiny_tbl, $updateSrcArr, $srcCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
             }
         }
         

@@ -120,6 +120,7 @@ class TableLib
         $tableArr['non_regular_due_date_for_tbl']=$adminDB.".non_regular_due_date_for_tbl";
         $tableArr['firm_salary_parameters_tbl']=$adminDB.".firm_salary_parameters_tbl";
         $tableArr['event_based_work_tbl']=$adminDB.".event_based_work_tbl";
+        $tableArr['scrutiny_tbl']=$adminDB.".scrutiny_tbl";
         
         return $tableArr;
 	}
