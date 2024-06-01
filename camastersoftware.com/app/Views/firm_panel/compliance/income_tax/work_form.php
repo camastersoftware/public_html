@@ -707,7 +707,9 @@
                                             <div class="col-md-12 mt-30 text-center">
                                                 <input type="hidden" name="juniors" id="juniors" value="<?php echo $workArr['juniors']; ?>">
                                                 <input type="hidden" name="juniorIds" id="juniorIds" value="">
+                                                <input type="hidden" name="asmtYear" id="asmtYear" value="<?php echo $asmtYear; ?>">
                                                 <input type="hidden" name="workId" id="workId" value="<?php echo $workId; ?>">
+                                                <input type="hidden" name="fkClientId" id="fkClientId" value="<?= $workArr['fkClientId']; ?>">
                                                 <input type="hidden" name="refundId" id="refundId" value="<?= $workArr['refundId']; ?>">
                                                 <input type="hidden" name="workPriority" id="workPriority" value="<?= $workArr['workPriority']; ?>" />
                                                 <input type="hidden" name="workPriorityColor" id="workPriorityColor" value="<?= $workArr['workPriorityColor']; ?>" />

@@ -15,7 +15,7 @@ class MscrutinyNoticeReply extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['fkScrNoticeId', 'fkWorkId', 'letterRefNo', 'datedOn', 'repliedOn', 'attendedBy', 'attendedOn', 'nextDate', 'replyRemark', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['fkScrNoticeId', 'fkScrutinyId', 'fkWorkId', 'letterRefNo', 'datedOn', 'repliedOn', 'attendedBy', 'attendedOn', 'nextDate', 'replyRemark', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';
