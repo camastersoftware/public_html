@@ -125,6 +125,10 @@
                         <?= $pageTitle; ?>
                     </h4>
                     <div class="text-right flex-grow">
+                        <a href="<?= base_url('add-scrutiny-case'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit">Add Scrutiny</button>
+                        </a>
+                        &nbsp;&nbsp;
                         <a href="<?php echo base_url('it-menus'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right">Back</button>
                         </a>
@@ -160,7 +164,7 @@
                                                     else
                                                         $clientNameVar=$e_row['clientBussOrganisation']; 
                                                 ?>
-                                                <a href="<?php echo base_url('scrutiny-case/'.$e_row['workId']); ?>" data-toggle="tooltip" data-original-title="<?php echo $clientNameVar; ?>">
+                                                <a href="<?php echo base_url('scrutiny-case/'.$e_row['scrutinyId']); ?>" data-toggle="tooltip" data-original-title="<?php echo $clientNameVar; ?>">
                                                     <?php 
                                                         if(strlen($clientNameVar)>24)
                                                         {
@@ -212,8 +216,8 @@
                                                 <div class="btn-group">
                                                     <button type="button" class="waves-effect waves-light btn btn-info btn-sm btn-xs btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
                                                     <div class="dropdown-menu" style="will-change: transform;">
-                                                        <a class="dropdown-item" href="<?php echo base_url('scrutiny-case/'.$e_row['workId']); ?>">Scrutiny Details</a>
-                                                        <a class="dropdown-item" href="<?php echo base_url('order-analysis/'.$e_row['workId']); ?>">Order Analysis</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('scrutiny-case/'.$e_row['scrutinyId']); ?>">Scrutiny Details</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('order-analysis/'.$e_row['scrutinyId']); ?>">Order Analysis</a>
                                                     </div>
                                                 </div>
                                             </td>

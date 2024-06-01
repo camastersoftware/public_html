@@ -163,6 +163,7 @@
         $asmtYear=$fY."-".$lY;
     }
     
+    $isExternal=$workDataArr['isExternal'];
     $refundTotalAmt=$workDataArr['refundTotalAmt'];
     $demandTotalAmt=$workDataArr['demandTotalAmt'];
 ?>
@@ -178,7 +179,7 @@
                             <h4 class="box-title font-weight-bold"><?= $pageTitle; ?></h4>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="<?= base_url('scrutiny'); ?>">
+                            <a href="<?= base_url('it-scrutiny'); ?>">
                                 <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right">Back</button>
                             </a>
                         </div>
@@ -224,9 +225,26 @@
                                     </div>
                                     <hr>
                                 </div>
+                                <?php if($isExternal==1): ?>
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group row">
+                                        <div class="col-md-12">
+                                            <div class="state due-month">
+                                                <label class="text-white">Basic Details</label>
+                                                <a href="javascript:void(0);" data-toggle="modal" data-target="#editBasicDetailsModal">
+                                                    <button type="button" class="waves-effect waves-light btn btn-sm btn-success float-right mr-2">
+                                                        <i class="fa fa-pencil"></i>&nbsp;Edit
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <?php endif; ?>
                                 <div class="offset-lg-4 col-md-4">
                                     <div class="tab-pane fade show active" id="apr_tab" role="tabpanel" aria-labelledby="apr-tab">
-                						<table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable-act no-footer">
+                                        <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable-act no-footer">
                                             <thead>
                                                 <tr class="row-1">
                                                     <th class="column-2" nowrap >Particulars (As per)</th>
@@ -252,7 +270,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-            					    </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-12 col-lg-12">
                                     <hr>
@@ -648,7 +666,7 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-12 col-lg-12 text-center">
-                                    <input type="hidden" id="hiddenWorkId" value="<?= $workDataArr['workId']; ?>">
+                                    <input type="hidden" id="hiddenScrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                                 </div>
                             </div>
                         </div>
@@ -662,6 +680,145 @@
 	</div>
 </section>
 <!-- /.content -->
+
+
+<!-- -------------------------------------------------------------------- Edit Basic Details Modal - Starts --------------------------------------------------------------------- -->
+<!-- Modal -->
+<div id="editBasicDetailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="<?= base_url('update-scrutiny-basic-details'); ?>" method="POST" >
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Edit Baisc Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <span class="font-weight-bold" >
+                                Name of the Client : 
+                            </span>
+                        </div>
+                        <div class="col-md-9">
+                            <?= $clientNameVar; ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Client Name:</label>
+                                <select class="custom-select form-control" name="fkClientId" id="scrClientId" >
+                                    <option value="">Select Client</option>
+                                    <?php if(!empty($getClientList)): ?>
+                                        <?php foreach($getClientList AS $e_clnt): ?>
+                                            <?php
+                                                if(in_array($e_clnt['orgType'], INDIVIDUAL_ARRAY))
+                                                    $clientNameVar=$e_clnt['clientName'];
+                                                else
+                                                    $clientNameVar=$e_clnt['clientBussOrganisation']; 
+                                            ?>
+                                            <option value="<?php echo $e_clnt['clientId']; ?>" data-pan="<?= $e_clnt["clientPanNumber"]; ?>" <?= $workDataArr['fkClientId']==$e_clnt['clientId'] ? "selected" : "" ?> ><?php echo $clientNameVar; ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="scrClientPan">PAN :</label>
+                                <input type="text" class="form-control" name="scrClientPan" id="scrClientPan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="finYear">A.Y :</label>
+                                <select class="custom-select form-control" name="finYear" id="finYear">
+                                    <option value="">Select Year</option>
+                                    <?php for($d=date("Y"); $d>=2000; $d--): ?>
+                                        <?php $dueYr=$d."-".(substr($d+1, 2)); ?>
+                                        <option value="<?php echo $dueYr; ?>" <?= $workDataArr['finYear']==$dueYr ? "selected" : "" ?> ><?php echo $dueYr; ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="acknowledgmentNo">Acknowledgment :</label>
+                                <input type="text" class="form-control" name="acknowledgmentNo" id="acknowledgmentNo" value="<?= $workDataArr['acknowledgmentNo'] ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <?php $eFillingDate = (check_valid_date($workDataArr['eFillingDate'])) ? date('Y-m-d', strtotime($workDataArr['eFillingDate'])) : "" ?>
+                                <label for="eFillingDate">E-Filling Date :</label>
+                                <input type="date" class="form-control" name="eFillingDate" id="eFillingDate" value="<?= $eFillingDate ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="m-2">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <span class="font-weight-bold" >
+                                Return of Income : 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="totalIncome">Total Income :</label>
+                                <input type="text" class="form-control" name="totalIncome" id="totalIncome" value="<?= $workDataArr['totalIncome'] ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="refundClaimed">Refund :</label>
+                                <input type="text" class="form-control" name="refundClaimed" id="refundClaimed" value="<?= $workDataArr['refundClaimed'] ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="m-2">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <span class="font-weight-bold" >
+                                Intimation : 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="intiTotalIncome">Total Income :</label>
+                                <input type="text" class="form-control" name="intiTotalIncome" id="intiTotalIncome" value="<?= $workDataArr['intiTotalIncome'] ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="refundTotalAmt">Refund :</label>
+                                <input type="text" class="form-control" name="refundTotalAmt" id="refundTotalAmt" value="<?= $workDataArr['refundTotalAmt'] ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="demandTotalAmt">Demand :</label>
+                                <input type="text" class="form-control" name="demandTotalAmt" id="demandTotalAmt" value="<?= $workDataArr['demandTotalAmt'] ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-right" style="width: 100%;">
+                    <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
+                    <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                    <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- -------------------------------------------------------------------- Edit Basic Details Modal - Ends --------------------------------------------------------------------- -->
 
 
 <!-- -------------------------------------------------------------------- Edit Notice Details Modal - Starts --------------------------------------------------------------------- -->
@@ -725,7 +882,7 @@
                     </div>
                 </div>
                 <div class="modal-footer text-right" style="width: 100%;">
-                    <input type="hidden" name="workId" value="<?= $workDataArr['workId']; ?>">
+                    <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                     <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                     <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                 </div>
@@ -801,7 +958,7 @@
                     </div>
                 </div>
                 <div class="modal-footer text-right" style="width: 100%;">
-                    <input type="hidden" name="workId" value="<?= $workDataArr['workId']; ?>">
+                    <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                     <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                     <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                 </div>
@@ -884,7 +1041,7 @@
                             </div>
                         </div>
                         <div class="modal-footer text-right" style="width: 100%;">
-                            <input type="hidden" name="workId" value="<?= $workDataArr['workId']; ?>">
+                            <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                             <input type="hidden" name="scrNoticeId" value="<?= $e_noc['scrNoticeId']; ?>">
                             <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                             <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
@@ -966,7 +1123,7 @@
                             </div>
                         </div>
                         <div class="modal-footer text-right" style="width: 100%;">
-                            <input type="hidden" name="workId" value="<?= $workDataArr['workId']; ?>">
+                            <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                             <input type="hidden" name="scrNoticeId" value="<?= $e_noc['scrNoticeId']; ?>">
                             <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                             <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
@@ -1062,7 +1219,7 @@
                             </div>
                         </div>
                         <div class="modal-footer text-right" style="width: 100%;">
-                            <input type="hidden" name="workId" value="<?= $workDataArr['workId']; ?>">
+                            <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                             <input type="hidden" name="scrNoticeId" value="<?= $eh_rpy['fkScrNoticeId']; ?>">
                             <input type="hidden" name="scrNoticeReplyId" value="<?= $eh_rpy['scrNoticeReplyId']; ?>">
                             <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
@@ -1176,7 +1333,8 @@
                     </div>
                 </div>
                 <div class="modal-footer text-right" style="width: 100%;">
-                    <input type="hidden" name="workId" value="<?= $workDataArr['workId']; ?>">
+                    <input type="hidden" name="workId" value="<?= $workDataArr['fkWorkId']; ?>">
+                    <input type="hidden" name="scrutinyId" value="<?= $workDataArr['scrutinyId']; ?>">
                     <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                     <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                 </div>
@@ -1189,6 +1347,23 @@
 <!-- /.modal -->
 <!-- -------------------------------------------------------------------- Edit Final Outcome Modal - Ends --------------------------------------------------------------------- -->
 
+
+<script>
+    $(document).ready(function(){
+
+        $("#scrClientId").on("change", function(){
+
+            var selectedPan = $('#scrClientId option:selected').data('pan');
+            if(selectedPan)
+                $("#scrClientPan").val(selectedPan);
+            else
+                $("#scrClientPan").val("");
+        });
+
+        $("#scrClientId").trigger("change");
+
+    });
+</script>
 
 <script type="text/javascript">
             
@@ -1217,7 +1392,7 @@
             e.preventDefault();
 
             var scrNoticeId = $(this).data('id');
-            var workId = $('#hiddenWorkId').val();
+            var scrutinyId = $('#hiddenScrutinyId').val();
 
             swal({
                 title: "Are you sure?",
@@ -1237,11 +1412,11 @@
                         type : 'POST',
                         data : {
                             'scrNoticeId':scrNoticeId,
-                            'workId':workId,
+                            'scrutinyId':scrutinyId,
                         },
                         dataType: 'text',
                         success : function(response) {
-                            var refreshUrl = base_url+'/scrutiny-case/'+workId;
+                            var refreshUrl = base_url+'/scrutiny-case/'+scrutinyId;
                             window.location.href=refreshUrl;
                         },
                         error : function(request, error)
@@ -1264,7 +1439,7 @@
 
             var scrNoticeReplyId = $(this).data('id');
             var scrNoticeId = $(this).data('notice_id');
-            var workId = $('#hiddenWorkId').val();
+            var scrutinyId = $('#hiddenScrutinyId').val();
 
             swal({
                 title: "Are you sure?",
@@ -1285,11 +1460,11 @@
                         data : {
                             'scrNoticeReplyId':scrNoticeReplyId,
                             'scrNoticeId':scrNoticeId,
-                            'workId':workId,
+                            'scrutinyId':scrutinyId,
                         },
                         dataType: 'text',
                         success : function(response) {
-                            var refreshUrl = base_url+'/scrutiny-case/'+workId;
+                            var refreshUrl = base_url+'/scrutiny-case/'+scrutinyId;
                             window.location.href=refreshUrl;
                         },
                         error : function(request, error)

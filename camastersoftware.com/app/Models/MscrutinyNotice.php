@@ -15,7 +15,7 @@ class MscrutinyNotice extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['fkWorkId', 'fkNoticeUSId', 'noticeDate', 'noticeDueDate', 'noticeSubject', 'noticeRemark', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['fkScrutinyId', 'fkWorkId', 'fkNoticeUSId', 'noticeDate', 'noticeDueDate', 'noticeSubject', 'noticeRemark', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';
