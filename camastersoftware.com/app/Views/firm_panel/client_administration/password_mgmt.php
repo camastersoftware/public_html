@@ -102,6 +102,15 @@
                                     </div>
                                 </a>
                             </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('dir-pt-password'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p>Directors/Partners</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <!-- /.box-body -->

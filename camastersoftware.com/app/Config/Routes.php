@@ -786,6 +786,9 @@ $routes->post('/edit-client-partnership-password', 'ClientAdministration::edit_p
 
 $routes->get('/custom-due-dates', 'ClientAdministration::custom_due_dates');
 
+$routes->get('/dir-pt-password', 'ClientAdministration::dir_pt_password');
+$routes->post('/edit-client-dir-pt-password', 'ClientAdministration::edit_dir_pt_password');
+
 // Office Management
 $routes->get('/office-administration', 'OfficeAdministration::index');
 
