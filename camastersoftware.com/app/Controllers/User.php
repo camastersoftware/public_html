@@ -34,6 +34,7 @@ class User extends BaseController
         $this->group_category_tbl=$tableArr['group_category_tbl'];
         $this->salutation_tbl=$tableArr['salutation_tbl'];
         $this->organisation_type_tbl=$tableArr['organisation_type_tbl'];
+        $this->staff_types=$tableArr['staff_types'];
 
         $this->sessCaFirmId=$this->session->get('caFirmId');
 
@@ -62,10 +63,12 @@ class User extends BaseController
 
         $userCondtnArr['user_tbl.status']="1";
         $userCondtnArr['user_tbl.isOldUser']=2;
-        $userOrderByArr['user_tbl.userStaffType']="ASC";
+        $userOrderByArr['staff_types.seqNo']="ASC";
         $userOrderByArr['user_tbl.userDesgn']="ASC";
+
+        $userJoinArr[]=array("tbl"=>$this->staff_types, "condtn"=>"staff_types.staff_type_id=user_tbl.userStaffType", "type"=>"left");
         
-        $query=$this->Mquery->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr=array(), $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mquery->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr, $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $getUserList=$query['userData'];
 
@@ -119,6 +122,7 @@ class User extends BaseController
         $this->data['salutationList']=$salutationList;
 
         $staffTypeList=$this->MstaffTypes->where('staff_types.status', 1)
+                        ->orderBy("staff_types.seqNo", "ASC")
                         ->findAll();
 
         $this->data['staffTypeList']=$staffTypeList;
@@ -171,6 +175,7 @@ class User extends BaseController
         $this->data['salutationList']=$salutationList;
 
         $staffTypeList=$this->MstaffTypes->where('staff_types.status', 1)
+                        ->orderBy("staff_types.seqNo", "ASC")
                         ->findAll();
 
         $this->data['staffTypeList']=$staffTypeList;

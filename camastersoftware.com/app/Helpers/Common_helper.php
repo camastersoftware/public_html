@@ -123,3 +123,24 @@ if (!function_exists('getTotMSGCount')) {
         return $totalMsgCount;
     }
 }
+
+if (!function_exists('getTodaysReminders')) {
+    function getTodaysReminders($sessUserId)
+    {   
+        $isReminderPresent = false;
+        if(!empty($sessUserId))
+        {
+            $todaysDate = date("Y-m-d");
+            $Mreminder = new \App\Models\Mreminder();
+            $userReminders = $Mreminder->where("reminderDate", $todaysDate)
+                ->where("status", '1')
+                ->findAll();
+
+            if(!empty($userReminders))
+            {
+                $isReminderPresent = true;
+            }
+        }
+        return $isReminderPresent;
+    }
+}
