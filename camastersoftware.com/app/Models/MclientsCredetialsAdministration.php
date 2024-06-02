@@ -15,7 +15,7 @@ class MclientsCredetialsAdministration extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['client_administration_model_id', 'org_type_id', 'client_id', 'type_of_account_id', 'portal_id', 'digital_certificate_class_master_id', 'login_username', 'password', 'e_way_bill_login', 'e_way_bill_password', 'purchase_from', 'start_date', 'end_date', 'dcs_token_with', 'dcs_token_date', 'notes', 'isDiscontinued', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['client_administration_model_id', 'org_type_id', 'client_id', 'type_of_account_id', 'portal_id', 'digital_certificate_class_master_id', 'login_username', 'password', 'llp_login_username', 'llp_password', 'e_way_bill_login', 'e_way_bill_password', 'purchase_from', 'start_date', 'end_date', 'dcs_token_with', 'dcs_token_date', 'notes', 'isDiscontinued', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';
