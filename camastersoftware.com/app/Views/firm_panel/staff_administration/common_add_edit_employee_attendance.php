@@ -46,25 +46,37 @@
                             </div>
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group bootstrap-timepicker">
-                                    <label>In Time<small class="text-danger">*</small></label>
+                                    <div class="form-group mb-0">
+                                        <label>In Time<small class="text-danger">*</small></label>
+                                        <input type="checkbox" id="setEditInTime<?= $k_row; ?>" class="radio-col-success setEditInTime" data-id="<?= $k_row; ?>" >
+                                        <label for="setEditInTime<?= $k_row; ?>">
+                                            <span class="font-weight-light">Set Current Time<span>
+                                        </label>
+                                    </div>
                                     <div class="input-group">
                 						<div class="input-group-addon">
                 						  <i class="fa fa-clock-o"></i>
                 						</div>
                                         <?php $inTime = (!empty($e_row['inTime'])) ? date('h:i A', strtotime($e_row['inTime'])) : ""; ?>
-                                        <input type="text" class="form-control editTimepicker" name="inTime" id="inTime" placeholder="Enter In Time" value="<?= $inTime; ?>" required>
+                                        <input type="text" class="form-control editTimepicker editInTimeInput<?= $k_row; ?>" name="inTime" id="inTime" placeholder="Enter In Time" value="<?= $inTime; ?>" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group bootstrap-timepicker">
-                                    <label>Out Time <?php if($isEndTimeReqd): ?><small class="text-danger">*</small><?php endif; ?></label>
+                                    <div class="form-group mb-0">
+                                        <label>Out Time <?php if($isEndTimeReqd): ?><small class="text-danger">*</small><?php endif; ?></label>
+                                        <input type="checkbox" id="setEditOutTime<?= $k_row; ?>" class="radio-col-success setEditOutTime" data-id="<?= $k_row; ?>">
+                                        <label for="setEditOutTime<?= $k_row; ?>">
+                                            <span class="font-weight-light">Set Current Time<span>
+                                        </label>
+                                    </div>
                                     <div class="input-group">
                 						<div class="input-group-addon">
                 						  <i class="fa fa-clock-o"></i>
                 						</div>
                                         <?php $outTime = (!empty($e_row['outTime'])) ? date('h:i A', strtotime($e_row['outTime'])) : ""; ?>
-                                        <input type="text" class="form-control editTimepicker" name="outTime" id="outTime" placeholder="Enter Out Time" value="<?= $outTime; ?>" <?php if($isEndTimeReqd): ?>required<?php endif; ?>>
+                                        <input type="text" class="form-control editTimepicker editOutTimeInput<?= $k_row; ?>" name="outTime" id="outTime" placeholder="Enter Out Time" value="<?= $outTime; ?>" <?php if($isEndTimeReqd): ?>required<?php endif; ?>>
                                     </div>
                                 </div>
                             </div>
@@ -133,23 +145,35 @@
                         </div>
                         <div class="col-md-6 col-lg-6">
                             <div class="form-group bootstrap-timepicker">
-                                <label>In Time<small class="text-danger">*</small></label>
+                                <div class="form-group mb-0">
+                                    <label>In Time<small class="text-danger">*</small></label>
+                                    <input type="checkbox" id="setAddInTime" class="radio-col-success">
+                                    <label for="setAddInTime">
+                                        <span class="font-weight-light">Set Current Time<span>
+                                    </label>
+                                </div>
                                 <div class="input-group">
             						<div class="input-group-addon">
             						  <i class="fa fa-clock-o"></i>
             						</div>
-                                    <input type="text" class="form-control timepicker addInTime" name="inTime" id="inTime" placeholder="Enter In Time" value="<?= $currentTime; ?>" required>
+                                    <input type="text" class="form-control timepicker addInTime addInTimeInput" name="inTime" id="inTime" placeholder="Enter In Time"  value="<?= $currentTime; ?>" required>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-6">
                             <div class="form-group bootstrap-timepicker">
-                                <label>Out Time</label>
+                                <div class="form-group mb-0">
+                                    <label>Out Time</label>
+                                    <input type="checkbox" id="setAddOutTime" class="radio-col-success">
+                                    <label for="setAddOutTime">
+                                        <span class="font-weight-light">Set Current Time<span>
+                                    </label>
+                                </div>
                                 <div class="input-group">
             						<div class="input-group-addon">
             						  <i class="fa fa-clock-o"></i>
             						</div>
-                                    <input type="text" class="form-control timepicker addOutTime" name="outTime" id="outTime" placeholder="Enter Out Time" value="" >
+                                    <input type="text" class="form-control timepicker addOutTime addOutTimeInput" name="outTime" id="outTime" placeholder="Enter Out Time" value="" >
                                 </div>
                             </div>
                         </div>
