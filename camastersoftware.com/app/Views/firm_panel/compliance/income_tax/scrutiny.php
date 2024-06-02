@@ -178,21 +178,7 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <?php 
-                                                    $asmtYear="N/A";
-                                                    if(!empty($e_row['finYear']))
-                                                    {
-                                                        $asmtYearVal=$e_row['finYear'];
-                                                        
-                                                        $asmtYearArr = explode('-', $asmtYearVal);
-                                                        
-                                                        $fY=(int)$asmtYearArr[0]+1;
-                                                        $lY=(int)$asmtYearArr[1]+1;
-                                                        
-                                                        $asmtYear=$fY."-".$lY;
-                                                    }
-                                                    echo $asmtYear;
-                                                ?>
+                                                <?php echo (!empty($e_row['finYear'])) ? $e_row['finYear'] : "<div class='text-center'>-</div>"; ?>
                                             </td>
                                             <td>
                                                 <?php echo (!empty($e_row['noticeUnderSectionTitle'])) ? $e_row['noticeUnderSectionTitle'] : "<div class='text-center'>-</div>"; ?>

@@ -148,20 +148,7 @@
     if(in_array($workDataArr['orgType'], INDIVIDUAL_ARRAY))
         $clientNameVar=$workDataArr['clientName'];
     else
-        $clientNameVar=$workDataArr['clientBussOrganisation']; 
-        
-    $asmtYear="N/A";
-    if(!empty($workDataArr['finYear']))
-    {
-        $asmtYearVal=$workDataArr['finYear'];
-        
-        $asmtYearArr = explode('-', $asmtYearVal);
-        
-        $fY=(int)$asmtYearArr[0]+1;
-        $lY=(int)$asmtYearArr[1]+1;
-        
-        $asmtYear=$fY."-".$lY;
-    }
+        $clientNameVar=$workDataArr['clientBussOrganisation'];
     
     $isExternal=$workDataArr['isExternal'];
     $refundTotalAmt=$workDataArr['refundTotalAmt'];
@@ -207,7 +194,7 @@
                                         <div class="col-md-2 col-lg-2 text-center">
                                             <span class="font-weight-bold">A.Y :&nbsp;</span>
                                             <span>
-                                                <?= $asmtYear; ?>
+                                                <?= (!empty($workDataArr['finYear'])) ? $workDataArr['finYear'] : "-"; ?>
                                             </span>
                                         </div>
                                         <div class="col-md-4 col-lg-4 text-center">
@@ -386,7 +373,7 @@
                                                                 <?php $noticeReplyArr = $scrNoticeReplyArray[$scrNoticeId]; ?>
                                                                 <?php $firstNoticeReplyArr = array_shift($noticeReplyArr); ?>
                                                                 <?php $remainNoticeReplyArr = $noticeReplyArr; ?>
-                                                             <?php endif; ?>
+                                                            <?php endif; ?>
                                                             
                                                             <tr class="row-1 <?php if($k_noc>0): ?> noticeDivLine <?php endif; ?>">
                                                                 <td class="column-2 text-center"><?= ($k_noc+1); ?></td>
@@ -709,15 +696,9 @@
                                 <label>Client Name:</label>
                                 <select class="custom-select form-control" name="fkClientId" id="scrClientId" >
                                     <option value="">Select Client</option>
-                                    <?php if(!empty($getClientList)): ?>
-                                        <?php foreach($getClientList AS $e_clnt): ?>
-                                            <?php
-                                                if(in_array($e_clnt['orgType'], INDIVIDUAL_ARRAY))
-                                                    $clientNameVar=$e_clnt['clientName'];
-                                                else
-                                                    $clientNameVar=$e_clnt['clientBussOrganisation']; 
-                                            ?>
-                                            <option value="<?php echo $e_clnt['clientId']; ?>" data-pan="<?= $e_clnt["clientPanNumber"]; ?>" <?= $workDataArr['fkClientId']==$e_clnt['clientId'] ? "selected" : "" ?> ><?php echo $clientNameVar; ?></option>
+                                    <?php if(!empty($clientListArr)): ?>
+                                        <?php foreach($clientListArr AS $e_clnt): ?>
+                                            <option value="<?php echo $e_clnt['clientId']; ?>" data-pan="<?= $e_clnt["clientPanNumber"]; ?>" <?= $workDataArr['fkClientId']==$e_clnt['clientId'] ? "selected" : "" ?>><?php echo $e_clnt['clientName']; ?></option>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </select>

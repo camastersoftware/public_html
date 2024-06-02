@@ -34,7 +34,7 @@
     
     table.dataTable {
         clear: both;
-         margin-top: 0px !important; 
+        margin-top: 0px !important; 
     }
     
     .wizard-content .wizard > .content > .body {
@@ -168,15 +168,9 @@
                                                             <label>Client Name:</label>
                                                             <select class="custom-select form-control" name="fkClientId" id="scrClientId" >
                                                                 <option value="">Select Client</option>
-                                                                <?php if(!empty($getClientList)): ?>
-                                                                    <?php foreach($getClientList AS $e_clnt): ?>
-                                                                        <?php
-                                                                            if(in_array($e_clnt['orgType'], INDIVIDUAL_ARRAY))
-                                                                                $clientNameVar=$e_clnt['clientName'];
-                                                                            else
-                                                                                $clientNameVar=$e_clnt['clientBussOrganisation']; 
-                                                                        ?>
-                                                                        <option value="<?php echo $e_clnt['clientId']; ?>" data-pan="<?= $e_clnt["clientPanNumber"]; ?>"><?php echo $clientNameVar; ?></option>
+                                                                <?php if(!empty($clientListArr)): ?>
+                                                                    <?php foreach($clientListArr AS $e_clnt): ?>
+                                                                        <option value="<?php echo $e_clnt['clientId']; ?>" data-pan="<?= $e_clnt["clientPanNumber"]; ?>"><?php echo $e_clnt['clientName']; ?></option>
                                                                     <?php endforeach; ?>
                                                                 <?php endif; ?>
                                                             </select>
