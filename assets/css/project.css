@@ -937,3 +937,14 @@ table tr td a {
     font-size: 12px; /* Adjust the font size based on your design */
 }
 
+.notify-point-icon {
+    position: relative;
+    top: -14px;
+    right: -98px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.1px 3px;
+    font-size: 4px;
+}
+

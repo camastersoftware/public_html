@@ -225,6 +225,9 @@
                         <div class="search-bx mx-5">
                             <p class="nav_bar verticalLine">
                                 <a href="<?php echo base_url('reminder'); ?>" class="text-white">
+                                    <?php if ($isReminderPresent) : ?>
+                                        <i class="notify-point-icon"></i>
+                                    <?php endif; ?>
                                     &nbsp;Reminders
                                 </a>
                             </p>
