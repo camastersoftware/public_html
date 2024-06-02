@@ -212,6 +212,8 @@ class BaseController extends Controller
         $this->data['feedbackAvgVal'] = $feedbackAvgVal;
 
         $this->data['tot_Msg_Count'] = getTotMSGCount($this->sessUserId);
+
+        $this->data['isReminderPresent'] = getTodaysReminders($this->sessUserId);
         //    dd($this->data['tot_Msg_Count']);
 
         //--------------------------------------------------------------------
