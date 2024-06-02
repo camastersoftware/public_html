@@ -113,6 +113,11 @@
         font-size: 14px !important;
         white-space: nowrap !important;
     }
+
+    .scrNoteClass{
+        font-size: 16px !important;
+        color: #005495 !important;
+    }
     
 </style>
 
@@ -135,90 +140,98 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="table-responsive">
-                        <table class="data_tbl table table-bordered table-striped" style="width:100%">
-                            <thead>
-                                <tr class="text-center tbl_hd_row">
-                                    <th>SN</th>
-                                    <th>Client Name</th>
-                                    <th>Asst Year</th>
-                                    <th>Notice u/s</th>
-                                    <th>Hearing Date</th>
-                                    <th>Attended On</th>
-                                    <th>Attended By</th>
-                                    <th>Next Date</th>
-                                    <th>Order Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $i=1; ?>
-                                <?php if(!empty($workDataArr)): ?>
-                                    <?php foreach($workDataArr AS $e_row): ?>
-                                        <tr class="text-center">
-                                            <td><?php echo $i; ?></td>
-                                            <td nowrap class="text-left">
-                                                <?php 
-                                                    if(in_array($e_row['orgType'], INDIVIDUAL_ARRAY))
-                                                        $clientNameVar=$e_row['clientName'];
-                                                    else
-                                                        $clientNameVar=$e_row['clientBussOrganisation']; 
-                                                ?>
-                                                <a href="<?php echo base_url('scrutiny-case/'.$e_row['scrutinyId']); ?>" data-toggle="tooltip" data-original-title="<?php echo $clientNameVar; ?>">
-                                                    <?php 
-                                                        if(strlen($clientNameVar)>24)
-                                                        {
-                                                            echo substr($clientNameVar, 0, 24)."..";
-                                                        }
-                                                        else
-                                                        {
-                                                            echo $clientNameVar;
-                                                        }
-                                                    ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo (!empty($e_row['finYear'])) ? $e_row['finYear'] : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo (!empty($e_row['noticeUnderSectionTitle'])) ? $e_row['noticeUnderSectionTitle'] : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo (!empty($e_row['noticeDueDate'])) ? date('d-m-Y', strtotime($e_row['noticeDueDate'])) : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo (!empty($e_row['attendedOn'])) ? date('d-m-Y', strtotime($e_row['attendedOn'])) : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td class="text-left">
-                                                <?php echo (!empty($e_row['attendedBy'])) ? $e_row['attendedBy'] : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo (!empty($e_row['nextDate'])) ? date('d-m-Y', strtotime($e_row['nextDate'])) : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo (!empty($e_row['recptFinalOrderDate'])) ? date('d-m-Y', strtotime($e_row['recptFinalOrderDate'])) : "<div class='text-center'>-</div>"; ?>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="waves-effect waves-light btn btn-info btn-sm btn-xs btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
-                                                    <div class="dropdown-menu" style="will-change: transform;">
-                                                        <a class="dropdown-item" href="<?php echo base_url('scrutiny-case/'.$e_row['scrutinyId']); ?>">Scrutiny Details</a>
-                                                        <a class="dropdown-item" href="<?php echo base_url('order-analysis/'.$e_row['scrutinyId']); ?>">Order Analysis</a>
-                                                    </div>
-                                                </div>
-                                            </td>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <label class="font-weight-bold scrNoteClass">For Scrutiny Page :</label>
+                            <span class="font-weight-bold scrNoteClass">From AY-17-18 select from Work Page & for earlier years use direct entry form.</span>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="data_tbl table table-bordered table-striped" style="width:100%">
+                                    <thead>
+                                        <tr class="text-center tbl_hd_row">
+                                            <th>SN</th>
+                                            <th>Client Name</th>
+                                            <th>Asst Year</th>
+                                            <th>Notice u/s</th>
+                                            <th>Hearing Date</th>
+                                            <th>Attended On</th>
+                                            <th>Attended By</th>
+                                            <th>Next Date</th>
+                                            <th>Order Date</th>
+                                            <th>Action</th>
                                         </tr>
-                                        <?php $i++; ?>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="10">
-                                            <center>No records found</center>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php $i=1; ?>
+                                        <?php if(!empty($workDataArr)): ?>
+                                            <?php foreach($workDataArr AS $e_row): ?>
+                                                <tr class="text-center">
+                                                    <td><?php echo $i; ?></td>
+                                                    <td nowrap class="text-left">
+                                                        <?php 
+                                                            if(in_array($e_row['orgType'], INDIVIDUAL_ARRAY))
+                                                                $clientNameVar=$e_row['clientName'];
+                                                            else
+                                                                $clientNameVar=$e_row['clientBussOrganisation']; 
+                                                        ?>
+                                                        <a href="<?php echo base_url('scrutiny-case/'.$e_row['scrutinyId']); ?>" data-toggle="tooltip" data-original-title="<?php echo $clientNameVar; ?>">
+                                                            <?php 
+                                                                if(strlen($clientNameVar)>24)
+                                                                {
+                                                                    echo substr($clientNameVar, 0, 24)."..";
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo $clientNameVar;
+                                                                }
+                                                            ?>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo (!empty($e_row['finYear'])) ? $e_row['finYear'] : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo (!empty($e_row['noticeUnderSectionTitle'])) ? $e_row['noticeUnderSectionTitle'] : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo (!empty($e_row['noticeDueDate'])) ? date('d-m-Y', strtotime($e_row['noticeDueDate'])) : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo (!empty($e_row['attendedOn'])) ? date('d-m-Y', strtotime($e_row['attendedOn'])) : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <?php echo (!empty($e_row['attendedBy'])) ? $e_row['attendedBy'] : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo (!empty($e_row['nextDate'])) ? date('d-m-Y', strtotime($e_row['nextDate'])) : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo (!empty($e_row['recptFinalOrderDate'])) ? date('d-m-Y', strtotime($e_row['recptFinalOrderDate'])) : "<div class='text-center'>-</div>"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="waves-effect waves-light btn btn-info btn-sm btn-xs btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                            <div class="dropdown-menu" style="will-change: transform;">
+                                                                <a class="dropdown-item" href="<?php echo base_url('scrutiny-case/'.$e_row['scrutinyId']); ?>">Scrutiny Details</a>
+                                                                <a class="dropdown-item" href="<?php echo base_url('order-analysis/'.$e_row['scrutinyId']); ?>">Order Analysis</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php $i++; ?>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <center>No records found</center>
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
