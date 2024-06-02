@@ -151,7 +151,31 @@ class Scrutiny extends BaseController
         
         $getClientList=$query['userData'];
 
-        $this->data['getClientList']=$getClientList;
+        $clientListArr = array();
+
+        if(!empty($getClientList))
+        {
+            foreach($getClientList AS $e_clnt)
+            {
+                if(in_array($e_clnt['orgType'], INDIVIDUAL_ARRAY))
+                    $clientNameVar=$e_clnt['clientName'];
+                else
+                    $clientNameVar=$e_clnt['clientBussOrganisation'];
+
+                $clientListArr[] = array(
+                    'clientId' => $e_clnt['clientId'],
+                    'clientName' => $clientNameVar,
+                    'clientPanNumber' => $e_clnt['clientPanNumber']
+                );
+            }
+
+            // Sorting $clientListArr by 'clientName'
+            usort($clientListArr, function ($a, $b) {
+                return strcmp($a['clientName'], $b['clientName']);
+            });
+        }
+
+        $this->data['clientListArr']=$clientListArr;
 
         $workCondtnArr['scrutiny_tbl.scrutinyId']=$scrutinyId;
         $workCondtnArr['client_tbl.status']="1";
@@ -400,7 +424,31 @@ class Scrutiny extends BaseController
         
         $getClientList=$query['userData'];
 
-        $this->data['getClientList']=$getClientList;
+        $clientListArr = array();
+
+        if(!empty($getClientList))
+        {
+            foreach($getClientList AS $e_clnt)
+            {
+                if(in_array($e_clnt['orgType'], INDIVIDUAL_ARRAY))
+                    $clientNameVar=$e_clnt['clientName'];
+                else
+                    $clientNameVar=$e_clnt['clientBussOrganisation'];
+
+                $clientListArr[] = array(
+                    'clientId' => $e_clnt['clientId'],
+                    'clientName' => $clientNameVar,
+                    'clientPanNumber' => $e_clnt['clientPanNumber']
+                );
+            }
+
+            // Sorting $clientListArr by 'clientName'
+            usort($clientListArr, function ($a, $b) {
+                return strcmp($a['clientName'], $b['clientName']);
+            });
+        }
+
+        $this->data['clientListArr']=$clientListArr;
         
         $noticeUSArr=$this->MNoticeUnderSection->where('status', 1)->findAll();
 
