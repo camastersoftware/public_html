@@ -410,6 +410,7 @@ $routes->get('/reset-inc-tax-forms', 'ComplianceSection/Income_tax2::reset_inc_t
 $routes->get('/inc-event-based-due-dates', 'ComplianceSection/Income_tax3::event_based_due_dates');
 $routes->get('/inc-event-based-work/(:any)', 'ComplianceSection\Income_tax3::event_based_work_form/$1');
 $routes->post('/update-inc-event-based-work', 'ComplianceSection/Income_tax3::update_event_based_work_form');
+$routes->post('/update-inc-work-juniors', 'ComplianceSection/Income_tax3::update_inc_work_juniors');
 
 //------------------------------Rectification-----------------------------//
 $routes->get('/rectification', 'ComplianceSection/Income_tax::rectification');
