@@ -367,9 +367,7 @@
 
         /**/
         var activeState = document.getElementsByClassName("clrBtn");
-        console.log(activeState);
         for(i=0; i<activeState.length; i++){
-            // console.log(activeState)+1;
             activeState[i].classList.remove('active');
         }
         y.classList.add('active');
@@ -389,9 +387,7 @@
 
         /**/
         var activeState = document.getElementsByClassName("clrBtn");
-        console.log(activeState);
         for(i=0; i<activeState.length; i++){
-            // console.log(activeState)+1;
             activeState[i].classList.remove('active');
         }
         y.classList.add('active');

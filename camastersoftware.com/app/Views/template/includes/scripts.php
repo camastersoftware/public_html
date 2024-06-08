@@ -78,16 +78,12 @@
                     "link": false, //Button to insert a link. Default true
                     "image": false, //Button to insert an image. Default true
                 }
-            });		
-            
-            //  $('.textarea').css("height", "400px");
+            });
         });
     </script>
 <?php endif; ?>
 
 <?php if(in_array('ckeditor', $jsArr)): ?>
-    <!--<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>-->
-    <!--<script src="https://cdn.ckeditor.com/4.23.0-lts/standard/ckeditor.js"></script>-->
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     
     <script>
@@ -123,33 +119,6 @@
             });
         }
     });
-
-    
-            // ClassicEditor
-            // .create( document.querySelector( '#ckeditor_textarea' ) )
-            // .then( editor => {
-            //         console.log( editor );
-            // } )
-            // .catch( error => {
-            //         console.error( error );
-            // } );
-                                
-        // ClassicEditor
-        //   .create(document.querySelector('#ckeditor_textarea'), {
-        //     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-        //     // Add other configuration options as needed
-        //   })
-        //   .then(editor => {
-        //     // Set up synchronization between CKEditor and the hidden textarea
-        //     const textarea = document.getElementsByClassName('textarea_input');
-        //     editor.model.document.on('change', () => {
-        //         console.log("editor.getData()", editor.getData());
-        //       textarea.value = editor.getData();
-        //     });
-        //   })
-        //   .catch(error => {
-        //     console.error(error);
-        //   });
     </script>
 <?php endif; ?>
 
@@ -200,8 +169,25 @@
 
 <script>
     var requestMethod = "<?php echo $requestMethod; ?>";
-    console.log(requestMethod);
 </script>
 
 <script src="<?php echo base_url('assets/js/custom.js?v='.date('Ymd')); ?>"></script>
 <script src="<?php echo base_url('assets/js/get-back.js?v='.date('Ymd')); ?>"></script>
+
+<script>
+    // Save scroll position on scroll event
+    $(window).on('scroll', function() {
+        var scrollPosition = $(window).scrollTop();
+        // console.log("scrollPosition", scrollPosition);
+        sessionStorage.setItem('scrollPosition', scrollPosition);
+    });
+
+    // Restore scroll position on page load
+    $(window).on('load', function() {
+        var savedPosition = sessionStorage.getItem('scrollPosition');
+        // console.log('Saved scroll position:', savedPosition);
+        if (savedPosition !== null) {
+            $(window).scrollTop(savedPosition);
+        }
+    });
+</script>

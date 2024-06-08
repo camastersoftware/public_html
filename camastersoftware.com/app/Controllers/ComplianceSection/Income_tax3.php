@@ -453,11 +453,28 @@ class Income_tax3 extends BaseController
         $userOrderByArr['user_tbl.userFullName']="ASC";
         $userOrderByArr['user_tbl.userSeq']="ASC";
         
-        $query=$this->Mquery->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.isCostCenter", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr=array(), $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mquery->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.isCostCenter", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr=array(), $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $getUserList=$query['userData'];
     
         $this->data['getUserList']=$getUserList;
+
+        $jnrCondtnArr['work_junior_map_tbl.status']="1";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_junior_map_tbl, $colNames="work_junior_map_tbl.fkWorkId, work_junior_map_tbl.fkUserId", $jnrCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $jnrList=$query['userData'];
+
+        $jnrIdsWorkArr = array();
+        if(!empty($jnrList))
+        {
+            foreach($jnrList AS $e_wk_jnr)
+            {
+                $jnrIdsWorkArr[$e_wk_jnr["fkWorkId"]][$e_wk_jnr["fkUserId"]]=$e_wk_jnr["fkUserId"];
+            }
+        }
+
+        $this->data['jnrIdsWorkArr']=$jnrIdsWorkArr;
 
         return view('firm_panel/compliance/income_tax/pending', $this->data);
     }
@@ -1179,6 +1196,80 @@ class Income_tax3 extends BaseController
             $this->Mquery->insertLog($insertLogArr);
 
             $this->session->setFlashdata('successMsg', "Event Based Work Information updated successfully :)");
+        }
+        
+        return redirect()->back();
+    }
+
+    public function update_inc_work_juniors()
+    {
+        $this->db->transBegin();
+
+        $workId=$this->request->getPost('workId');
+        $juniorsIds=$this->request->getPost('juniorsIds');
+        $juniors=$this->request->getPost('juniors');
+
+        // print_r($this->request->getPost());
+        // die();
+
+        $wkUpdateArr = [
+            'juniors'=>$juniors,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['work_tbl.workId']=$workId;
+
+        $query=$this->Mcommon->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+
+        $junrUpdateArr = [
+            'status'=>2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $junrCondtnArr['work_junior_map_tbl.fkWorkId']=$workId;
+
+        $query=$this->Mcommon->updateData($tableName=$this->work_junior_map_tbl, $junrUpdateArr, $junrCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+        $junrInsertArr=array();
+
+        if(!empty($juniorsIds))
+        {
+            foreach($juniorsIds AS $e_jnr)
+            {
+                $junrInsertArr[] = [
+                    'fkWorkId'=>$workId,
+                    'fkUserId'=>$e_jnr,
+                    'status' => 1,
+                    'createdBy' => $this->adminId,
+                    'createdDatetime' => $this->currTimeStamp
+                ];
+            }
+
+            $this->Mcommon->insert($tableName=$this->work_junior_map_tbl, $junrInsertArr, $returnType="");
+        }
+
+        if($this->db->transStatus() === FALSE)
+        {
+            $this->db->transRollback();
+
+            $this->session->setFlashdata('errorMsg', "Something went wrong!!, Juniors Allotment has not updated :(");
+        }
+        else
+        {
+            $this->db->transCommit();
+
+            $insertLogArr['section']=$this->section;
+            $insertLogArr['message']="Juniors Allotment updated";
+            $insertLogArr['ip']=$this->IPAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $this->session->setFlashdata('successMsg', "Juniors Allotment has been updated successfully :)");
         }
         
         return redirect()->back();
