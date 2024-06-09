@@ -243,10 +243,12 @@
                                 <button class="btn btn-submit btn-sm" data-toggle="tooltip" data-original-title="Filter">&nbsp;Add</button>
                             </a>
                             &nbsp;&nbsp;
-                             <a href="<?php echo base_url('scheduleNotes'); ?>">
+                            <!--
+                            <a href="<?php //echo base_url('scheduleNotes'); ?>">
                                 <button type="button" class="btn btn-danger btn-sm">Notes</button>
                             </a>
                             &nbsp;&nbsp;
+                            -->
                             <a href="<?php echo base_url('office-administration'); ?>">
                                 <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right">Back</button>
                             </a>
