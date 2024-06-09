@@ -15,6 +15,7 @@
         margin: 50px !important;
         width: 70% !important;
         margin-top: 130px !important;
+        margin-bottom: 0px !important;
     }
     
     .quotesSpan{
@@ -48,7 +49,7 @@
                 <?php endif; ?>
             <?php else: ?>
                 <img src="<?= esc(base_url('assets/images/logo-ca.png')); ?>" class="img-fuild ca_logo_img" height="100%">
-                <span class="logoTitleSpan">Professional Practice Management</span>
+                <span class="logoTitleSpan">Compliance Management Solution</span>
             <?php endif; ?>
         </div>
     </div>
@@ -61,7 +62,7 @@
                             <div class="card-header text-center" style="padding-bottom: 5px;">
                                 <img class="img-fluid" src="<?= esc(base_url('assets/images/logo-ca.png')); ?>" alt="" style="margin:0 auto; width:230px;">
                             </div>
-                            <p class="text-center" style="color: #005495; font-size: 14px;font-weight: 600;text-transform: uppercase;">Professional Practice Management</p>
+                            <p class="text-center" style="color: #005495; font-size: 14px;font-weight: 600;text-transform: uppercase;">Compliance Management Solution</p>
                             <div class="card-body">
                                 <h4 style="color:black;">Login</h4>
                                 <form action="" method="post">
