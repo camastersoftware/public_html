@@ -21,6 +21,7 @@ class MyAccount extends BaseController
         $this->Mfeedback = new \App\Models\Mfeedback();
         $this->Mfirm = new \App\Models\Mfirm();
         $this->Mconfig = new \App\Models\Mconfig();
+        $this->MYearConfig = new \App\Models\MYearConfig();
         $this->Mcommon = new \App\Models\Mcommon();
         $this->TableLib = new \App\Libraries\TableLib();
 
@@ -32,6 +33,10 @@ class MyAccount extends BaseController
         $this->staff_types=$tableArr['staff_types'];
         
         $this->section="My Account";
+
+        $this->currCalYear = date("Y");
+
+        $this->data['currCalYear']=$this->currCalYear;
     }
 
 	public function feedback_report()
@@ -446,7 +451,7 @@ class MyAccount extends BaseController
 	        $this->session->setFlashdata('errorMsg', "Announcement Settings has not update :(");
 	    }
 	    
-	    return redirect()->route('announcement-settings');
+        return redirect()->route('announcement-settings');
 	}
 	
 	public function hr_settings()
@@ -464,6 +469,15 @@ class MyAccount extends BaseController
 
         $navArr[0]['active']=true;
         $navArr[0]['title']=$pageTitle;
+
+        $calYear = $this->request->getGet("calYear");
+
+        if(empty($calYear))
+        {
+            $calYear = $this->currCalYear;
+        }
+
+        $this->data['calYear']=$calYear;
         
         $firmDetails=$this->Mfirm->select('ca_firm_tbl.*')
             ->where('ca_firm_tbl.status', 1)
@@ -484,8 +498,13 @@ class MyAccount extends BaseController
         $ancDataArr=$query['userData'];
 
         $this->data['ancDataArr']=$ancDataArr;
+
+        $configCondtn = array(
+            "year" => $calYear,
+            'status' => 1
+        );
         
-        $settingsArr = $this->Mconfig->where('status', 1)->get()->getRowArray();
+        $settingsArr = $this->MYearConfig->where($configCondtn)->get()->getRowArray();
         
         $this->data['settingsArr']=$settingsArr;
 
@@ -495,22 +514,26 @@ class MyAccount extends BaseController
 	public function update_hr_settings()
 	{
 	    $configId=$this->request->getPost('configId');
+	    $year=$this->request->getPost('year');
 	    $officeStartTime=$this->request->getPost('officeStartTime');
 	    $officeEndTime=$this->request->getPost('officeEndTime');
 	    $halfDayStartTime=$this->request->getPost('halfDayStartTime');
 	    $halfDayEndTime=$this->request->getPost('halfDayEndTime');
+	    $scheduleNotes=$this->request->getPost('scheduleNotes');
 	    
 	    $insertArr=[
-            'configId'          =>  $configId,
-            'officeStartTime'   =>  $officeStartTime,
-            'officeEndTime'     =>  $officeEndTime,
-            'halfDayStartTime'  =>  $halfDayStartTime,
-            'halfDayEndTime'    =>  $halfDayEndTime,
-            'updatedBy'         =>  $this->adminId,
-            'updatedDatetime'   =>  $this->currTimeStamp
+            'calender_year_config_id'   =>  $configId,
+            'year'                      =>  $year,
+            'officeStartTime'           =>  $officeStartTime,
+            'officeEndTime'             =>  $officeEndTime,
+            'halfDayStartTime'          =>  $halfDayStartTime,
+            'halfDayEndTime'            =>  $halfDayEndTime,
+            'scheduleNotes'             =>  $scheduleNotes,
+            'updatedBy'                 =>  $this->adminId,
+            'updatedDatetime'           =>  $this->currTimeStamp
         ];
 	    
-	    if($this->Mconfig->save($insertArr))
+	    if($this->MYearConfig->save($insertArr))
 	    {
 	        $insertLogArr['section']=$this->section;
             $insertLogArr['message']="HR Settings Updated";
