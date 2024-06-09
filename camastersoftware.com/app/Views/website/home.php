@@ -68,7 +68,8 @@
         <div class="section-title" data-aos="fade-up">
           <h3>WELCOME TO</h3> 
           <h2 class="color-title">CAMASTER SOFTWARE PRIVATE LIMITED</h2>
-          <P>PROFESSIONAL OFFICE MANAGEMENT</P>
+          <!-- <P>PROFESSIONAL OFFICE MANAGEMENT</P> -->
+          <P>COMPLIANCE MANAGEMENT SOLUTION</P>
         </div>
 
         <div class="row text-center">

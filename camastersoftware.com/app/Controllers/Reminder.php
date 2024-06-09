@@ -53,8 +53,8 @@ class Reminder extends BaseController
         
         $reminderArr = $this->Mreminder->where('status', 1)
                     ->where('reminderAddedBy', $this->adminId)
-                    ->orderBy('reminderDate', "ASC")
-                    ->orderBy('reminderFrom', "ASC")
+                    ->orderBy('reminderDate', "DESC")
+                    ->orderBy('reminderFrom', "DESC")
                     ->findAll();
 
         $this->data['reminderArr']=$reminderArr;
