@@ -23,7 +23,7 @@
                             <div class="card-header text-center" style="padding-bottom: 5px;">
                                 <img class="img-fluid" src="<?= esc(base_url('assets/images/logo-ca.png')); ?>" alt="" style="margin:0 auto; width:230px;">
                             </div>
-                            <p class="text-center" style="color: #005495; font-size: 14px;font-weight: 600;text-transform: uppercase;">Professional Practice Management</p>
+                            <p class="text-center" style="color: #005495; font-size: 14px;font-weight: 600;text-transform: uppercase;">Compliance Management Solution</p>
                             <div class="card-body">
                                 <h4 style="color:black;">Login</h4>
                                 <form action="" method="post">

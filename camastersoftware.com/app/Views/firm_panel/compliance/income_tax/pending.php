@@ -468,8 +468,8 @@
                                                                 </td>
                                                                 <td class="column-6 <?= $rowColor; ?>" width="7%" nowrap >
                                                                     <div class="text-center" data-toggle="tooltip" data-original-title="<?= $e_inc_row['juniors']; ?>">
-                                                                        <?php if($e_inc_row['juniors']!=""): ?>
-                                                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#updateJuniorStaff<?= $uniqueRowId ?>">
+                                                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#updateJuniorStaff<?= $uniqueRowId ?>">
+                                                                            <?php if($e_inc_row['juniors']!=""): ?>
                                                                                 <?php
                                                                                     $juniorArray = explode(", ", $e_inc_row['juniors']);
                                                                                     if(count($juniorArray)>1)
@@ -481,10 +481,10 @@
                                                                                         echo $e_inc_row['juniors'];
                                                                                     }
                                                                                 ?>
-                                                                            </a>
-                                                                        <?php else: ?>
-                                                                            -
-                                                                        <?php endif; ?>
+                                                                            <?php else: ?>
+                                                                                -
+                                                                            <?php endif; ?>
+                                                                        </a>
                                                                     </div>
                                                                     <!-- Modal -->
                                                                     <div id="updateJuniorStaff<?= $uniqueRowId ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
