@@ -121,6 +121,8 @@ class TableLib
         $tableArr['firm_salary_parameters_tbl']=$adminDB.".firm_salary_parameters_tbl";
         $tableArr['event_based_work_tbl']=$adminDB.".event_based_work_tbl";
         $tableArr['scrutiny_tbl']=$adminDB.".scrutiny_tbl";
+        $tableArr['calender_year_config_tbl']=$adminDB.".calender_year_config_tbl";
+        $tableArr['reminder_user_map_tbl']=$adminDB.".reminder_user_map_tbl";
         
         return $tableArr;
 	}
