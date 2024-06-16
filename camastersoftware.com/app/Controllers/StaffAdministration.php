@@ -89,7 +89,7 @@ class StaffAdministration extends BaseController
         $userOrderByArr['user_tbl.userStaffType'] = "ASC";
         $userOrderByArr['user_tbl.userDesgn'] = "ASC";
 
-        $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+        $query = $this->Mcommon->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
         $getUserList = $query['userData'];
 
@@ -121,7 +121,7 @@ class StaffAdministration extends BaseController
         $userOrderByArr['user_tbl.userStaffType'] = "ASC";
         $userOrderByArr['user_tbl.userDesgn'] = "ASC";
 
-        $query = $this->Mquery->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+        $query = $this->Mcommon->getRecords($tableName = $this->user_tbl, $colNames = "user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userStaffType, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.userDob, user_tbl.userDOJ, user_tbl.userPan", $userCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = FALSE, $userOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
 
         $getUserList = $query['userData'];
 
