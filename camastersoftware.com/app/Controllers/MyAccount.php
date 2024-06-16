@@ -190,7 +190,7 @@ class MyAccount extends BaseController
         $userCondtnArr['user_tbl.status']="1";
         $userCondtnArr['user_tbl.isOldUser']=2;
         $userOrderByArr['staff_types.seqNo']="ASC";
-        $userOrderByArr['user_tbl.userStaffType']="ASC";
+        // $userOrderByArr['user_tbl.userStaffType']="ASC";
         $userOrderByArr['user_tbl.userDesgn']="ASC";
         
         $userJoinArr[]=array("tbl"=>$this->staff_types, "condtn"=>'staff_types.staff_type_id=user_tbl.userStaffType', "type"=>"left");
