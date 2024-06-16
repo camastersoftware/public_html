@@ -46,6 +46,7 @@ class MainPage extends BaseController
         $this->client_partner_tbl=$tableArr['client_partner_tbl'];
         $this->periodicity_tbl=$tableArr['periodicity_tbl'];
         $this->due_date_type_tbl=$tableArr['due_date_type_tbl'];
+        $this->staff_types=$tableArr['staff_types'];
         
         $currMth=date('n');
         
@@ -2057,10 +2058,13 @@ class MainPage extends BaseController
         // $userCondtnArr['user_tbl.userId']=$userId;
         $userCondtnArr['user_tbl.status']="1";
         $userCondtnArr['user_tbl.isOldUser']="2";
-        $userOrderByArr['user_tbl.userStaffType']="ASC";
+        $userOrderByArr['staff_types.seqNo']="ASC";
+        // $userOrderByArr['user_tbl.userStaffType']="ASC";
         $userOrderByArr['user_tbl.userDesgn']="ASC";
+
+        $userJoinArr[]=array("tbl"=>$this->staff_types, "condtn"=>"staff_types.staff_type_id=user_tbl.userStaffType", "type"=>"left");
         
-        $query=$this->Mcommon->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.*", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr=array(), $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.*", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr, $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $userDataArr=$query['userData'];
 
