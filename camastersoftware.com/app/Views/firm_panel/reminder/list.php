@@ -52,7 +52,7 @@
         
         .clrBtn {
             width: 13.33%;
-            padding: 25px;
+            padding: 0px;
             color: #ffffff;
             font-size: 30px;
             cursor: pointer;
@@ -84,6 +84,12 @@
             border-bottom: 3px solid #333333;
             z-index: 11;
             transform: rotate(-45deg);
+        }
+
+        .clrBtn span{
+            color: #000000 !important;
+            font-size: 10px !important;
+
         }
         
         .none{
@@ -159,7 +165,11 @@
                                             <tr style="background-color: <?php echo $e_row['reminderColor']; ?> !important;" class="<?php if($crMth!=$prvMth && $prvMth!=""): ?>borderTopClr<?php endif; ?>">
                                     			<td nowrap class="text-center" width="5%"><?php echo date("d-m-Y", strtotime($e_row['reminderDate'])); ?></td>
                                     			<td nowrap class="text-center" width="5%"><?php echo date("D", strtotime($e_row['reminderDate'])); ?></td>
-                                    			<td nowrap><?php echo $e_row['reminderFor']; ?></td>
+                                    			<td nowrap>
+                                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#updateReminder<?php echo $e_row['reminderId']; ?>">
+                                                        <?php echo $e_row['reminderFor']; ?>
+                                                    </a>
+                                                </td>
                                     			<td nowrap class="text-center" width="5%">
                                     			    <?php 
                                     			        if(!empty($e_row['reminderFrom']) && $e_row['reminderFrom']!="00:00:00")
@@ -189,7 +199,7 @@
                                     			</td>
                                     		</tr>
                                     	    <?php $i++; ?>
-                                    	 <?php $prvMth=$crMth; ?>
+                                    	    <?php $prvMth=$crMth; ?>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
@@ -213,6 +223,15 @@
     
     <?php if(!empty($reminderArr)): ?>
         <?php foreach($reminderArr AS $e_row): ?>
+
+        <?php
+            $rmdUserArr = array();
+            
+            if(!empty($reminderUsers[$e_row['reminderId']]))
+            {
+                $rmdUserArr = $reminderUsers[$e_row['reminderId']];
+            }
+        ?>
         
         <!-- Modal -->
         <div id="updateReminder<?php echo $e_row['reminderId']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -251,19 +270,30 @@
                                 </div>
                                 <div class="col-md-12 col-lg-12">
                                     <div class="form-group">
+                                        <label>Reminder To :</label>
+                                        <select class="form-control select2" name="reminderToUsers[]" id="reminderToUsers<?php echo $e_row['reminderId']; ?>" multiple="multiple" data-placeholder="Reminder To" style="width:100%;">
+                                            <option value="">Select Users</option>
+                                            <?php if(!empty($getUserList)): ?>
+                                                <?php foreach($getUserList AS $e_usr_val): ?>
+                                                    <option value="<?= $e_usr_val['userId']; ?>" <?= (in_array($e_usr_val['userId'], $rmdUserArr)) ? "selected":""; ?> ><?= $e_usr_val['userShortName']; ?></option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
                                         <label>Color<small class="text-danger">*</small></label>
-                                        <!--<select class="custom-select form-control" name="reminderColor" id="reminderColor" required>-->
-                                        <!--    <option value="">Select</option>-->
-                                        <!--    <option value="none" <?php //if($e_row['reminderColor']=="none"): ?>selected<?php //endif; ?> >None</option>-->
-                                        <!--    <option value="#f58b8b" <?php //if($e_row['reminderColor']=="#f58b8b"): ?>selected<?php //endif; ?> >Red</option>-->
-                                        <!--    <option value="#f0f58b7d" <?php //if($e_row['reminderColor']=="#f0f58b7d"): ?>selected<?php //endif; ?> >Yellow</option>-->
-                                        <!--    <option value="#f38bf5" <?php //if($e_row['reminderColor']=="#f38bf5"): ?>selected<?php //endif; ?> >Violet</option>-->
-                                        <!--    <option value="#37fa1f" <?php //if($e_row['reminderColor']=="#37fa1f"): ?>selected<?php //endif; ?> >Green</option>-->
-                                        <!--</select>-->
                                         <div class="grid-Wrapper">
-                                            <button type="button" class="clrBtn none <?php if($e_row['reminderColor']=="none"): ?>active<?php endif; ?>" data-clr="none" data-id="<?php echo $e_row['reminderId']; ?>" onclick="EditColorPicker('none',this);"></button>
-                                            <button type="button" class="clrBtn yellow <?php if($e_row['reminderColor']=="#f0f58b7d"): ?>active<?php endif; ?>" data-clr="#f0f58b7d" data-id="<?php echo $e_row['reminderId']; ?>" onclick="EditColorPicker('#f0f58b7d',this);"></button>
-                                            <button type="button" class="clrBtn red <?php if($e_row['reminderColor']=="pink"): ?>active<?php endif; ?>" data-clr="pink" data-id="<?php echo $e_row['reminderId']; ?>" onclick="EditColorPicker('pink',this);"></button>
+                                            <button type="button" class="clrBtn none <?php if($e_row['reminderColor']=="none"): ?>active<?php endif; ?>" data-clr="none" data-id="<?php echo $e_row['reminderId']; ?>" onclick="EditColorPicker('none',this);">
+                                                <span>Low</span>
+                                            </button>
+                                            <button type="button" class="clrBtn yellow <?php if($e_row['reminderColor']=="#f0f58b7d"): ?>active<?php endif; ?>" data-clr="#f0f58b7d" data-id="<?php echo $e_row['reminderId']; ?>" onclick="EditColorPicker('#f0f58b7d',this);">
+                                                <span>Medium</span>
+                                            </button>
+                                            <button type="button" class="clrBtn red <?php if($e_row['reminderColor']=="pink"): ?>active<?php endif; ?>" data-clr="pink" data-id="<?php echo $e_row['reminderId']; ?>" onclick="EditColorPicker('pink',this);">
+                                                <span>High</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -273,7 +303,13 @@
                             <input type="hidden" name="reminderId" id="reminderId" value="<?php echo $e_row['reminderId']; ?>">
                             <input type="hidden" name="reminderColor" id="reminderColor<?php echo $e_row['reminderId']; ?>" value="<?php echo $e_row['reminderColor']; ?>" />
                             <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
-                            <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                            <?php if($e_row['isGroupReminder']==1): ?>
+                                <?php if($sessUserLoginID==$e_row['reminderAddedBy']): ?>
+                                    <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
@@ -323,26 +359,39 @@
                             </div>
                             <div class="col-md-12 col-lg-12">
                                 <div class="form-group">
+                                    <label>Reminder To :</label>
+                                    <select class="form-control select2" name="reminderToUsers[]" id="reminderToUsers" multiple="multiple" data-placeholder="Reminder To" style="width:100%;">
+                                        <option value="">Select Users</option>
+                                        <?php if(!empty($getUserList)): ?>
+                                            <?php foreach($getUserList AS $e_usr_val): ?>
+                                                <?php if($sessUserLoginID!=$e_usr_val['userId']): ?>
+                                                <option value="<?= $e_usr_val['userId']; ?>" data-short="<?= $e_usr_val['userShortName']; ?>"><?= $e_usr_val['userShortName']; ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <div class="form-group">
                                     <label>Select Color<small class="text-danger">*</small></label>
-                                    <!--<select class="custom-select form-control" name="reminderColor" id="reminderColor" required>-->
-                                    <!--    <option value="">Select</option>-->
-                                    <!--    <option value="none">None</option>-->
-                                    <!--    <option value="#f58b8b">Red</option>-->
-                                    <!--    <option value="#f0f58b7d">Yellow</option>-->
-                                    <!--    <option value="#f38bf5">Violet</option>-->
-                                    <!--    <option value="#37fa1f">Green</option>-->
-                                    <!--</select>-->
                                     <div class="grid-Wrapper">
-                                        <button type="button" class="clrBtn none" data-clr="none" onclick="ColorPicker('none',this);"></button>
-                                        <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker('#f0f58b7d',this);"></button>
-                                        <button type="button" class="clrBtn red active" data-clr="pink" onclick="ColorPicker('pink',this);"></button>
+                                        <button type="button" class="clrBtn none" data-clr="none" onclick="ColorPicker('none',this);">
+                                            <span>Low</span>
+                                        </button>
+                                        <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker('#f0f58b7d',this);">
+                                            <span>Medium</span>
+                                        </button>
+                                        <button type="button" class="clrBtn red active" data-clr="pink" onclick="ColorPicker('pink',this);">
+                                            <span>High</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer text-right" style="width: 100%;">
-                        <input type="hidden" name="reminderColor" id="reminderColor" value="#f58b8b" />
+                        <input type="hidden" name="reminderColor" id="reminderColor" value="pink" />
                         <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                         <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                     </div>
@@ -374,7 +423,6 @@
         
         var clr = $(y).data('clr');
         $('#reminderColor').val(clr);
-       
     }
     
     function EditColorPicker(x,y){
@@ -395,7 +443,6 @@
         var clr = $(y).data('clr');
         var rmId = $(y).data('id');
         $('#reminderColor'+rmId).val(clr);
-       
     }
         
     $(document).ready(function(){

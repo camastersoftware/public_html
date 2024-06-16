@@ -4,18 +4,18 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Mreminder extends Model
+class MreminderUser extends Model
 {
     protected $DBGroup = 'adminDB';
-    protected $table = 'reminder_tbl';
-    protected $primaryKey = 'reminderId';
+    protected $table = 'reminder_user_map_tbl';
+    protected $primaryKey = 'reminder_user_map_id';
 
     protected $useAutoIncrement = true;
 
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['reminderDate', 'reminderFor', 'reminderColor', 'reminderFrom', 'reminderTo', 'reminderAddedBy', 'isGroupReminder', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['fkReminderId', 'fkUserId', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';
