@@ -98,6 +98,7 @@ class Reminder extends BaseController
         $this->data['reminderUsers']=$reminderUsers;
 
         $userCondtnArr['user_tbl.status']="1";
+        $userCondtnArr['user_tbl.isOldUser']=2;
         $userOrderByArr['user_tbl.userFullName']="ASC";
         $userOrderByArr['user_tbl.userSeq']="ASC";
         
