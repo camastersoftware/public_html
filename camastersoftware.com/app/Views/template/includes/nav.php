@@ -34,7 +34,7 @@
                 <ul class="nav navbar-nav">
                     <li class="btn-group d-lg-inline-flex d-none">
                         <div class="app-menu animateHeader" data-id="in">
-                            <div class="front animateInHeader">
+                            <div class="front animateInHeader text-center">
                                 <div class="search-bx mx-5">
                                     <p class="mb-0 font-weight-bold">
                                         <?php echo date('l, dS M Y'); ?>
@@ -42,16 +42,23 @@
                                     <div id="MyClockDisplay" class="clock text-center" onload="showTime()"></div>
                                 </div>
                             </div>
-                            <div class="back animateOutHeader text-center" style="width: 250px;">
+                            <div class="back animateOutHeader" style="width: 250px; display: block ruby;">
                                 <div class="search-bx mx-5">
                                     <p class="mb-0 font-weight-bold">
-                                        <span>Login By :</span>
+                                        <span>Login :</span>
                                         <span class="fu_count loginNameSpan"><?php echo $sessUserLoginName; ?></span>
                                     </p>
                                     <p class="mb-0 font-weight-bold" style="font-size: 12px !important;">
                                         <span>Due Date Year :</span>
                                         <span class="fu_count loginNameSpan"><?php echo $sessDueDateYear; ?></span>
                                     </p>
+                                </div>
+                                <div class="search-bx mx-5">
+                                    <?php if (!empty($sessUserImg)) : ?>
+                                        <img src="<?= base_url("uploads/ca_firm_" . $sessCaFirmId . "/documents/" . $sessUserImg); ?>"  class="nav-profile-img" />
+                                    <?php else : ?>
+                                        <img src="<?= base_url("assets/images/avatar/blank.png"); ?>" class="nav-profile-img" />
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
