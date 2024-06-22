@@ -655,7 +655,7 @@ section.mt-40{
 .fu_count{
     width: 60px !important;
     display: inline-block !important;
-    text-align: end !important;
+    /* text-align: end !important; */
 }
 
 .mr_my_work{
