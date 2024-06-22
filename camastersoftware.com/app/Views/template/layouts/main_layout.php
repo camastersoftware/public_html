@@ -32,8 +32,7 @@
     ?>
     
     <script>
-         var base_url = "<?= base_url(); ?>/";
-         
+        var base_url = "<?= base_url(); ?>/";
     </script>
 
 </head>
@@ -59,12 +58,12 @@
                     <div class="d-flex align-items-center">
                         <div class="mr-auto">
                             <!--<h3 class="page-title">-->
-                               <?php
+                                <?php
                                     // if(isset($pageTitle))
                                     //     echo $pageTitle;
                                     // else
                                     //     echo "N/A";
-                               ?>
+                                ?>
                             <!--</h3>-->
                             <div class="d-inline-block align-items-center">
                                 <nav>
