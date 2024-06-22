@@ -185,9 +185,9 @@
                                     Create&nbsp;Masters
                                 </a>
                                 <div class="dropdown-menu drop_fileds">
-                                    <a class="dropdown-item" href="<?php echo base_url('clients'); ?>">Create Client</a>
-                                    <a class="dropdown-item" href="<?php echo base_url('groups'); ?>">Create Group</a>
-                                    <a class="dropdown-item" href="<?php echo base_url('users'); ?>">Create User (Employee)</a>
+                                    <a class="dropdown-item" href="<?php echo base_url('clients'); ?>">Create/Edit Client</a>
+                                    <a class="dropdown-item" href="<?php echo base_url('groups'); ?>">Create/Edit Group</a>
+                                    <a class="dropdown-item" href="<?php echo base_url('users'); ?>">Create/Edit User (Employee)</a>
                                     <!-- <a class="dropdown-item" href="<?php //echo base_url('non-regular-due-date-for-list'); ?>">Create Non-Regular Due Date For</a> -->
                                     <!-- <a class="dropdown-item" href="<?php //echo base_url('non-regular-due-dates'); ?>">Create Non-Regular Due Dates</a> -->
                                 </div>
