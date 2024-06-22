@@ -326,9 +326,16 @@
 
                             if(resStatus==true)
                             {
-                                swal("Deleted", resMsg, "success");
-
                                 $('#client_id_tr_'+clientId).remove();
+                                // swal("Deleted", resMsg, "success");
+
+                                swal({
+                                    title: "Deleted", 
+                                    text: resMsg, 
+                                    type: "success"},
+                                    function(){
+                                        location.reload();
+                                });
                             }
                             else
                             {
