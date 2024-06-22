@@ -45,7 +45,7 @@
                                 <a href="<?php echo base_url($secPrefixUrl.'-ddf-pending/'.INC_TAX_UPDATED_RETURN[0]); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new" data-toggle="tooltip" data-original-title="Updated">
-                                            <p class="wh_space_nowrp">Updated</p>
+                                            <p class="wh_space_nowrp">Updated Returns</p>
                                         </div>
                                     </div>
                                 </a>
