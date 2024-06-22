@@ -89,7 +89,6 @@
         .clrBtn span{
             color: #000000 !important;
             font-size: 10px !important;
-
         }
         
         .none{
@@ -376,13 +375,13 @@
                                 <div class="form-group">
                                     <label>Select Color<small class="text-danger">*</small></label>
                                     <div class="grid-Wrapper">
-                                        <button type="button" class="clrBtn none" data-clr="none" onclick="ColorPicker('none',this);">
+                                        <button type="button" class="clrBtn none active" data-clr="none" onclick="ColorPicker('none',this);">
                                             <span>Low</span>
                                         </button>
                                         <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker('#f0f58b7d',this);">
                                             <span>Medium</span>
                                         </button>
-                                        <button type="button" class="clrBtn red active" data-clr="pink" onclick="ColorPicker('pink',this);">
+                                        <button type="button" class="clrBtn red" data-clr="pink" onclick="ColorPicker('pink',this);">
                                             <span>High</span>
                                         </button>
                                     </div>
@@ -391,7 +390,7 @@
                         </div>
                     </div>
                     <div class="modal-footer text-right" style="width: 100%;">
-                        <input type="hidden" name="reminderColor" id="reminderColor" value="pink" />
+                        <input type="hidden" name="reminderColor" id="reminderColor" value="none" />
                         <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                         <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                     </div>
