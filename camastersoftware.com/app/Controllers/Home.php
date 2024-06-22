@@ -296,7 +296,7 @@ class Home extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
-        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
         $this->data['jsArr']=$jsArr;
         
         $pageTitle="My Work";
