@@ -243,41 +243,52 @@ class Admin extends BaseController
     {
         $client_group_id=$this->request->getPost('client_group_id');
 
-	    $dataArray = [
-            'client_group_id' => $client_group_id,
-            'status' => 2,
-            'updatedBy' => $this->adminId,
-            'updatedDatetime' => $this->currTimeStamp
-        ];
-	    
-        if($this->Mgroup->save($dataArray)){
-            
-            $contSubGrpArr = $this->Mcontsubgroup->where('fk_cont_group_id', 1)->where('refId', $client_group_id)->where('status', 1)->get()->getRowArray();
+        $clientListData=$this->Mclient->where('client_tbl.clientGroup', $client_group_id)
+            ->where('client_tbl.status', 1)
+            ->findAll();
 
-            $contactSubGrpUpdateArr=[
-                'cont_sub_group_id'=>$contSubGrpArr['cont_sub_group_id'],
+        if(empty($clientListData))
+        {
+            $dataArray = [
+                'client_group_id' => $client_group_id,
                 'status' => 2,
                 'updatedBy' => $this->adminId,
                 'updatedDatetime' => $this->currTimeStamp
             ];
             
-            $this->Mcontsubgroup->save($contactSubGrpUpdateArr);
-            
-            $insertLogArr['section']="Client group";
-            $insertLogArr['message']="Client group deleted";
-            $insertLogArr['ip']=$this->IPAddress;
-            // $insertLogArr['macAddr']=$this->macAddress;
-            $insertLogArr['createdBy']=$this->adminId;
-            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+            if($this->Mgroup->save($dataArray)){
+                
+                $contSubGrpArr = $this->Mcontsubgroup->where('fk_cont_group_id', 1)->where('refId', $client_group_id)->where('status', 1)->get()->getRowArray();
 
-            $this->Mquery->insertLog($insertLogArr);
+                $contactSubGrpUpdateArr=[
+                    'cont_sub_group_id'=>$contSubGrpArr['cont_sub_group_id'],
+                    'status' => 2,
+                    'updatedBy' => $this->adminId,
+                    'updatedDatetime' => $this->currTimeStamp
+                ];
+                
+                $this->Mcontsubgroup->save($contactSubGrpUpdateArr);
+                
+                $insertLogArr['section']="Client group";
+                $insertLogArr['message']="Client group deleted";
+                $insertLogArr['ip']=$this->IPAddress;
+                // $insertLogArr['macAddr']=$this->macAddress;
+                $insertLogArr['createdBy']=$this->adminId;
+                $insertLogArr['createdDatetime']=$this->currTimeStamp;
 
-            $responseArr['status']=TRUE;
-            $responseArr['message']="Client group has been deleted successfully :)";
-            $responseArr['userdata']=array();
+                $this->Mquery->insertLog($insertLogArr);
+
+                $responseArr['status']=TRUE;
+                $responseArr['message']="Client group has been deleted successfully :)";
+                $responseArr['userdata']=array();
+            }else{
+                $responseArr['status']=FALSE;
+                $responseArr['message']="Client group has not delete :(";
+                $responseArr['userdata']=array();
+            }
         }else{
             $responseArr['status']=FALSE;
-            $responseArr['message']="Client group has not delete :(";
+            $responseArr['message']="Client Group cannot be deleted without deleting all the members.";
             $responseArr['userdata']=array();
         }
 

@@ -242,21 +242,21 @@
                                             <th width="5%">SN</th>
                                             <th width="5%">Group&nbsp;Number</th>
                                             <th>Client&nbsp;Group</th>
-                                            <th width="5%">No.&nbsp;of.&nbsp;Members</th>
-                                            <!--
-                                            <th width="5%">Cost&nbsp;Center</th>
-                                            <th width="5%">Category</th>
-                                            -->
+                                            <th width="5%">Present&nbsp;Members</th>
+                                            <th width="5%">Members&nbsp;Left</th>
                                             <th width="5%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php $i=1; ?>
                                         <?php $totalClientCount=0; ?>
+                                        <?php $totalOldClientCount=0; ?>
                                         <?php if(!empty($groupList)): ?>
                                             <?php foreach($groupList AS $e_grp): ?>
-                                                <?php $clientCount=$e_grp['clientCount']; ?>
+                                                <?php $clientCount=$e_grp['presentClientCount']; ?>
+                                                <?php $oldClientCount=$e_grp['oldClientCount']; ?>
                                                 <?php $totalClientCount+=$clientCount; ?>
+                                                <?php $totalOldClientCount+=$oldClientCount; ?>
                                                 <tr id="client_group_id_tr_<?php echo $e_grp['client_group_id']; ?>">
                                                     <td width="5%" class="text-center"><?php echo $i; ?></td>
                                                     <td width="5%" class="text-center"><?php echo $e_grp['client_group_number']; ?></td>
@@ -266,6 +266,7 @@
                                                         </a>
                                                     </td>
                                                     <td width="5%" class="text-center"><?php echo $clientCount; ?></td>
+                                                    <td width="5%" class="text-center"><?php echo $oldClientCount; ?></td>
                                                     <!--
                                                     <td width="5%" class="text-center"><?php echo $e_grp['userShortName']; ?></td>
                                                     <td width="5%" class="text-center"><?php echo $e_grp['group_category_name']; ?></td>
@@ -300,6 +301,7 @@
                                                 <td></td>
                                                 <td><b>Total</b></td>
                                                 <td><b><?php echo $totalClientCount; ?></b></td>
+                                                <td><b><?php echo $totalOldClientCount; ?></b></td>
                                                 <!--<td></td>-->
                                                 <!--<td></td>-->
                                                 <td></td>
@@ -338,50 +340,108 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="table-responsive">
-                            <table class="clientGrpTable" style="width:100%">
-                                <thead>
-                                    <tr class="text-center">
-                                        <th width="5%">SN</th>
-                                        <th>Name&nbsp;of&nbsp;the&nbsp;Client</th>
-                                        <th width="5%">Organization&nbsp;Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if(isset($clientListArr[$e_grp['client_group_id']])): ?>
-                                        <?php $grpClientListArr=$clientListArr[$e_grp['client_group_id']]; ?>
-                                        <?php if(!empty($grpClientListArr)): ?>
-                                            <?php $c=1; ?>
-                                            <?php foreach($grpClientListArr AS $e_cl_grp): ?>
-                                                <tr>
-                                                    <td width="5%" class="text-center"><?php echo $c; ?></td>
-                                                    <td>
-                                                        <?php
-                                                            if($e_cl_grp['orgType']==8 || $e_cl_grp['orgType']==9)
-                                                                $cliName=$e_cl_grp['clientName'];
-                                                            else
-                                                                $cliName=$e_cl_grp['clientBussOrganisation']; 
-                                                        ?>
-                                                        <?php echo $cliName; ?>
-                                                    </td>
-                                                    <td nowrap width="5%" class="text-center">
-                                                        <?php echo $e_cl_grp['organisation_type_name']; ?>
-                                                    </td>
-                                                </tr>
-                                            <?php $c++; ?>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="3"><center>No records found</center></td>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h5 class="font-weight-bold">Present Members</h5>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="clientGrpTable" style="width:100%">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th width="5%">SN</th>
+                                                <th width="55%">Name&nbsp;of&nbsp;the&nbsp;Client</th>
+                                                <th width="40%">Organization&nbsp;Type</th>
                                             </tr>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="3"><center>No records found</center></td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php if(isset($clientListArr[$e_grp['client_group_id']])): ?>
+                                                <?php $grpClientListArr=$clientListArr[$e_grp['client_group_id']]; ?>
+                                                <?php if(!empty($grpClientListArr)): ?>
+                                                    <?php $c=1; ?>
+                                                    <?php foreach($grpClientListArr AS $e_cl_grp): ?>
+                                                        <tr>
+                                                            <td width="5%" class="text-center"><?php echo $c; ?></td>
+                                                            <td nowrap width="55%">
+                                                                <?php
+                                                                    if(in_array($e_cl_grp['orgType'], INDIVIDUAL_ARRAY))
+                                                                        $cliName=$e_cl_grp['clientName'];
+                                                                    else
+                                                                        $cliName=$e_cl_grp['clientBussOrganisation']; 
+                                                                ?>
+                                                                <?php echo $cliName; ?>
+                                                            </td>
+                                                            <td nowrap width="40%" class="text-center">
+                                                                <?php echo $e_cl_grp['organisation_type_name']; ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php $c++; ?>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="3"><center>No records found</center></td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="3"><center>No records found</center></td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <hr>
+                                <h5 class="font-weight-bold">Members Left</h5>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="clientGrpTable" style="width:100%">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th width="5%">SN</th>
+                                                <th width="55%">Name&nbsp;of&nbsp;the&nbsp;Client</th>
+                                                <th width="40%">Organization&nbsp;Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if(isset($oldClientListArr[$e_grp['client_group_id']])): ?>
+                                                <?php $grpOldClientListArr=$oldClientListArr[$e_grp['client_group_id']]; ?>
+                                                <?php if(!empty($grpOldClientListArr)): ?>
+                                                    <?php $c=1; ?>
+                                                    <?php foreach($grpOldClientListArr AS $e_cl_grp): ?>
+                                                        <tr>
+                                                            <td width="5%" class="text-center"><?php echo $c; ?></td>
+                                                            <td nowrap width="55%">
+                                                                <?php
+                                                                    if(in_array($e_cl_grp['orgType'], INDIVIDUAL_ARRAY))
+                                                                        $cliName=$e_cl_grp['clientName'];
+                                                                    else
+                                                                        $cliName=$e_cl_grp['clientBussOrganisation']; 
+                                                                ?>
+                                                                <?php echo $cliName; ?>
+                                                            </td>
+                                                            <td nowrap width="5%" class="text-center">
+                                                                <?php echo $e_cl_grp['organisation_type_name']; ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php $c++; ?>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="3"><center>No records found</center></td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="3"><center>No records found</center></td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer text-right" style="width: 100%;">
