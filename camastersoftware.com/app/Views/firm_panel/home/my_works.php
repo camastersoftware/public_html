@@ -163,6 +163,15 @@
                             <h4 class="box-title font-weight-bold"><?php echo $pageTitle; ?></h4>
                         </div>
                         <div class="col-6 text-right">
+                            <a href="<?= base_url('reminder'); ?>">
+                                <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Reminder">
+                                    Reminder
+                                </button>
+                                <?php if ($isReminderPresent) : ?>
+                                    <i class="notify-point-icon-btn"></i>
+                                <?php endif; ?>
+                            </a>
+                            &nbsp;&nbsp;
                             <a href="<?= base_url('my_works_filed'); ?>">
                                 <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Returns Filed">
                                     Filed

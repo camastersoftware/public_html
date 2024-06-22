@@ -948,6 +948,17 @@ table tr td a {
     font-size: 4px;
 }
 
+.notify-point-icon-btn {
+    position: relative;
+    right: 14px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.1px 3px;
+    font-size: 4px;
+    vertical-align: text-top;
+}
+
 .nav-profile-img{
     width: 50px;
     border-radius: 50%;
