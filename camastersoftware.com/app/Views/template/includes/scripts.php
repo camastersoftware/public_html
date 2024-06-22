@@ -91,14 +91,14 @@
     $(document).ready(function(){
         CKEDITOR.replace( 'ckeditor_textarea', {
         // CKEditor 4 configuration options
-          on: {
-            instanceReady: function (ev) {
-              // Set up synchronization between CKEditor and the hidden input field
-              ev.editor.on('change', function () {
-                $('.textarea_input').val(ev.editor.getData());
-              });
+            on: {
+                instanceReady: function (ev) {
+                // Set up synchronization between CKEditor and the hidden input field
+                ev.editor.on('change', function () {
+                    $('.textarea_input').val(ev.editor.getData());
+                });
+                }
             }
-          }
         });
 
         console.log("$('.ckeditor_textarea_elem').length", $('.ckeditor_textarea_elem').length);

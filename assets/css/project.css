@@ -948,3 +948,13 @@ table tr td a {
     font-size: 4px;
 }
 
+.nav-profile-img{
+    width: 50px;
+    border-radius: 50%;
+    padding: 0px;
+    border: 2px solid #f99d27;
+    height: 40px;
+    float: left;
+    cursor: pointer;
+}
+
