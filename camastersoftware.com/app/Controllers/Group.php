@@ -61,7 +61,7 @@ class Group extends BaseController
         $taxJoinArr[]=array("tbl"=>$this->group_category_tbl, "condtn"=>'group_category_tbl.group_category_id=client_group_tbl.client_group_category', "type"=>"left");
         $taxJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>'client_tbl.clientGroup=client_group_tbl.client_group_id AND client_tbl.status=1', "type"=>"left");
         
-        $query=$this->Mcommon->getRecords($tableName=$this->client_group_tbl, $colNames='client_group_tbl.*, user_tbl.userFullName, user_tbl.userShortName, group_category_tbl.group_category_name, COUNT(client_tbl.clientId) AS clientCount', $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->client_group_tbl, $colNames='client_group_tbl.*, user_tbl.userFullName, user_tbl.userShortName, group_category_tbl.group_category_name, COUNT(client_tbl.clientId) AS clientCount, SUM(CASE WHEN client_tbl.isOldClient = 1 THEN 1 ELSE 0 END) AS oldClientCount, SUM(CASE WHEN client_tbl.isOldClient != 1 THEN 1 ELSE 0 END) AS presentClientCount', $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $groupList=$query['userData'];
         
@@ -75,20 +75,26 @@ class Group extends BaseController
         $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
         $clientJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
         
-        $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_tbl.clientDob, client_group_tbl.client_group, client_group_tbl.client_group_number, organisation_type_tbl.organisation_type_name", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $clientOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_tbl.clientDob, client_tbl.isOldClient, client_group_tbl.client_group, client_group_tbl.client_group_number, organisation_type_tbl.organisation_type_name", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $clientOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $getClientList=$query['userData'];
         
         $clientListArr=array();
+        $oldClientListArr=array();
+
         if(!empty($getClientList))
         {
             foreach($getClientList AS $e_cl)
             {
-                $clientListArr[$e_cl['clientGroup']][]=$e_cl;
+                if($e_cl["isOldClient"]==1)
+                    $oldClientListArr[$e_cl['clientGroup']][]=$e_cl;
+                else
+                    $clientListArr[$e_cl['clientGroup']][]=$e_cl;
             }
         }
         
         $this->data['clientListArr']=$clientListArr;
+        $this->data['oldClientListArr']=$oldClientListArr;
 
         $groupCatList=$this->Mgroup_cat->where('group_category_tbl.status', 1)
             ->findAll();

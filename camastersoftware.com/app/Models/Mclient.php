@@ -15,7 +15,7 @@
         protected $returnType     = 'array';
         protected $useSoftDeletes = false;
 
-        protected $allowedFields = ['clientName', 'clientBussOrganisation', 'clientBussOrganisationType', 'isOldClient', 'clientLeftReason', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+        protected $allowedFields = ['clientName', 'clientBussOrganisation', 'clientBussOrganisationType', 'clientGroup', 'isOldClient', 'clientLeftReason', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
         protected $useTimestamps = true;
         protected $createdField  = 'createdDatetime';
