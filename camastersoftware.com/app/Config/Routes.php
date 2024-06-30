@@ -944,6 +944,10 @@ $routes->post('/delete-salary-params', 'Payroll::delete_salary_params');
 $routes->get('websocket/startserver', 'WebSocketController::startServer');
 // Websocket Code End
 
+// DB Patch Work - Start
+$routes->get('updateNewDueDateOrganization', 'Utility/DatabasePatch::updateNewDueDateOrganization');
+// DB Patch Work - End
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -7,6 +7,7 @@ class ShiftDueDateNextYearCron extends BaseController
     {
         $this->section="Crons";
         $this->Mfirm = new \App\Models\Mfirm();
+        $this->MorganisationType = new \App\Models\MorganisationType();
         $this->ConnectDb = new \App\Libraries\ConnectDb();
         $this->TableLib = new \App\Libraries\TableLib();
         $tableArr=$this->TableLib->get_tables();
@@ -46,6 +47,9 @@ class ShiftDueDateNextYearCron extends BaseController
 	    echo "Cron Started for ".$this->dueYear." ...";
 	    
 	    $this->db->transBegin();
+
+        $organisationTypes=$this->MorganisationType->where('organisation_type_tbl.status', 1)
+                        ->findAll();
 	    
 	    log_message('error', 'Cron Start for '.$this->dueYear);
 	   
@@ -82,6 +86,7 @@ class ShiftDueDateNextYearCron extends BaseController
                 $periodicityVal=$e_dd['periodicity'];
                 $nextDueDate=date('Y-m-d', strtotime($e_dd['due_date']." +1 years"));
                 $ddFinYear=$e_dd['finYear'];
+                $is_all_tax_payer=$e_dd['is_all_tax_payer'];
                 
                 $ddFinYearArr=explode('-', $ddFinYear);
         
@@ -169,17 +174,38 @@ class ShiftDueDateNextYearCron extends BaseController
                         
                         if(!empty($taxPayerArr))
                         {
-                            foreach($taxPayerArr AS $e_tax_payer)
+                            if($is_all_tax_payer==1)
                             {
-                                $taxPayerInsertArr[]=array(
-                                    'fk_due_date_id'=>$due_date_id,
-                                    'fk_org_type_id'=>$e_tax_payer['fk_org_type_id'],
-                                    'byCron' => 1,
-                                    'status' => 1,
-                                    'createdBy' => $this->adminId,
-                                    'createdDatetime' => $this->currTimeStamp
-                                );
+                                if(!empty($organisationTypes))
+                                {
+                                    foreach($organisationTypes AS $e_org_data)
+                                    {
+                                        $taxPayerInsertArr[]=array(
+                                            'fk_due_date_id' => $due_date_id,
+                                            'fk_org_type_id' => $e_org_data["organisation_type_id"],
+                                            'byCron' => 1,
+                                            'status' => 1,
+                                            'createdBy' => $this->adminId,
+                                            'createdDatetime' => $this->currTimeStamp
+                                        );
+                                    }
+                                }
                             }
+                            else
+                            {
+                                foreach($taxPayerArr AS $e_tax_payer)
+                                {
+                                    $taxPayerInsertArr[]=array(
+                                        'fk_due_date_id'=>$due_date_id,
+                                        'fk_org_type_id'=>$e_tax_payer['fk_org_type_id'],
+                                        'byCron' => 1,
+                                        'status' => 1,
+                                        'createdBy' => $this->adminId,
+                                        'createdDatetime' => $this->currTimeStamp
+                                    );
+                                }
+                            }
+                            
                             
                             if(!empty($taxPayerInsertArr))
                                 $this->Mcommon->insert($tableName=$this->tax_payer_due_date_map_tbl, $taxPayerInsertArr, $returnType="");
