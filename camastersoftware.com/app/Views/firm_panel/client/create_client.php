@@ -2347,6 +2347,7 @@
                 e.preventDefault();    
                 var validForm=true;
                 // var actFormData = new FormData($('#actWiseForm'));
+                var selectedActId = $('#selectedActId').val();
                 var actFormData = $('#actWiseForm').serialize();
     
                 var actDataArr = $('#actWiseForm').serializeArray();
@@ -2405,10 +2406,24 @@
                     
                     if(n['value']=="")
                     {
-                        validForm=false;
-                        $("#"+fieldName).closest('div').append('<span class="text-danger">This field is required</span>');
+                        if(n['name']!="actPtEnrollNo" && n['name']!="actPtRegNo")
+                        {
+                            validForm=false;
+                            $("#"+fieldName).closest('div').append('<span class="text-danger">This field is required</span>');
+                        }
                     } 
                 });
+
+                $("#ptErrorDiv").html("");
+
+                if(selectedActId == 7)
+                {
+                    if($("#actPtEnrollNo").val().trim() == "" && $("#actPtRegNo").val().trim() == "")
+                    {
+                        validForm=false;
+                        $("#ptErrorDiv").html(`<span class="text-danger">Please enter at least one of PT Enrolment No or PT Registration No.</span>`);
+                    }
+                }
     
                 if(validForm==false)
                     return false;
