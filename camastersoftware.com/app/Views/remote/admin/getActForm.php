@@ -183,6 +183,7 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12 col-lg-12" id="ptErrorDiv"></div>
             <?php endif; ?>
             <?php if($selAct==13): ?> <!-- Done -->
             <div class="col-md-12 col-lg-12">
