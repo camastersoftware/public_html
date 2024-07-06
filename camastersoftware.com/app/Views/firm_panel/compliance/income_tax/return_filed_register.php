@@ -190,7 +190,8 @@
                                                                 </td>
                                                                 <td class="column-2">
                                                                     <?php 
-                                                                        if($e_inc_row['orgType']==8 || $e_inc_row['orgType']==9)
+                                                                        // if($e_inc_row['orgType']==8 || $e_inc_row['orgType']==9)
+                                                                        if(in_array($e_inc_row['orgType'], INDIVIDUAL_ARRAY))
                                                                             $clientNameVar=$e_inc_row['clientName'];
                                                                         else
                                                                             $clientNameVar=$e_inc_row['clientBussOrganisation']; 
