@@ -650,7 +650,7 @@ if (!empty($leaveCalDataArr)) {
         }
 
         var timeDifference = completion_date.getTime() - start_date.getTime();
-        var daysDifference = Math.abs(timeDifference / (1000 * 60 * 60 * 24));
+        var daysDifference = Math.abs((float)timeDifference / (1000 * 60 * 60 * 24));
         if (isNaN(daysDifference)) {
             daysDifference = 0;
         }

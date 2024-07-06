@@ -273,7 +273,7 @@
                                                                             <?php if($e_inc_row['totalIncome']>=0): ?>
                                                                                 <?= amount_format($e_inc_row['totalIncome']); ?>
                                                                             <?php else: ?>
-                                                                                <?= "(".amount_format(abs($e_inc_row['totalIncome'])).")"; ?>
+                                                                                <?= "(".amount_format(abs((float)$e_inc_row['totalIncome'])).")"; ?>
                                                                             <?php endif; ?>
                                                                         </div>
                                                                     <?php else: ?>
@@ -286,7 +286,7 @@
                                                                             <?php if($e_inc_row['selfAssessmentTax']>=0): ?>
                                                                                 <?= amount_format($e_inc_row['selfAssessmentTax']); ?>
                                                                             <?php else: ?>
-                                                                                <?= "(".amount_format(abs($e_inc_row['selfAssessmentTax'])).")"; ?>
+                                                                                <?= "(".amount_format(abs((float)$e_inc_row['selfAssessmentTax'])).")"; ?>
                                                                             <?php endif; ?>
                                                                         </div>
                                                                     <?php else: ?>
@@ -299,7 +299,7 @@
                                                                             <?php if($e_inc_row['refundClaimed']>=0): ?>
                                                                                 <?= amount_format($e_inc_row['refundClaimed']); ?>
                                                                             <?php else: ?>
-                                                                                <?= "(".amount_format(abs($e_inc_row['refundClaimed'])).")"; ?>
+                                                                                <?= "(".amount_format(abs((float)$e_inc_row['refundClaimed'])).")"; ?>
                                                                             <?php endif; ?>
                                                                         </div>
                                                                     <?php else: ?>
