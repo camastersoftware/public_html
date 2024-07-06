@@ -305,7 +305,7 @@
                                                                         <?php if($e_inc_row['tdsTcsAmtPaid']>=0): ?>
                                                                             <?= amount_format($e_inc_row['tdsTcsAmtPaid']); ?>
                                                                         <?php else: ?>
-                                                                            <?= "(".amount_format(abs($e_inc_row['tdsTcsAmtPaid'])).")"; ?>
+                                                                            <?= "(".amount_format(abs((float)$e_inc_row['tdsTcsAmtPaid'])).")"; ?>
                                                                         <?php endif; ?>
                                                                     </div>
                                                                 <?php else: ?>
@@ -318,7 +318,7 @@
                                                                         <?php if($e_inc_row['taxDeductedCollected']>=0): ?>
                                                                             <?= amount_format($e_inc_row['taxDeductedCollected']); ?>
                                                                         <?php else: ?>
-                                                                            <?= "(".amount_format(abs($e_inc_row['taxDeductedCollected'])).")"; ?>
+                                                                            <?= "(".amount_format(abs((float)$e_inc_row['taxDeductedCollected'])).")"; ?>
                                                                         <?php endif; ?>
                                                                     </div>
                                                                 <?php else: ?>
