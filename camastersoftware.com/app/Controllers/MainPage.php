@@ -1755,47 +1755,47 @@ class MainPage extends BaseController
         if(!empty($selActValue))
             $selActVal=$selActValue;
         else
-            $selActVal=1;
+            $selActVal=6;
 
         $this->data['selActVal']=$selActVal;
 
         $clientMasterData=array();
+
+        $clientMasterData[1]['id']=6;
+        $clientMasterData[1]['name']="Income Tax";
+        $clientMasterData[1]['type']="act";
+
+        $clientMasterData[2]['id']=7;
+        $clientMasterData[2]['name']="Tax Deducted at Source";
+        $clientMasterData[2]['type']="act";
+
+        $clientMasterData[3]['id']=8;
+        $clientMasterData[3]['name']="Goods and Services Tax";
+        $clientMasterData[3]['type']="act";
+
+        $clientMasterData[4]['id']=9;
+        $clientMasterData[4]['name']="Profession Tax";
+        $clientMasterData[4]['type']="act";
         
-        $clientMasterData[1]['id']=1;
-        $clientMasterData[1]['name']="Companies";
-        $clientMasterData[1]['type']="org";
-
-        $clientMasterData[2]['id']=2;
-        $clientMasterData[2]['name']="Limited Liability Partnership";
-        $clientMasterData[2]['type']="org";
-
-        $clientMasterData[3]['id']=3;
-        $clientMasterData[3]['name']="Partnership Firms";
-        $clientMasterData[3]['type']="org";
-
-        $clientMasterData[4]['id']=4;
-        $clientMasterData[4]['name']="Co-operative Societies";
-        $clientMasterData[4]['type']="org";
-
-        $clientMasterData[5]['id']=5;
-        $clientMasterData[5]['name']="Charitable Trusts/Private Trusts";
+        $clientMasterData[5]['id']=1;
+        $clientMasterData[5]['name']="Companies";
         $clientMasterData[5]['type']="org";
 
-        $clientMasterData[6]['id']=6;
-        $clientMasterData[6]['name']="Income Tax";
-        $clientMasterData[6]['type']="act";
+        $clientMasterData[6]['id']=2;
+        $clientMasterData[6]['name']="Limited Liability Partnership";
+        $clientMasterData[6]['type']="org";
 
-        $clientMasterData[7]['id']=7;
-        $clientMasterData[7]['name']="Tax Deducted at Source";
-        $clientMasterData[7]['type']="act";
+        $clientMasterData[7]['id']=3;
+        $clientMasterData[7]['name']="Partnership Firms";
+        $clientMasterData[7]['type']="org";
 
-        $clientMasterData[8]['id']=8;
-        $clientMasterData[8]['name']="Goods and Services Tax";
-        $clientMasterData[8]['type']="act";
+        $clientMasterData[8]['id']=4;
+        $clientMasterData[8]['name']="Co-operative Societies";
+        $clientMasterData[8]['type']="org";
 
-        $clientMasterData[9]['id']=9;
-        $clientMasterData[9]['name']="Profession Tax";
-        $clientMasterData[9]['type']="act";
+        $clientMasterData[9]['id']=5;
+        $clientMasterData[9]['name']="Charitable Trusts/Private Trusts";
+        $clientMasterData[9]['type']="org";
 
         // $clientMasterData[10]['id']=10;
         // $clientMasterData[10]['name']="Profession Tax-Registration";
