@@ -370,7 +370,7 @@
                                                                                         </div>
                                                                                         <div class="col-md-10">
                                                                                             <div class="form-group">
-                                                                                                <label for="edit_clientName">Name of Client :</label>
+                                                                                                <label for="edit_clientName">Name of Client :<small class="text-danger">*</small></label>
                                                                                                 <input type="text" class="form-control" name="edit_clientName" id="edit_clientName" placeholder="(First Name) (Middle Name) (Last Name) as per PAN" value="<?php echo $clientData['clientName']; ?>" onkeyup="setClientName(this);showClientName();" onkeydown="setClientName(this);showClientName();" onkeypress="setClientName(this);showClientName();" oninput="setClientName(this);showClientName();" onfocus="setClientName(this);showClientName();"> 
                                                                                             </div>
                                                                                         </div>
@@ -380,7 +380,7 @@
                                                                                     <div class="row">
                                                                                         <div class="col-md-10">
                                                                                             <div class="form-group">
-                                                                                                <label for="edit_clientGroup">Client Group:</label>
+                                                                                                <label for="edit_clientGroup">Client Group:<small class="text-danger">*</small></label>
                                                                                                 <select class="custom-select form-control" name="edit_clientGroup" id="edit_clientGroup">
                                                                                                     <option value="">Select Client Group</option>
                                                                                                     <?php if(!empty($groupList)): ?>
@@ -464,7 +464,7 @@
                                                                     <div class="row buss_div">
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
-                                                                                <label for="edit_clientBussOrganisation">Organisation Name :</label>
+                                                                                <label for="edit_clientBussOrganisation">Organisation Name :<small class="text-danger">*</small></label>
                                                                                 <input type="text" class="form-control" name="edit_clientBussOrganisation" id="edit_clientBussOrganisation" placeholder="Enter Organisation Name" value="<?php echo $clientData['clientBussOrganisation']; ?>"  oninput="showClientName();" onkeyup="showClientName();" onkeydown="showClientName();" onkeypress="showClientName();" onfocus="showClientName();"> 
                                                                             </div>
                                                                         </div>
@@ -472,7 +472,7 @@
                                                                             <div class="row">
                                                                                 <div class="col-md-10">
                                                                                     <div class="form-group">
-                                                                                        <label for="edit_clientGroup">Client Group:</label>
+                                                                                        <label for="edit_clientGroup">Client Group:<small class="text-danger">*</small></label>
                                                                                         <select class="custom-select form-control" name="edit_clientGroup" id="edit_clientGroupNew">
                                                                                             <option value="">Select Client Group</option>
                                                                                             <?php if(!empty($groupList)): ?>
@@ -831,8 +831,11 @@
                                                                                                 if(isset($clientDocDataArr[$cli_doc_id]['client_document_number']))
                                                                                                     $client_document_number=$clientDocDataArr[$cli_doc_id]['client_document_number'];
                                                                                             ?>
-                                                                                            <label><?php echo $e_doc['client_document_name']; ?>:</label>
-                                                                                            <input type="text" class="form-control" id="edit_docName<?php echo $cli_doc_id; ?>Label" placeholder="Enter <?php echo $e_doc['client_document_name']; ?>" value="<?php echo $client_document_number; ?>" readonly > 
+                                                                                            <label><?php echo $e_doc['client_document_name']; ?>: <?php if($cli_doc_id==1): ?><small class="text-danger">*</small><?php endif; ?></label>
+                                                                                            <input type="text" class="form-control" id="edit_docName<?php echo $cli_doc_id; ?>Label" placeholder="Enter <?php echo $e_doc['client_document_name']; ?>" value="<?php echo $client_document_number; ?>" readonly >
+                                                                                            <?php if($cli_doc_id==1): ?>
+                                                                                                <input type="hidden" name="actPanValue" id="actPanValue" value="<?php echo $client_document_number; ?>" />
+                                                                                            <?php endif; ?>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-md-4">
@@ -858,7 +861,7 @@
                                                                                                                             $client_document_number=$clientDocDataArr[$cli_doc_id]['client_document_number'];
                                                                                                                     ?>
                                                                                                                     <label for="edit_docName<?php echo $cli_doc_id; ?>"><?php echo $e_doc['client_document_name']; ?>:</label>
-                                                                                                                    <input type="text" class="form-control clientDocInput" name="edit_client_document_number[]" id="edit_docName<?php echo $cli_doc_id; ?>" placeholder="Enter <?php echo $e_doc['client_document_name']; ?>" value="<?php echo $client_document_number; ?>"> 
+                                                                                                                    <input type="text" class="form-control clientDocInput" name="edit_client_document_number[]" id="edit_docName<?php echo $cli_doc_id; ?>" data-doc_id="<?php echo $cli_doc_id; ?>" placeholder="Enter <?php echo $e_doc['client_document_name']; ?>" value="<?php echo $client_document_number; ?>"> 
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                             <div class="col-md-6">
@@ -1479,7 +1482,7 @@
                                                     <input type="hidden" name="due_state" value="12" />
                                                     <button type="button" class="waves-effect waves-light btn btn-submit text-right cliNavBtns" id="cliPrevBtn">Previous</button>
                                                     <button type="button" class="waves-effect waves-light btn btn-submit text-right cliNavBtns" id="cliNextBtn">Next</button>
-                                                    <button type="submit" name="submit" class="waves-effect waves-light btn btn-submit text-right">Submit</button>
+                                                    <button type="submit" name="submit" class="waves-effect waves-light btn btn-submit text-right" id="cliSubBtn">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1940,6 +1943,7 @@
             $('#client_active_tab').val("#client_details_tab");
             $('#cliPrevBtn').prop('disabled', true);
             $('#cliNextBtn').prop('disabled', false);
+            $('#cliSubBtn').prop('disabled', true);
             
             $('.edit_client_form .nav-link').on('click', function(){
                 
@@ -1949,30 +1953,35 @@
                 {
                     $('#cliPrevBtn').prop('disabled', true);
                     $('#cliNextBtn').prop('disabled', false);
+                    $('#cliSubBtn').prop('disabled', true);
                     $('#client_active_tab').val(tabName);
                 }
                 else if(tabName=="#reg_details_tab")
                 {
                     $('#cliPrevBtn').prop('disabled', false);
                     $('#cliNextBtn').prop('disabled', false);
+                    $('#cliSubBtn').prop('disabled', false);
                     $('#client_active_tab').val(tabName);
                 }
                 else if(tabName=="#act_applicable_tab")
                 {
                     $('#cliPrevBtn').prop('disabled', false);
-                    $('#cliNextBtn').prop('disabled', true);
+                    $('#cliNextBtn').prop('disabled', false);
+                    $('#cliSubBtn').prop('disabled', false);
                     $('#client_active_tab').val(tabName);
                 }
                 else if(tabName=="#non_regular_due_date_tab")
                 {
                     $('#cliPrevBtn').prop('disabled', false);
                     $('#cliNextBtn').prop('disabled', true);
+                    $('#cliSubBtn').prop('disabled', false);
                     $('#client_active_tab').val(tabName);
                 }
                 else
                 {
                     $('#cliPrevBtn').prop('disabled', true);
                     $('#cliNextBtn').prop('disabled', false);
+                    $('#cliSubBtn').prop('disabled', true);
                     $('#client_active_tab').val("#client_details_tab");
                 }
             });
@@ -2321,6 +2330,7 @@
                 if(actPanVal!="")
                 {
                     $('#edit_docName1').val(actPanVal);
+                    $('#actPanValue').val(actPanVal);
                 }
     
                 if(actWardVal!="")
@@ -2755,6 +2765,8 @@
                 e.preventDefault();    
                 var clientFormData = new FormData(this);
 
+                var cliOrgType = $('#edit_clientBussOrganisationType').val();
+
                 $.ajax({
                     url : base_url+'/update_client',
                     type : 'POST',
@@ -2769,6 +2781,7 @@
                         var resMsg = response['message'];
                         var resUserData = response['userdata'];
                         
+                        $(".vErrSpan").remove();
                         if(resStatus==true)
                         {
                             swal({
@@ -2786,7 +2799,34 @@
                                 $("#"+index).siblings('span').remove();
                         
                                 if(value!="")
-                                    $("#"+index).closest('div').append('<span class="text-danger">'+value+'</span>');
+                                {
+                                    if(index == "clientGroup")
+                                    {
+                                        if(cliOrgType!="")
+                                        {
+                                            let clientGroupFieldID = "";
+                                            if(cliOrgType=="9") // Individual
+                                            {
+                                                clientGroupFieldID="edit_clientGroup";
+                                            }
+                                            else if(cliOrgType=="8" || cliOrgType=="3" || cliOrgType=="22" || cliOrgType=="23") // Proprietory, OPC
+                                            {
+                                                clientGroupFieldID="edit_clientGroup";
+                                            }
+                                            else if(cliOrgType!="9" && cliOrgType!="8" && cliOrgType!="3" || cliOrgType!="22" || cliOrgType!="23") // Other Than Individual
+                                            {
+                                                clientGroupFieldID="edit_clientGroupNew";
+                                            }
+
+                                            $("#"+clientGroupFieldID).closest('div').append('<span class="text-danger vErrSpan">'+value+'</span>');
+                                        }
+                                        
+                                    }
+                                    else
+                                    {
+                                        $("#"+index).closest('div').append('<span class="text-danger vErrSpan">'+value+'</span>');
+                                    }
+                                }
                             });
     
                             swal("Error!", resMsg, "error");
@@ -3363,6 +3403,12 @@
             $(".clientDocInput").on("input", function(){
                 var clientDocNo = $(this).val();
                 var clientDocInputId = $(this).attr("id");
+                var clientDocId = $(this).data("doc_id");
+                
+                if(clientDocId==1)
+                {
+                    $('#actPanValue').val(clientDocNo);
+                }
                 
                 $("#"+clientDocInputId+"Label").val(clientDocNo);
             });

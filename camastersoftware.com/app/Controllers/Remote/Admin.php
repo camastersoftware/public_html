@@ -320,7 +320,6 @@ class Admin extends BaseController
         $this->db->transBegin();
 
         $validationRulesArr['clientTitle']=['label' => 'Client Title', 'rules' => 'trim'];
-        $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'trim'];
         $validationRulesArr['clientFatherName']=['label' => 'Father Name', 'rules' => 'trim'];
         $validationRulesArr['clientSpouseName']=['label' => 'Spouse Name', 'rules' => 'trim'];
         $validationRulesArr['clientDob']=['label' => 'Date of Birth', 'rules' => 'trim'];
@@ -343,11 +342,10 @@ class Admin extends BaseController
         $validationRulesArr['clientFactoryPhone']=['label' => 'Factory Phone', 'rules' => 'trim'];
         $validationRulesArr['clientEmail1']=['label' => 'Email 1', 'rules' => 'trim'];
         $validationRulesArr['clientEmail2']=['label' => 'Email 2', 'rules' => 'trim'];
-        $validationRulesArr['clientGroup']=['label' => 'Client Group', 'rules' => 'trim'];
+        $validationRulesArr['clientGroup']=['label' => 'Client Group', 'rules' => 'required|trim'];
         $validationRulesArr['clientCostCenter']=['label' => 'Cost Center', 'rules' => 'trim'];
         $validationRulesArr['clientCategory']=['label' => 'Category', 'rules' => 'trim'];
-        $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
-        $validationRulesArr['clientBussOrganisationType']=['label' => 'Type of Organisation', 'rules' => 'required|trim'];
+        $validationRulesArr['clientBussOrganisationType']=['label' => 'Type of Client', 'rules' => 'required|trim'];
         $validationRulesArr['clientBussIncorporationDate']=['label' => 'Date of Incorporation', 'rules' => 'trim'];
         $validationRulesArr['clientBussNature']=['label' => 'Nature of Business', 'rules' => 'trim'];
         $validationRulesArr['clientBussRegisteredAddress']=['label' => 'Registered Address', 'rules' => 'trim'];
@@ -384,6 +382,31 @@ class Admin extends BaseController
         $validationRulesArr['clientBussRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['clientContactRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['clientContactDesgtn']=['label' => 'Contact Person Designation', 'rules' => 'trim'];
+        $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'trim'];
+        $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+        $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+
+        $cliOrgType=$this->request->getPost('clientBussOrganisationType');
+
+        if(!empty($cliOrgType))
+        {
+            $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'required|trim'];
+            if($cliOrgType=="9") // Individual
+            {
+                $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+            }
+            elseif($cliOrgType=="8" || $cliOrgType=="3" || $cliOrgType=="22" || $cliOrgType=="23") // Proprietory, OPC
+            {
+                $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+            elseif($cliOrgType!="9" && $cliOrgType!="8" && $cliOrgType!="3" || $cliOrgType!="22" || $cliOrgType!="23") // Other Than Individual
+            {
+                $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+                $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+        }
 
         $errorArr=array();
 
@@ -1093,7 +1116,6 @@ class Admin extends BaseController
         $this->db->transBegin();
 
         $validationRulesArr['edit_clientTitle']=['label' => 'Client Title', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientFatherName']=['label' => 'Father Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientSpouseName']=['label' => 'Spouse Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientDob']=['label' => 'Date of Birth', 'rules' => 'trim'];
@@ -1115,11 +1137,10 @@ class Admin extends BaseController
         $validationRulesArr['edit_clientFactoryPhone']=['label' => 'Factory Phone', 'rules' => 'trim'];
         $validationRulesArr['edit_clientEmail1']=['label' => 'Email 1', 'rules' => 'trim'];
         $validationRulesArr['edit_clientEmail2']=['label' => 'Email 2', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientGroup']=['label' => 'Client Group', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientGroup']=['label' => 'Client Group', 'rules' => 'required|trim'];
         $validationRulesArr['edit_clientCostCenter']=['label' => 'Cost Center', 'rules' => 'trim'];
         $validationRulesArr['edit_clientCategory']=['label' => 'Category', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientBussOrganisationType']=['label' => 'Type of Organisation', 'rules' => 'required|trim'];
+        $validationRulesArr['edit_clientBussOrganisationType']=['label' => 'Type of Client', 'rules' => 'required|trim'];
         $validationRulesArr['edit_clientBussIncorporationDate']=['label' => 'Date of Incorporation', 'rules' => 'trim'];
         $validationRulesArr['edit_clientBussNature']=['label' => 'Nature of Business', 'rules' => 'trim'];
         $validationRulesArr['edit_clientBussRegisteredAddress']=['label' => 'Registered Address', 'rules' => 'trim'];
@@ -1156,6 +1177,31 @@ class Admin extends BaseController
         $validationRulesArr['edit_clientBussRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['edit_clientContactRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['edit_clientContactDesgtn']=['label' => 'Contact Person Designation', 'rules' => 'trim'];
+        $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+
+        $cliOrgType=$this->request->getPost('edit_clientBussOrganisationType');
+
+        if(!empty($cliOrgType))
+        {
+            $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'required|trim'];
+            if($cliOrgType=="9") // Individual
+            {
+                $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+            }
+            elseif($cliOrgType=="8" || $cliOrgType=="3" || $cliOrgType=="22" || $cliOrgType=="23") // Proprietory, OPC
+            {
+                $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+            elseif($cliOrgType!="9" && $cliOrgType!="8" && $cliOrgType!="3" || $cliOrgType!="22" || $cliOrgType!="23") // Other Than Individual
+            {
+                $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+                $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+        }
 
         $errorArr=array();
 
