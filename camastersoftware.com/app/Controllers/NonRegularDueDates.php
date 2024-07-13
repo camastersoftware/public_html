@@ -45,6 +45,9 @@ class NonRegularDueDates extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 
@@ -109,6 +112,9 @@ class NonRegularDueDates extends BaseController
 	{
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
 
         $jsArr=array('sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
@@ -253,6 +259,9 @@ class NonRegularDueDates extends BaseController
         $non_rglr_due_date_id=$uri->getSegment(2);
         $this->data['non_rglr_due_date_id']=$non_rglr_due_date_id;
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+        
         $jsArr=array('sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 
