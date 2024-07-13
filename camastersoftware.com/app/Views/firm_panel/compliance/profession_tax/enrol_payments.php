@@ -295,15 +295,28 @@
                                             
                                                     <?php if(!empty($workDataArr)): ?>
                                                         <?php foreach($workDataArr AS $e_row): ?>
-                                                        
+
+                                                            <?php $pt_enrol_paid_on = check_valid_date($e_row['pt_enrol_paid_on']); ?>
+
+                                                            <?php $pt_enrol_paid_on_comp = $pt_enrol_paid_on && !empty($pt_enrol_paid_on); ?>
+                                                            
+                                                            <?php
+                                                                $rowColor="";
+
+                                                                if($pt_enrol_paid_on_comp)
+                                                                {
+                                                                    $rowColor="hasCompleted";
+                                                                }
+                                                            ?>
+
                                                             <tr class="row-1 tbl_row_clr" >
-                                                                <td class="column-1" width="1%" nowrap>
+                                                                <td class="column-1 <?= $rowColor; ?>" width="1%" nowrap>
                                                                     <?= $sr; ?>
                                                                 </td>
-                                                                <td class="column-2" width="5%" nowrap>
+                                                                <td class="column-2 <?= $rowColor; ?>" width="5%" nowrap>
                                                                     <?= $e_row['client_group_number']; ?>
                                                                 </td>
-                                                                <td class="column-3" width="15%" nowrap>
+                                                                <td class="column-3 <?= $rowColor; ?>" width="15%" nowrap>
                                                                     <?php 
                                                                         if(in_array($e_row['orgType'], INDIVIDUAL_ARRAY))
                                                                             $clientNameVar=$e_row['clientName'];
@@ -323,13 +336,13 @@
                                                                         ?>
                                                                     </a>
                                                                 </td>
-                                                                <td class="column-4 text-center" width="10%" nowrap>
+                                                                <td class="column-4 text-center <?= $rowColor; ?>" width="10%" nowrap>
                                                                     <?= $e_row['client_org_short_name']; ?>
                                                                 </td>
-                                                                <td class="column-5 text-center" width="7%">
+                                                                <td class="column-5 text-center <?= $rowColor; ?>" width="7%">
                                                                     <?= (!empty($e_row['client_document_number'])) ? $e_row['client_document_number'] : "-"; ?>
                                                                 </td>
-                                                                <td class="column-6 text-center" width="7%" nowrap>
+                                                                <td class="column-6 text-center <?= $rowColor; ?>" width="7%" nowrap>
                                                                     <?php if($e_row['juniors']!=""): ?>
                                                                         <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $e_row['juniors']; ?>">
                                                                             <?php 
@@ -343,10 +356,10 @@
                                                                         -
                                                                     <?php endif; ?>
                                                                 </td>
-                                                                <td class="column-7 text-center" width="7%">
+                                                                <td class="column-7 text-center <?= $rowColor; ?>" width="7%">
                                                                     <?= (!empty($e_row['seniorName'])) ? $e_row['seniorName'] : "-"; ?>
                                                                 </td>
-                                                                <td class="column-8 text-center" nowrap>
+                                                                <td class="column-8 text-center <?= $rowColor; ?>" nowrap>
                                                                     <?php
                                                                         if($e_row['periodicity']=="1")
                                                                         {
@@ -366,13 +379,13 @@
                                                                         }
                                                                     ?>
                                                                 </td>
-                                                                <td class="column-10 text-right">
+                                                                <td class="column-10 text-right <?= $rowColor; ?>">
                                                                     <?= (!empty($e_row['pt_enrol_amt_paid'])) ? amount_format($e_row['pt_enrol_amt_paid']) : "-"; ?>
                                                                 </td>
-                                                                <td class="column-11 text-center">
+                                                                <td class="column-11 text-center <?= $rowColor; ?>">
                                                                     <?= (check_valid_date($e_row['pt_enrol_paid_on'])) ? date('d-m-Y', strtotime($e_row['pt_enrol_paid_on'])) : "-"; ?>
                                                                 </td>
-                                                                <td class="column-12 text-center">
+                                                                <td class="column-12 text-center <?= $rowColor; ?>">
                                                                     <?= (!empty($e_row['pt_enrol_pmt_mode'])) ? $e_row['pt_enrol_pmt_mode'] : "-"; ?>
                                                                 </td>
                                                                 <td class="column-13 text-center">
