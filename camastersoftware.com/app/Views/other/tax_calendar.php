@@ -321,9 +321,12 @@ if(!empty($taxCalIsAdminCookie))
                                                     -->
                                                     <td class="column-11 text-center" nowrap>
                                                         <?php $nextDueDate=$e_row['next_extended_date']; ?>
-
-                                                        <?php if($nextDueDate!="" && $nextDueDate!="1970-01-01"  && $nextDueDate!="0000-00-00"): ?>
-                                                            <?php echo date("d-m-Y", strtotime($nextDueDate)); ?>
+                                                        <?php if($e_row['is_extended']==1): ?>
+                                                            <?php if($nextDueDate!="" && $nextDueDate!="1970-01-01"  && $nextDueDate!="0000-00-00"): ?>
+                                                                <?php echo date("d-m-Y", strtotime($nextDueDate)); ?>
+                                                            <?php else: ?>
+                                                                N/A
+                                                            <?php endif; ?>
                                                         <?php else: ?>
                                                             N/A
                                                         <?php endif; ?>
