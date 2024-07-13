@@ -468,6 +468,9 @@ class Duedate extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 
@@ -719,6 +722,9 @@ class Duedate extends BaseController
 
         $this->data['due_date_id']=$due_date_id;
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+        
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 

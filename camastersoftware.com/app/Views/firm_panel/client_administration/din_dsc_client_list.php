@@ -113,7 +113,7 @@
         margin: 0px !important;
     }
     
-    .discontinueClass td {
+    .discontinueClass td, .discontinueClass td a {
       color: #9d9c97 !important;
     }
     

@@ -148,6 +148,9 @@ class Client extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 
@@ -232,6 +235,9 @@ class Client extends BaseController
 
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
 
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full', 'ckeditor');
         $this->data['jsArr']=$jsArr;
