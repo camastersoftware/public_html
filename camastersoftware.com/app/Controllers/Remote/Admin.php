@@ -1119,6 +1119,7 @@ class Admin extends BaseController
         $validationRulesArr['edit_clientFatherName']=['label' => 'Father Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientSpouseName']=['label' => 'Spouse Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientDob']=['label' => 'Date of Birth', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientExpireDate']=['label' => 'Date of Expiry', 'rules' => 'trim'];
         $validationRulesArr['edit_clientPassport']=['label' => 'Passport', 'rules' => 'trim'];
         $validationRulesArr['edit_clientBussOrganisationEmp']=['label' => 'Organisation Name (Employed With)', 'rules' => 'trim'];
         $validationRulesArr['edit_clientQualification']=['label' => 'Qualification', 'rules' => 'trim'];
@@ -1217,6 +1218,7 @@ class Admin extends BaseController
             $clientFatherName=$this->request->getPost('edit_clientFatherName');
             $clientSpouseName=$this->request->getPost('edit_clientSpouseName');
             $clientDob=$this->request->getPost('edit_clientDob');
+            $clientExpireDate=$this->request->getPost('edit_clientExpireDate');
             $clientPassport=$this->request->getPost('edit_clientPassport');
             $clientBussOrganisationEmp=$this->request->getPost('edit_clientBussOrganisationEmp');
             $clientQualification=$this->request->getPost('edit_clientQualification');
@@ -1427,6 +1429,7 @@ class Admin extends BaseController
                 'clientFatherName'=>$clientFatherName,
                 'clientSpouseName'=>$clientSpouseName,
                 'clientDob'=>$clientDob,
+                'clientExpireDate'=>$clientExpireDate,
                 'clientPassport'=>$clientPassport,
                 'clientBussOrganisationEmp'=>$clientBussOrganisationEmp,
                 'clientQualification'=>$clientQualification,

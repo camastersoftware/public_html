@@ -408,7 +408,7 @@
                                                                                         <input type="text" class="form-control" name="edit_clientSpouseName" id="edit_clientSpouseName" placeholder="Enter Spouse Name" value="<?php echo $clientData['clientSpouseName']; ?>"> 
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-md-4">
+                                                                                <div class="col-md-2">
                                                                                     <div class="form-group">
                                                                                         <label for="edit_clientDob">Date of Birth :</label>
                                                                                         <?php 
@@ -417,6 +417,17 @@
                                                                                                 $clientDob=date("Y-m-d", strtotime($clientData['clientDob']));
                                                                                         ?>
                                                                                         <input type="date" class="form-control" name="edit_clientDob" id="edit_clientDob" placeholder="Enter Date of Birth" value="<?php echo $clientDob; ?>"> 
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="form-group">
+                                                                                        <label for="edit_clientExpireDate">Date of Expiry :</label>
+                                                                                        <?php 
+                                                                                            $clientExpireDate="";
+                                                                                            if(check_valid_date($clientData['clientExpireDate']))
+                                                                                                $clientExpireDate=date("Y-m-d", strtotime($clientData['clientExpireDate']));
+                                                                                        ?>
+                                                                                        <input type="date" class="form-control" name="edit_clientExpireDate" id="edit_clientExpireDate" placeholder="Enter Date of Expiry" value="<?php echo $clientExpireDate; ?>"> 
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-4">

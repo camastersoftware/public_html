@@ -125,12 +125,14 @@ class Home extends BaseController
         {
             $clientCondtnArr['DATE_FORMAT(client_tbl.clientDob, "%m-%d")']=date('m-d');
             $clientCondtnArr['client_tbl.status']=1;
+
+            $clientCustomWhereArray[]=" (client_tbl.clientExpireDate='' OR client_tbl.clientExpireDate IS NULL OR client_tbl.clientExpireDate='0000-00-00' OR client_tbl.clientExpireDate='1970-01-01')";
             
             if($clientTypeVal==1){
                 $clientCondtnArr['client_tbl.isOldClient !=']=1;
             }
             
-            $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientName, client_tbl.clientBussOrganisationType AS orgType, client_tbl.clientDob", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr=array(), $singleRow=FALSE, $clientOrderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+            $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientName, client_tbl.clientBussOrganisationType AS orgType, client_tbl.clientDob", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr=array(), $singleRow=FALSE, $clientOrderByArr=array(), $groupByArr=array(), $whereInArray=array(), $clientCustomWhereArray, $orWhereArray=array(), $orWhereDataArr=array());
             
             $clientList=$query['userData'];
             
