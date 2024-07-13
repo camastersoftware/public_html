@@ -128,8 +128,9 @@ class ClientAdministration extends BaseController
         $clientCondtnArr['ccat.client_id !=']='';
         $clientCondtnArr['ccat.client_administration_model_id']='2';
         // $clientWhereInArray['client_tbl.clientId']=$digitalCertificateClientIdArr;
-        $clientOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $clientOrderByArr['ccat.end_date']="ASC";
         $clientOrderByArr['organisation_type_tbl.sortingBy']="ASC";
+        $clientOrderByArr['client_tbl.clientId']="ASC";
         
         $clientJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"ccat.client_id=client_tbl.clientId AND ccat.status=1", "type"=>"left");
         $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
@@ -1126,6 +1127,9 @@ class ClientAdministration extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+        
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
         
