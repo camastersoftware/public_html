@@ -148,6 +148,11 @@
         /*border-style: dashed !important;*/
         background: #e4f1fc;
     }
+
+    .theme-primary .btnPrimClr {
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
     
 </style>
 <?php $s_time = strtotime("2019-12-01"); ?>
@@ -352,6 +357,7 @@
                                                                                             <th class="column-8">Set</th>
                                                                                             <th class="column-9">Billing</th>
                                                                                             <th class="column-11">Receipt</th>
+                                                                                            <th class="column-11">Action</th>
                                                                                         </tr>
                                                                                         <tr class="row-1">
                                                                                             <th class="column-1">No</th>
@@ -367,6 +373,7 @@
                                                                                             <th class="column-10">By</th>
                                                                                             <th class="column-11">Details</th>
                                                                                             <th class="column-12">Details</th>
+                                                                                            <th class="column-12"></th>
                                                                                         </tr>
                                                                                     </thead>
                                                                                     <tbody class="row-hover">
@@ -522,6 +529,16 @@
                                                                                                         </td>
                                                                                                         <td class="column-13 text-center <?php if($isReceiptDone=='Yes'): ?>hasCompleted<?php endif; ?>">
                                                                                                             <?php echo $isReceiptDone; ?>
+                                                                                                        </td>
+                                                                                                        <td class="column-13 text-center">
+                                                                                                            <div class="btn-group">
+                                                                                                                <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                                                                <div class="dropdown-menu" style="will-change: transform;">
+                                                                                                                    <a class="dropdown-item" href="javascript:void(0);<?php //echo base_url('client/edit_client/'.$e_row['clientId']); ?>" >
+                                                                                                                        <i class="fa fa-calendar"></i>&nbsp;Time Sheet
+                                                                                                                    </a>
+                                                                                                                </div>
+                                                                                                            </div>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <?php $sr++; ?>
