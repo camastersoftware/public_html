@@ -324,6 +324,10 @@ class Home extends BaseController
         $ftr_ddf=$this->request->getPost('ftr_ddf');
         $ftr_period=$this->request->getPost('ftr_period');
         $ftr_ddm=$this->request->getPost('ftr_ddm');
+
+        if(empty($ftr_staff)){
+            $ftr_staff = $this->sessUserId;
+        }
         
         if(!empty($ftr_clientgrp))
             $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
@@ -334,8 +338,8 @@ class Home extends BaseController
         if(!empty($ftr_costcenter))
             $workCondtnArr['user_tbl.userId']=$ftr_costcenter;
             
-        if(!empty($ftr_staff))
-            $workCondtnArr['user_tbl.userId']=$ftr_staff;
+        // if(!empty($ftr_staff))
+        //     $workCondtnArr['user_tbl.userId']=$ftr_staff;
             
         if(!empty($ftr_ddf))
             $workCondtnArr['due_date_for_tbl.act_option_map_id']=$ftr_ddf;
@@ -380,7 +384,7 @@ class Home extends BaseController
         // $workCondtnArr['act_tbl.act_id']=1;
         $workCustomWhereArray[]=" (work_tbl.eFillingDate IS NULL OR work_tbl.eFillingDate='' OR work_tbl.eFillingDate='0000-00-00' OR work_tbl.eFillingDate='1970-01-01')";
         
-        $workCustomWhereArray[] = "(work_tbl.seniorId='".$this->adminId."' OR work_junior_map_tbl.fkUserId='".$this->adminId."')";
+        $workCustomWhereArray[] = "(work_tbl.seniorId='".$ftr_staff."' OR work_junior_map_tbl.fkUserId='".$ftr_staff."')";
         
         $workOrderByArr['act_tbl.act_name']="ASC";
         $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
@@ -500,7 +504,7 @@ class Home extends BaseController
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
-        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
         $this->data['jsArr']=$jsArr;
         
         $pageTitle="My Work";
@@ -526,6 +530,10 @@ class Home extends BaseController
         $ftr_ddf=$this->request->getPost('ftr_ddf');
         $ftr_period=$this->request->getPost('ftr_period');
         $ftr_ddm=$this->request->getPost('ftr_ddm');
+
+        if(empty($ftr_staff)){
+            $ftr_staff = $this->sessUserId;
+        }
         
         if(!empty($ftr_clientgrp))
             $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
@@ -536,8 +544,8 @@ class Home extends BaseController
         if(!empty($ftr_costcenter))
             $workCondtnArr['user_tbl.userId']=$ftr_costcenter;
             
-        if(!empty($ftr_staff))
-            $workCondtnArr['user_tbl.userId']=$ftr_staff;
+        // if(!empty($ftr_staff))
+        //     $workCondtnArr['user_tbl.userId']=$ftr_staff;
             
         if(!empty($ftr_ddf))
             $workCondtnArr['due_date_for_tbl.act_option_map_id']=$ftr_ddf;
@@ -584,7 +592,7 @@ class Home extends BaseController
         $workCondtnArr['work_tbl.eFillingDate != ']="0000-00-00";
         $workCondtnArr['work_tbl.eFillingDate !=']="1970-01-01";
         
-        $workCustomWhereArray[] = "(work_tbl.seniorId='".$this->adminId."' OR work_junior_map_tbl.fkUserId='".$this->adminId."')";
+        $workCustomWhereArray[] = "(work_tbl.seniorId='".$ftr_staff."' OR work_junior_map_tbl.fkUserId='".$ftr_staff."')";
         
         $workOrderByArr['act_tbl.act_name']="ASC";
         $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
