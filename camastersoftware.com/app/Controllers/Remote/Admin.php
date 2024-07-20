@@ -21,6 +21,9 @@ class Admin extends BaseController
         $this->Mdue_date = new \App\Models\Mdue_date();
         $this->Mcontsubgroup = new \App\Models\Mcontsubgroup();
         $this->Mcontact = new \App\Models\Mcontact();
+        $this->MArticleshipStaff = new \App\Models\MArticleshipStaff();
+        $this->MCharterAccountant = new \App\Models\MCharterAccountant();
+        $this->MNonRegularDueDates = new \App\Models\MNonRegularDueDates();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -44,6 +47,10 @@ class Admin extends BaseController
         $this->rectification_tbl=$tableArr['rectification_tbl'];
         $this->tax_payment_tbl=$tableArr['tax_payment_tbl'];
         $this->client_act_map_tbl=$tableArr['client_act_map_tbl'];
+        $this->articleship_staff_tbl = $tableArr['articleship_staff_tbl'];
+        $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
+        $this->non_regular_due_date_tbl = $tableArr['non_regular_due_date_tbl'];
+        $this->event_based_work_tbl = $tableArr['event_based_work_tbl'];
     }
 
     public function getGroups()
@@ -236,41 +243,52 @@ class Admin extends BaseController
     {
         $client_group_id=$this->request->getPost('client_group_id');
 
-	    $dataArray = [
-            'client_group_id' => $client_group_id,
-            'status' => 2,
-            'updatedBy' => $this->adminId,
-            'updatedDatetime' => $this->currTimeStamp
-        ];
-	    
-        if($this->Mgroup->save($dataArray)){
-            
-            $contSubGrpArr = $this->Mcontsubgroup->where('fk_cont_group_id', 1)->where('refId', $client_group_id)->where('status', 1)->get()->getRowArray();
+        $clientListData=$this->Mclient->where('client_tbl.clientGroup', $client_group_id)
+            ->where('client_tbl.status', 1)
+            ->findAll();
 
-            $contactSubGrpUpdateArr=[
-                'cont_sub_group_id'=>$contSubGrpArr['cont_sub_group_id'],
+        if(empty($clientListData))
+        {
+            $dataArray = [
+                'client_group_id' => $client_group_id,
                 'status' => 2,
                 'updatedBy' => $this->adminId,
                 'updatedDatetime' => $this->currTimeStamp
             ];
             
-            $this->Mcontsubgroup->save($contactSubGrpUpdateArr);
-            
-            $insertLogArr['section']="Client group";
-            $insertLogArr['message']="Client group deleted";
-            $insertLogArr['ip']=$this->IPAddress;
-            // $insertLogArr['macAddr']=$this->macAddress;
-            $insertLogArr['createdBy']=$this->adminId;
-            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+            if($this->Mgroup->save($dataArray)){
+                
+                $contSubGrpArr = $this->Mcontsubgroup->where('fk_cont_group_id', 1)->where('refId', $client_group_id)->where('status', 1)->get()->getRowArray();
 
-            $this->Mquery->insertLog($insertLogArr);
+                $contactSubGrpUpdateArr=[
+                    'cont_sub_group_id'=>$contSubGrpArr['cont_sub_group_id'],
+                    'status' => 2,
+                    'updatedBy' => $this->adminId,
+                    'updatedDatetime' => $this->currTimeStamp
+                ];
+                
+                $this->Mcontsubgroup->save($contactSubGrpUpdateArr);
+                
+                $insertLogArr['section']="Client group";
+                $insertLogArr['message']="Client group deleted";
+                $insertLogArr['ip']=$this->IPAddress;
+                // $insertLogArr['macAddr']=$this->macAddress;
+                $insertLogArr['createdBy']=$this->adminId;
+                $insertLogArr['createdDatetime']=$this->currTimeStamp;
 
-            $responseArr['status']=TRUE;
-            $responseArr['message']="Client group has been deleted successfully :)";
-            $responseArr['userdata']=array();
+                $this->Mquery->insertLog($insertLogArr);
+
+                $responseArr['status']=TRUE;
+                $responseArr['message']="Client group has been deleted successfully :)";
+                $responseArr['userdata']=array();
+            }else{
+                $responseArr['status']=FALSE;
+                $responseArr['message']="Client group has not delete :(";
+                $responseArr['userdata']=array();
+            }
         }else{
             $responseArr['status']=FALSE;
-            $responseArr['message']="Client group has not delete :(";
+            $responseArr['message']="Client Group cannot be deleted without deleting all the members.";
             $responseArr['userdata']=array();
         }
 
@@ -302,7 +320,6 @@ class Admin extends BaseController
         $this->db->transBegin();
 
         $validationRulesArr['clientTitle']=['label' => 'Client Title', 'rules' => 'trim'];
-        $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'trim'];
         $validationRulesArr['clientFatherName']=['label' => 'Father Name', 'rules' => 'trim'];
         $validationRulesArr['clientSpouseName']=['label' => 'Spouse Name', 'rules' => 'trim'];
         $validationRulesArr['clientDob']=['label' => 'Date of Birth', 'rules' => 'trim'];
@@ -325,11 +342,10 @@ class Admin extends BaseController
         $validationRulesArr['clientFactoryPhone']=['label' => 'Factory Phone', 'rules' => 'trim'];
         $validationRulesArr['clientEmail1']=['label' => 'Email 1', 'rules' => 'trim'];
         $validationRulesArr['clientEmail2']=['label' => 'Email 2', 'rules' => 'trim'];
-        $validationRulesArr['clientGroup']=['label' => 'Client Group', 'rules' => 'trim'];
+        $validationRulesArr['clientGroup']=['label' => 'Client Group', 'rules' => 'required|trim'];
         $validationRulesArr['clientCostCenter']=['label' => 'Cost Center', 'rules' => 'trim'];
         $validationRulesArr['clientCategory']=['label' => 'Category', 'rules' => 'trim'];
-        $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
-        $validationRulesArr['clientBussOrganisationType']=['label' => 'Type of Organisation', 'rules' => 'required|trim'];
+        $validationRulesArr['clientBussOrganisationType']=['label' => 'Type of Client', 'rules' => 'required|trim'];
         $validationRulesArr['clientBussIncorporationDate']=['label' => 'Date of Incorporation', 'rules' => 'trim'];
         $validationRulesArr['clientBussNature']=['label' => 'Nature of Business', 'rules' => 'trim'];
         $validationRulesArr['clientBussRegisteredAddress']=['label' => 'Registered Address', 'rules' => 'trim'];
@@ -366,6 +382,31 @@ class Admin extends BaseController
         $validationRulesArr['clientBussRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['clientContactRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['clientContactDesgtn']=['label' => 'Contact Person Designation', 'rules' => 'trim'];
+        $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'trim'];
+        $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+        $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+
+        $cliOrgType=$this->request->getPost('clientBussOrganisationType');
+
+        if(!empty($cliOrgType))
+        {
+            $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'required|trim'];
+            if($cliOrgType=="9") // Individual
+            {
+                $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+            }
+            elseif($cliOrgType=="8" || $cliOrgType=="3" || $cliOrgType=="22" || $cliOrgType=="23") // Proprietory, OPC
+            {
+                $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+            elseif($cliOrgType!="9" && $cliOrgType!="8" && $cliOrgType!="3" || $cliOrgType!="22" || $cliOrgType!="23") // Other Than Individual
+            {
+                $validationRulesArr['clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+                $validationRulesArr['clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+        }
 
         $errorArr=array();
 
@@ -457,6 +498,25 @@ class Admin extends BaseController
             $clientBussRemark=$this->request->getPost('clientBussRemark');
             $clientContactRemark=$this->request->getPost('clientContactRemark');
             $clientContactDesgtn=$this->request->getPost('clientContactDesgtn');
+
+            $cust_actId_arr=$this->request->getPost('cust_actId[]');
+            $non_rglr_due_state_arr=$this->request->getPost('non_rglr_due_state[]');
+            $non_rglr_due_act_arr=$this->request->getPost('non_rglr_due_act[]');
+            $non_rglr_due_date_for_arr=$this->request->getPost('non_rglr_due_date_for[]');
+            $non_rglr_applicable_form_arr=$this->request->getPost('non_rglr_applicable_form[]');
+            $non_rglr_under_section_arr=$this->request->getPost('non_rglr_under_section[]');
+            $non_rglr_periodicity_arr=$this->request->getPost('non_rglr_periodicity[]');
+            $non_rglr_daily_date_arr=$this->request->getPost('non_rglr_daily_date[]');
+            $non_rglr_period_month_arr=$this->request->getPost('non_rglr_period_month[]');
+            $non_rglr_period_year_arr=$this->request->getPost('non_rglr_period_year[]');
+            $non_rglr_f_period_month_arr=$this->request->getPost('non_rglr_f_period_month[]');
+            $non_rglr_f_period_year_arr=$this->request->getPost('non_rglr_f_period_year[]');
+            $non_rglr_t_period_month_arr=$this->request->getPost('non_rglr_t_period_month[]');
+            $non_rglr_t_period_year_arr=$this->request->getPost('non_rglr_t_period_year[]');
+            $non_rglr_finYear_arr=$this->request->getPost('non_rglr_finYear[]');
+            $non_rglr_due_date_arr=$this->request->getPost('non_rglr_due_date[]');
+            $non_rglr_event_date_arr=$this->request->getPost('non_rglr_event_date[]');
+            $non_rglr_due_notes_arr=$this->request->getPost('non_rglr_due_notes[]');
 
             $documentFileArr=array();
             
@@ -933,6 +993,89 @@ class Admin extends BaseController
         	    
         	    $this->Mcontact->save($contactInsertArr);
     	    }
+
+            $non_rglr_due_date_insert_array=array();
+
+            if(!empty($cust_actId_arr))
+            {
+                foreach($cust_actId_arr AS $k_cust_act=>$e_cust_act)
+                {
+                    $non_rglr_due_state=(isset($non_rglr_due_state_arr[$k_cust_act])) ? $non_rglr_due_state_arr[$k_cust_act] : "";
+                    $non_rglr_due_act=(isset($non_rglr_due_act_arr[$k_cust_act])) ? $non_rglr_due_act_arr[$k_cust_act] : "";
+                    $non_rglr_due_date_for=(isset($non_rglr_due_date_for_arr[$k_cust_act])) ? $non_rglr_due_date_for_arr[$k_cust_act] : "";
+                    $non_rglr_applicable_form=(isset($non_rglr_applicable_form_arr[$k_cust_act])) ? $non_rglr_applicable_form_arr[$k_cust_act] : "";
+                    $non_rglr_under_section=(isset($non_rglr_under_section_arr[$k_cust_act])) ? $non_rglr_under_section_arr[$k_cust_act] : "";
+                    $non_rglr_periodicity=(isset($non_rglr_periodicity_arr[$k_cust_act])) ? $non_rglr_periodicity_arr[$k_cust_act] : "";
+                    $non_rglr_daily_date=(isset($non_rglr_daily_date_arr[$k_cust_act])) ? $non_rglr_daily_date_arr[$k_cust_act] : "";
+                    $non_rglr_period_month=(isset($non_rglr_period_month_arr[$k_cust_act])) ? $non_rglr_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_period_year=(isset($non_rglr_period_year_arr[$k_cust_act])) ? $non_rglr_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_f_period_month=(isset($non_rglr_f_period_month_arr[$k_cust_act])) ? $non_rglr_f_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_f_period_year=(isset($non_rglr_f_period_year_arr[$k_cust_act])) ? $non_rglr_f_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_t_period_month=(isset($non_rglr_t_period_month_arr[$k_cust_act])) ? $non_rglr_t_period_month_arr[$k_cust_act] : "";
+                    $non_rglr_t_period_year=(isset($non_rglr_t_period_year_arr[$k_cust_act])) ? $non_rglr_t_period_year_arr[$k_cust_act] : "";
+                    $non_rglr_finYear=(isset($non_rglr_finYear_arr[$k_cust_act])) ? $non_rglr_finYear_arr[$k_cust_act] : "";
+                    $non_rglr_due_date=(isset($non_rglr_due_date_arr[$k_cust_act])) ? $non_rglr_due_date_arr[$k_cust_act] : "";
+                    $non_rglr_event_date=(isset($non_rglr_event_date_arr[$k_cust_act])) ? $non_rglr_event_date_arr[$k_cust_act] : "";
+                    $non_rglr_due_notes=(isset($non_rglr_due_notes_arr[$k_cust_act])) ? $non_rglr_due_notes_arr[$k_cust_act] : "";
+
+                    $non_rglr_due_date_insert_array[]=array(
+                        "non_rglr_due_state" => $non_rglr_due_state,
+                        "non_rglr_due_act" => $non_rglr_due_act,
+                        "non_rglr_due_date_for" => $non_rglr_due_date_for,
+                        "non_rglr_applicable_form" => $non_rglr_applicable_form,
+                        "non_rglr_under_section" => $non_rglr_under_section,
+                        "non_rglr_periodicity" => $non_rglr_periodicity,
+                        "non_rglr_daily_date" => $non_rglr_daily_date,
+                        "non_rglr_period_month" => $non_rglr_period_month,
+                        "non_rglr_period_year" => $non_rglr_period_year,
+                        "non_rglr_f_period_month" => $non_rglr_f_period_month,
+                        "non_rglr_f_period_year" => $non_rglr_f_period_year,
+                        "non_rglr_t_period_month" => $non_rglr_t_period_month,
+                        "non_rglr_t_period_year" => $non_rglr_t_period_year,
+                        "non_rglr_finYear" => $non_rglr_finYear,
+                        "non_rglr_due_date" => $non_rglr_due_date,
+                        "non_rglr_event_date" => $non_rglr_event_date,
+                        "non_rglr_due_notes" => $non_rglr_due_notes,
+                        'fkClientId'=>$clientId,
+                        'status' => 1,
+                        'createdBy' => $this->adminId,
+                        'createdDatetime' => $this->currTimeStamp
+                    );
+                }
+            }
+
+            if(!empty($non_rglr_due_date_insert_array)){
+                $non_rglr_due_date_insert_query = $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+                
+                if($non_rglr_due_date_insert_query['status'] == true)
+                {
+                    $non_rglr_due_date_inserted_ids = $non_rglr_due_date_insert_query['insertedIds'];
+
+                    $event_based_work_insert_array = array();
+
+                    if(!empty($non_rglr_due_date_inserted_ids))
+                    {
+                        foreach($non_rglr_due_date_inserted_ids AS $e_non_rglr_dd)
+                        {
+                            $uniqueId=strtoupper(substr(str_shuffle(uniqid()), 0, 4));
+
+                            $workCode="WORKID_".$uniqueId;
+
+                            $event_based_work_insert_array[]=[
+                                'workCode'=>$workCode,
+                                'fk_event_based_due_date_id'=>$e_non_rglr_dd,
+                                'fkClientId'=>$clientId,
+                                'status' => 1,
+                                'createdBy' => $this->adminId,
+                                'createdDatetime' => $this->currTimeStamp
+                            ];
+                        }
+                    }
+                    if(!empty($event_based_work_insert_array)){
+                        $this->Mquery->insert($tableName=$this->event_based_work_tbl, $event_based_work_insert_array, $returnType="");
+                    }
+                }
+            }
         }
 
         if($this->db->transStatus() === FALSE || !empty($errorArr)){
@@ -973,10 +1116,10 @@ class Admin extends BaseController
         $this->db->transBegin();
 
         $validationRulesArr['edit_clientTitle']=['label' => 'Client Title', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientFatherName']=['label' => 'Father Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientSpouseName']=['label' => 'Spouse Name', 'rules' => 'trim'];
         $validationRulesArr['edit_clientDob']=['label' => 'Date of Birth', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientExpireDate']=['label' => 'Date of Expiry', 'rules' => 'trim'];
         $validationRulesArr['edit_clientPassport']=['label' => 'Passport', 'rules' => 'trim'];
         $validationRulesArr['edit_clientBussOrganisationEmp']=['label' => 'Organisation Name (Employed With)', 'rules' => 'trim'];
         $validationRulesArr['edit_clientQualification']=['label' => 'Qualification', 'rules' => 'trim'];
@@ -995,11 +1138,10 @@ class Admin extends BaseController
         $validationRulesArr['edit_clientFactoryPhone']=['label' => 'Factory Phone', 'rules' => 'trim'];
         $validationRulesArr['edit_clientEmail1']=['label' => 'Email 1', 'rules' => 'trim'];
         $validationRulesArr['edit_clientEmail2']=['label' => 'Email 2', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientGroup']=['label' => 'Client Group', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientGroup']=['label' => 'Client Group', 'rules' => 'required|trim'];
         $validationRulesArr['edit_clientCostCenter']=['label' => 'Cost Center', 'rules' => 'trim'];
         $validationRulesArr['edit_clientCategory']=['label' => 'Category', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
-        $validationRulesArr['edit_clientBussOrganisationType']=['label' => 'Type of Organisation', 'rules' => 'required|trim'];
+        $validationRulesArr['edit_clientBussOrganisationType']=['label' => 'Type of Client', 'rules' => 'required|trim'];
         $validationRulesArr['edit_clientBussIncorporationDate']=['label' => 'Date of Incorporation', 'rules' => 'trim'];
         $validationRulesArr['edit_clientBussNature']=['label' => 'Nature of Business', 'rules' => 'trim'];
         $validationRulesArr['edit_clientBussRegisteredAddress']=['label' => 'Registered Address', 'rules' => 'trim'];
@@ -1036,6 +1178,31 @@ class Admin extends BaseController
         $validationRulesArr['edit_clientBussRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['edit_clientContactRemark']=['label' => 'Remark', 'rules' => 'trim'];
         $validationRulesArr['edit_clientContactDesgtn']=['label' => 'Contact Person Designation', 'rules' => 'trim'];
+        $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+        $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+
+        $cliOrgType=$this->request->getPost('edit_clientBussOrganisationType');
+
+        if(!empty($cliOrgType))
+        {
+            $validationRulesArr['actPanValue']=['label' => 'PAN Number', 'rules' => 'required|trim'];
+            if($cliOrgType=="9") // Individual
+            {
+                $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'trim'];
+            }
+            elseif($cliOrgType=="8" || $cliOrgType=="3" || $cliOrgType=="22" || $cliOrgType=="23") // Proprietory, OPC
+            {
+                $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'required|trim'];
+                $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+            elseif($cliOrgType!="9" && $cliOrgType!="8" && $cliOrgType!="3" || $cliOrgType!="22" || $cliOrgType!="23") // Other Than Individual
+            {
+                $validationRulesArr['edit_clientName']=['label' => 'Client Name', 'rules' => 'trim'];
+                $validationRulesArr['edit_clientBussOrganisation']=['label' => 'Organisation Name', 'rules' => 'required|trim'];
+            }
+        }
 
         $errorArr=array();
 
@@ -1051,6 +1218,7 @@ class Admin extends BaseController
             $clientFatherName=$this->request->getPost('edit_clientFatherName');
             $clientSpouseName=$this->request->getPost('edit_clientSpouseName');
             $clientDob=$this->request->getPost('edit_clientDob');
+            $clientExpireDate=$this->request->getPost('edit_clientExpireDate');
             $clientPassport=$this->request->getPost('edit_clientPassport');
             $clientBussOrganisationEmp=$this->request->getPost('edit_clientBussOrganisationEmp');
             $clientQualification=$this->request->getPost('edit_clientQualification');
@@ -1141,6 +1309,26 @@ class Admin extends BaseController
             $clientBussRemark=$this->request->getPost('edit_clientBussRemark');
             $clientContactRemark=$this->request->getPost('edit_clientContactRemark');
             $clientContactDesgtn=$this->request->getPost('edit_clientContactDesgtn');
+
+            $non_rglr_due_date_id_arr=$this->request->getPost('non_rglr_due_date_id[]');
+            $cust_actId_arr=$this->request->getPost('cust_actId[]');
+            $non_rglr_due_state_arr=$this->request->getPost('non_rglr_due_state[]');
+            $non_rglr_due_act_arr=$this->request->getPost('non_rglr_due_act[]');
+            $non_rglr_due_date_for_arr=$this->request->getPost('non_rglr_due_date_for[]');
+            $non_rglr_applicable_form_arr=$this->request->getPost('non_rglr_applicable_form[]');
+            $non_rglr_under_section_arr=$this->request->getPost('non_rglr_under_section[]');
+            $non_rglr_periodicity_arr=$this->request->getPost('non_rglr_periodicity[]');
+            $non_rglr_daily_date_arr=$this->request->getPost('non_rglr_daily_date[]');
+            $non_rglr_period_month_arr=$this->request->getPost('non_rglr_period_month[]');
+            $non_rglr_period_year_arr=$this->request->getPost('non_rglr_period_year[]');
+            $non_rglr_f_period_month_arr=$this->request->getPost('non_rglr_f_period_month[]');
+            $non_rglr_f_period_year_arr=$this->request->getPost('non_rglr_f_period_year[]');
+            $non_rglr_t_period_month_arr=$this->request->getPost('non_rglr_t_period_month[]');
+            $non_rglr_t_period_year_arr=$this->request->getPost('non_rglr_t_period_year[]');
+            $non_rglr_finYear_arr=$this->request->getPost('non_rglr_finYear[]');
+            $non_rglr_due_date_arr=$this->request->getPost('non_rglr_due_date[]');
+            $non_rglr_event_date_arr=$this->request->getPost('non_rglr_event_date[]');
+            $non_rglr_due_notes_arr=$this->request->getPost('non_rglr_due_notes[]');
 
             // print_r($clientRegDocumentFile);
             // print_r($client_document_file);
@@ -1241,6 +1429,7 @@ class Admin extends BaseController
                 'clientFatherName'=>$clientFatherName,
                 'clientSpouseName'=>$clientSpouseName,
                 'clientDob'=>$clientDob,
+                'clientExpireDate'=>$clientExpireDate,
                 'clientPassport'=>$clientPassport,
                 'clientBussOrganisationEmp'=>$clientBussOrganisationEmp,
                 'clientQualification'=>$clientQualification,
@@ -1751,6 +1940,106 @@ class Admin extends BaseController
         	    
         	    $this->Mcontact->save($contactUpdateArr);
     	    }
+
+            $prevEvtDDCondtnArr['non_regular_due_date_tbl.fkClientId']=$clientId;
+            $prevEvtDDCondtnArr['non_regular_due_date_tbl.status']="1";
+
+            $query=$this->Mquery->getRecords($tableName=$this->non_regular_due_date_tbl, $colNames="non_regular_due_date_tbl.non_rglr_due_date_id", $prevEvtDDCondtnArr, $likeCondtnArr=array(), $workJoinArr=array(), $singleRow=FALSE, $workOrderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+            
+            $prevEvtDDArr=$query['userData'];
+
+            $clientEvtDDArr=array();
+
+            if(!empty($prevEvtDDArr))
+                $clientEvtDDArr=array_column($prevEvtDDArr, 'non_rglr_due_date_id');
+
+            $non_rglr_due_date_insert_array=array();
+
+            if(!empty($cust_actId_arr))
+            {
+                foreach($cust_actId_arr AS $k_cust_act=>$e_cust_act)
+                {
+                    $non_rglr_due_date_id_val=(isset($non_rglr_due_date_id_arr[$k_cust_act])) ? $non_rglr_due_date_id_arr[$k_cust_act] : "";
+
+                    if(!in_array($non_rglr_due_date_id_val, $clientEvtDDArr))
+                    {
+                        $non_rglr_due_state=(isset($non_rglr_due_state_arr[$k_cust_act])) ? $non_rglr_due_state_arr[$k_cust_act] : "";
+                        $non_rglr_due_act=(isset($non_rglr_due_act_arr[$k_cust_act])) ? $non_rglr_due_act_arr[$k_cust_act] : "";
+                        $non_rglr_due_date_for=(isset($non_rglr_due_date_for_arr[$k_cust_act])) ? $non_rglr_due_date_for_arr[$k_cust_act] : "";
+                        $non_rglr_applicable_form=(isset($non_rglr_applicable_form_arr[$k_cust_act])) ? $non_rglr_applicable_form_arr[$k_cust_act] : "";
+                        $non_rglr_under_section=(isset($non_rglr_under_section_arr[$k_cust_act])) ? $non_rglr_under_section_arr[$k_cust_act] : "";
+                        $non_rglr_periodicity=(isset($non_rglr_periodicity_arr[$k_cust_act])) ? $non_rglr_periodicity_arr[$k_cust_act] : "";
+                        $non_rglr_daily_date=(isset($non_rglr_daily_date_arr[$k_cust_act])) ? $non_rglr_daily_date_arr[$k_cust_act] : "";
+                        $non_rglr_period_month=(isset($non_rglr_period_month_arr[$k_cust_act])) ? $non_rglr_period_month_arr[$k_cust_act] : "";
+                        $non_rglr_period_year=(isset($non_rglr_period_year_arr[$k_cust_act])) ? $non_rglr_period_year_arr[$k_cust_act] : "";
+                        $non_rglr_f_period_month=(isset($non_rglr_f_period_month_arr[$k_cust_act])) ? $non_rglr_f_period_month_arr[$k_cust_act] : "";
+                        $non_rglr_f_period_year=(isset($non_rglr_f_period_year_arr[$k_cust_act])) ? $non_rglr_f_period_year_arr[$k_cust_act] : "";
+                        $non_rglr_t_period_month=(isset($non_rglr_t_period_month_arr[$k_cust_act])) ? $non_rglr_t_period_month_arr[$k_cust_act] : "";
+                        $non_rglr_t_period_year=(isset($non_rglr_t_period_year_arr[$k_cust_act])) ? $non_rglr_t_period_year_arr[$k_cust_act] : "";
+                        $non_rglr_finYear=(isset($non_rglr_finYear_arr[$k_cust_act])) ? $non_rglr_finYear_arr[$k_cust_act] : "";
+                        $non_rglr_due_date=(isset($non_rglr_due_date_arr[$k_cust_act])) ? $non_rglr_due_date_arr[$k_cust_act] : "";
+                        $non_rglr_event_date=(isset($non_rglr_event_date_arr[$k_cust_act])) ? $non_rglr_event_date_arr[$k_cust_act] : "";
+                        $non_rglr_due_notes=(isset($non_rglr_due_notes_arr[$k_cust_act])) ? $non_rglr_due_notes_arr[$k_cust_act] : "";
+
+                        $non_rglr_due_date_insert_array[]=array(
+                            "non_rglr_due_state" => $non_rglr_due_state,
+                            "non_rglr_due_act" => $non_rglr_due_act,
+                            "non_rglr_due_date_for" => $non_rglr_due_date_for,
+                            "non_rglr_applicable_form" => $non_rglr_applicable_form,
+                            "non_rglr_under_section" => $non_rglr_under_section,
+                            "non_rglr_periodicity" => $non_rglr_periodicity,
+                            "non_rglr_daily_date" => $non_rglr_daily_date,
+                            "non_rglr_period_month" => $non_rglr_period_month,
+                            "non_rglr_period_year" => $non_rglr_period_year,
+                            "non_rglr_f_period_month" => $non_rglr_f_period_month,
+                            "non_rglr_f_period_year" => $non_rglr_f_period_year,
+                            "non_rglr_t_period_month" => $non_rglr_t_period_month,
+                            "non_rglr_t_period_year" => $non_rglr_t_period_year,
+                            "non_rglr_finYear" => $non_rglr_finYear,
+                            "non_rglr_due_date" => $non_rglr_due_date,
+                            "non_rglr_event_date" => $non_rglr_event_date,
+                            "non_rglr_due_notes" => $non_rglr_due_notes,
+                            'fkClientId'=>$clientId,
+                            'status' => 1,
+                            'createdBy' => $this->adminId,
+                            'createdDatetime' => $this->currTimeStamp
+                        );
+                    }
+                }
+            }
+
+            if(!empty($non_rglr_due_date_insert_array)){
+                $non_rglr_due_date_insert_query = $this->Mquery->insert($tableName=$this->non_regular_due_date_tbl, $non_rglr_due_date_insert_array, $returnType="");
+                
+                if($non_rglr_due_date_insert_query['status'] == true)
+                {
+                    $non_rglr_due_date_inserted_ids = $non_rglr_due_date_insert_query['insertedIds'];
+
+                    $event_based_work_insert_array = array();
+
+                    if(!empty($non_rglr_due_date_inserted_ids))
+                    {
+                        foreach($non_rglr_due_date_inserted_ids AS $e_non_rglr_dd)
+                        {
+                            $uniqueId=strtoupper(substr(str_shuffle(uniqid()), 0, 4));
+
+                            $workCode="WORKID_".$uniqueId;
+
+                            $event_based_work_insert_array[]=[
+                                'workCode'=>$workCode,
+                                'fk_event_based_due_date_id'=>$e_non_rglr_dd,
+                                'fkClientId'=>$clientId,
+                                'status' => 1,
+                                'createdBy' => $this->adminId,
+                                'createdDatetime' => $this->currTimeStamp
+                            ];
+                        }
+                    }
+                    if(!empty($event_based_work_insert_array)){
+                        $this->Mquery->insert($tableName=$this->event_based_work_tbl, $event_based_work_insert_array, $returnType="");
+                    }
+                }
+            }
         }
 
         if($this->db->transStatus() === FALSE || !empty($errorArr)){
@@ -1987,6 +2276,7 @@ class Admin extends BaseController
         $validationRulesArr['userCV']=['label' => 'CV', 'rules' => 'trim'];
         $validationRulesArr['isCostCenter']=['label' => 'Cost Centre', 'rules' => 'trim'];
         $validationRulesArr['userStaffType']=['label' => 'Employee Type', 'rules' => 'required|trim'];
+        $validationRulesArr['fkUserCatId']=['label' => 'User Type', 'rules' => 'required|trim'];
         $validationRulesArr['userDesgn']=['label' => 'Designation', 'rules' => 'trim'];
         $validationRulesArr['userEmpNo']=['label' => 'Employee No', 'rules' => 'trim'];
         $validationRulesArr['userDOJ']=['label' => 'Date of Joining', 'rules' => 'trim'];
@@ -1996,6 +2286,7 @@ class Admin extends BaseController
         $validationRulesArr['userArtRegNo']=['label' => 'Articleship Registration No', 'rules' => 'trim'];
         $validationRulesArr['userArtStartDate']=['label' => 'Date of Start of Articleship', 'rules' => 'trim'];
         $validationRulesArr['userArtEndDate']=['label' => 'Date of End of Articleship', 'rules' => 'trim'];
+    
         $validationRulesArr['userICAICommDate']=['label' => 'Intimation to ICAI-Commencemene', 'rules' => 'trim'];
         $validationRulesArr['userICAIComplDate']=['label' => 'Intimation to ICAI-Completion', 'rules' => 'trim'];
         $validationRulesArr['userCAMemNo']=['label' => 'CA Membership No', 'rules' => 'trim'];
@@ -2063,6 +2354,7 @@ class Admin extends BaseController
                     $userCV=$this->request->getFile('userCV');
                     $isCostCenter=$this->request->getPost('isCostCenter');
                     $userStaffType=$this->request->getPost('userStaffType');
+                    $fkUserCatId=$this->request->getPost('fkUserCatId');
                     $userDesgn=$this->request->getPost('userDesgn');
                     $userEmpNo=$this->request->getPost('userEmpNo');
                     $userDOJ=$this->request->getPost('userDOJ');
@@ -2235,8 +2527,8 @@ class Admin extends BaseController
                         'userShortName'=>$userShortName,
                         'userDob'=>$userDob,
                         'userQualification'=>$userQualification,
-                        'userRegNo'=>$userRegNo,
-                        'userRegDocument'=>$userRegDocumentPath,
+                        // 'userRegNo'=>$userRegNo,
+                        // 'userRegDocument'=>$userRegDocumentPath,
                         'userAadharNo'=>$userAadharNo,
                         'userAadharDoc'=>$userAadharDocPath,
                         'userPan'=>$userPan,
@@ -2255,6 +2547,7 @@ class Admin extends BaseController
                         'userCV'=>$userCVPath,
                         'isCostCenter'=>$isCostCenter,
                         'userStaffType'=>$userStaffType,
+                        'fkUserCatId'=>$fkUserCatId,
                         'userDesgn'=>$userDesgn,
                         'userEmpNo'=>$userEmpNo,
                         'userDOJ'=>$userDOJ,
@@ -2423,6 +2716,7 @@ class Admin extends BaseController
         $validationRulesArr['userCV']=['label' => 'CV', 'rules' => 'trim'];
         $validationRulesArr['isCostCenter']=['label' => 'Cost Centre', 'rules' => 'trim'];
         $validationRulesArr['userStaffType']=['label' => 'Employee Type', 'rules' => 'required|trim'];
+        $validationRulesArr['fkUserCatId']=['label' => 'User Type', 'rules' => 'required|trim'];
         $validationRulesArr['userDesgn']=['label' => 'Designation', 'rules' => 'trim'];
         $validationRulesArr['userEmpNo']=['label' => 'Employee No', 'rules' => 'trim'];
         $validationRulesArr['userDOJ']=['label' => 'Date of Joining', 'rules' => 'trim'];
@@ -2432,8 +2726,18 @@ class Admin extends BaseController
         $validationRulesArr['userArtRegNo']=['label' => 'Articleship Registration No', 'rules' => 'trim'];
         $validationRulesArr['userArtStartDate']=['label' => 'Date of Start of Articleship', 'rules' => 'trim'];
         $validationRulesArr['userArtEndDate']=['label' => 'Date of End of Articleship', 'rules' => 'trim'];
+        $validationRulesArr['userArtEndDate']=['label' => 'Date of End of Articleship', 'rules' => 'trim'];
         $validationRulesArr['userICAICommDate']=['label' => 'Intimation to ICAI-Commencemene', 'rules' => 'trim'];
-        $validationRulesArr['userICAIComplDate']=['label' => 'Intimation to ICAI-Completion', 'rules' => 'trim'];
+        $validationRulesArr['userArtComplTerminationDate']=['label' => 'Actual Date of Completion/Termination', 'rules' => 'trim'];
+        $validationRulesArr['isArticleShipContinue']=['label' => 'Articleship Continue', 'rules' => 'trim'];
+
+        $validationRulesArr['art_staff_name_of_principle']=['label' => 'Name Of the Principal', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_membership_no']=['label' => 'Membership Number', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_date_suppl_art_icai']=['label' => 'Date Of Supplementary Intimation to ICAI', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_date_suppl_art']=['label' => 'Date Of Supplementary Of Articleship', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_year_completion_inter_ca']=['label' => 'Year Of Completion Of Inter CA', 'rules' => 'trim'];
+        $validationRulesArr['art_staff_year_completion_final_ca']=['label' => 'Year Of Completion Of Final CA', 'rules' => 'trim'];
+
         $validationRulesArr['userCAMemNo']=['label' => 'CA Membership No', 'rules' => 'trim'];
         $validationRulesArr['userCADOJ']=['label' => 'Date of Joining (CA)', 'rules' => 'trim'];
         $validationRulesArr['userCADOL']=['label' => 'Date of Leaving (CA)', 'rules' => 'trim'];
@@ -2512,6 +2816,7 @@ class Admin extends BaseController
                     $userOldCV=$this->request->getPost('userOldCV');
                     $isCostCenter=$this->request->getPost('isCostCenter');
                     $userStaffType=$this->request->getPost('userStaffType');
+                    $fkUserCatId=$this->request->getPost('fkUserCatId');
                     $userDesgn=$this->request->getPost('userDesgn');
                     $userEmpNo=$this->request->getPost('userEmpNo');
                     $userDOJ=$this->request->getPost('userDOJ');
@@ -2522,6 +2827,15 @@ class Admin extends BaseController
                     $userArtStartDate=$this->request->getPost('userArtStartDate');
                     $userArtEndDate=$this->request->getPost('userArtEndDate');
                     $userICAICommDate=$this->request->getPost('userICAICommDate');
+                    $userArtComplTerminationDate=$this->request->getPost('userArtComplTerminationDate');
+                    $isArticleShipContinue=$this->request->getPost('isArticleShipContinue');
+                    $art_staff_name_of_principle=$this->request->getPost('art_staff_name_of_principle');
+                    $art_staff_membership_no=$this->request->getPost('art_staff_membership_no');
+                    $art_staff_date_suppl_art_icai=$this->request->getPost('art_staff_date_suppl_art_icai');
+                    $art_staff_date_suppl_art=$this->request->getPost('art_staff_date_suppl_art');
+                    $art_staff_year_completion_inter_ca=$this->request->getPost('art_staff_year_completion_inter_ca');
+                    $art_staff_year_completion_final_ca=$this->request->getPost('art_staff_year_completion_final_ca');
+
                     $userICAIComplDate=$this->request->getPost('userICAIComplDate');
                     $userCAMemNo=$this->request->getPost('userCAMemNo');
                     $userCADOJ=$this->request->getPost('userCADOJ');
@@ -2750,6 +3064,7 @@ class Admin extends BaseController
                         'userCV'=>$userCVPath,
                         'isCostCenter'=>$isCostCenter,
                         'userStaffType'=>$userStaffType,
+                        'fkUserCatId'=>$fkUserCatId,
                         'userDesgn'=>$userDesgn,
                         'userEmpNo'=>$userEmpNo,
                         'userDOJ'=>$userDOJ,
@@ -2759,6 +3074,16 @@ class Admin extends BaseController
                         'userArtRegNo'=>$userArtRegNo,
                         'userArtStartDate'=>$userArtStartDate,
                         'userArtEndDate'=>$userArtEndDate,
+                        'userArtComplTerminationDate'=>$userArtComplTerminationDate,
+                        'isArticleShipContinue'=>$isArticleShipContinue,
+                        
+                        'art_staff_year_completion_inter_ca'=>$art_staff_year_completion_inter_ca,
+                        'art_staff_year_completion_final_ca'=>$art_staff_year_completion_final_ca,
+                        'art_staff_name_of_principle'=>$art_staff_name_of_principle,
+                        'art_staff_membership_no'=>$art_staff_membership_no,
+                        'art_staff_date_suppl_art_icai'=>$art_staff_date_suppl_art_icai,
+                        'art_staff_date_suppl_art'=>$art_staff_date_suppl_art,
+
                         'userICAICommDate'=>$userICAICommDate,
                         'userICAIComplDate'=>$userICAIComplDate,
                         'userCAMemNo'=>$userCAMemNo,
@@ -2783,12 +3108,73 @@ class Admin extends BaseController
                     }
         
                     $userCondtnArr['user_tbl.userId']=$userId;
+
+                    // Articleship Code Start
+                    if($isArticleShipContinue==2 || $isArticleShipContinue==1){
+                        $upsertArticleshipArr=[];
+
+                        $upsertArticleshipArr=[
+                            'art_staff_name'=>$userFullName,
+                            'art_staff_img'=>$userImgPath,
+                            'art_staff_name_of_principle'=>$art_staff_name_of_principle,
+                            'art_staff_reg_no'=>$userArtRegNo,
+                            'art_staff_membership_no'=>$art_staff_membership_no,
+                            'art_staff_date_commencement'=>$userArtStartDate,
+                            'art_staff_date_intimation_icai'=>$userICAICommDate,
+                            'art_staff_date_suppl_art_icai'=>$art_staff_date_suppl_art_icai,
+                            'art_staff_date_completion_art_icai'=>$userICAIComplDate,
+                            'art_staff_date_suppl_art'=>$art_staff_date_suppl_art,
+                            'art_staff_date_completion_art'=>$userArtEndDate,
+                            'art_staff_year_completion_inter_ca'=>$art_staff_year_completion_inter_ca,
+                            'art_staff_year_completion_final_ca'=>$art_staff_year_completion_final_ca,
+                            'art_staff_job_status'=>"",
+                            'art_staff_remark'=>"",
+                            'fkUserId'=>$userId,
+                            'isAddedFromUser'=>2,
+                        ];
+
+                        $articleShipCondtnArr['articleship_staff_tbl.fkUserId'] = $userId;
+                        $articleShipOrderByArr['articleship_staff_tbl.art_staff_name'] = "ASC";
+                
+                        $articleShipQuery = $this->Mquery->getRecords($tableName = $this->articleship_staff_tbl, $colNames = "articleship_staff_tbl.*", $articleShipCondtnArr, $likeCondtnArr = array(), $userJoinArr = array(), $singleRow = TRUE, $articleShipOrderByArr, $groupByArr = array(), $whereInArray = array(), $customWhereArray = array(), $orWhereArray = array(), $orWhereDataArr = array());
+                
+                        $getArticleShipUserData = $articleShipQuery['userData'];
+                     
+                        if(!empty($getArticleShipUserData)){
+
+                            $articleShipUpdateCondtn = array(
+                                'fkUserId' =>  $userId,
+                            );
+                            $upsertArticleshipArr["status"]=1;
+                            $upsertArticleshipArr["updatedBy"]=$this->adminId;
+                            $upsertArticleshipArr["updatedDatetime"]=$this->currTimeStamp;
+                                
+                            $response = $this->MArticleshipStaff->set($upsertArticleshipArr)->where($articleShipUpdateCondtn)->update();
+                        }else{
+                           
+                            $upsertArticleshipArr["status"]=1;
+                            $upsertArticleshipArr["createdBy"]=$this->adminId;
+                            $upsertArticleshipArr["createdDatetime"]=$this->currTimeStamp;
+
+                            $this->MArticleshipStaff->save($upsertArticleshipArr);
+                        }
+                    }
                     
+                    if($isArticleShipContinue==2){//Inactive User No
+                        // $userUpdateArr['status']=2;
+                        $upsertArticleshipArr["isOldUser"]=1;
+                    }else if($isArticleShipContinue==1){
+                        // $userUpdateArr['status']=1;//Continue Yes
+                        $upsertArticleshipArr["isOldUser"]=2;
+                    }
+                    // Articleship Code End
                     // print_r($userPassword);
                     // print_r($userUpdateArr);
                     // die();
         
                     $query=$this->Mquery->updateData($tableName=$this->user_tbl, $userUpdateArr, $userCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+                   
                     
                     $sbGrpArr=$this->Mcontsubgroup->where('fk_cont_group_id', 2)->findAll();
         	    
@@ -3171,6 +3557,122 @@ class Admin extends BaseController
         return view('remote/admin/search_due_date', $this->data);
     }
 
+    public function set_cust_due_date()
+    {
+        $this->data['due_date_for']=$due_date_for=$this->request->getPost('due_date_for');
+        $this->data['applicable_form']=$applicable_form=$this->request->getPost('applicable_form');
+        $this->data['under_section']=$under_section=$this->request->getPost('under_section');
+        $this->data['periodicity']=$periodicity=$this->request->getPost('periodicity');
+        $this->data['daily_date']=$daily_date=$this->request->getPost('daily_date');
+        $this->data['period_month']=$period_month=$this->request->getPost('period_month');
+        $this->data['period_year']=$period_year=$this->request->getPost('period_year');
+        $this->data['f_period_month']=$f_period_month=$this->request->getPost('f_period_month');
+        $this->data['f_period_year']=$f_period_year=$this->request->getPost('f_period_year');
+        $this->data['t_period_month']=$t_period_month=$this->request->getPost('t_period_month');
+        $this->data['t_period_year']=$t_period_year=$this->request->getPost('t_period_year');
+        $this->data['finYear']=$finYear=$this->request->getPost('finYear');
+        $this->data['event_date']=$event_date=$this->request->getPost('event_date');
+        $this->data['due_date']=$due_date=$this->request->getPost('due_date');
+        $this->data['due_notes']=$due_notes=$this->request->getPost('due_notes');
+        $this->data['due_act']=$due_act=$this->request->getPost('due_act');
+        $this->data['due_act_name']=$due_act_name=$this->request->getPost('due_act_name');
+        $this->data['due_state']=$due_state=$this->request->getPost('due_state');
+        $prevCustActs=$this->request->getPost('prevCustActs');
+
+        $prevCustActArr=array();
+        
+        if(!empty($prevCustActs))
+            $prevCustActArr=explode(',', $prevCustActs);
+
+        $isActSel="";
+        
+        if(in_array($due_act, $prevCustActArr))
+            $isActSel="selected";
+            
+        $this->data['isActSel']=$isActSel;
+
+        $randomId = uniqid() . mt_rand();
+
+        $this->data['randomId']=$randomId;
+        
+        return view('remote/admin/set_cust_due_date', $this->data);
+    }
+
+    public function edit_cust_due_date()
+    {
+        $this->db->transBegin();
+
+        $non_rglr_due_date_id=$this->request->getPost('non_rglr_due_date_id');
+        $due_date_for=$this->request->getPost('non_rglr_due_date_for');
+        $applicable_form=$this->request->getPost('non_rglr_applicable_form');
+        $under_section=$this->request->getPost('non_rglr_under_section');
+        $periodicity=$this->request->getPost('periodicity');
+        $daily_date=$this->request->getPost('daily_date');
+        $period_month=$this->request->getPost('period_month');
+        $period_year=$this->request->getPost('period_year');
+        $f_period_month=$this->request->getPost('f_period_month');
+        $f_period_year=$this->request->getPost('f_period_year');
+        $t_period_month=$this->request->getPost('t_period_month');
+        $t_period_year=$this->request->getPost('t_period_year');
+        $finYear=$this->request->getPost('non_rglr_finYear');
+        $event_date=$this->request->getPost('non_rglr_event_date');
+        $due_date=$this->request->getPost('non_rglr_due_date');
+        $due_notes=$this->request->getPost('non_rglr_due_notes');
+        $due_state=$this->request->getPost('non_rglr_due_state');
+
+        $eventDDUpdateArr=[
+            'non_rglr_due_date_id'=>$non_rglr_due_date_id,
+            "non_rglr_due_state" => $due_state,
+            "non_rglr_due_date_for" => $due_date_for,
+            "non_rglr_applicable_form" => $applicable_form,
+            "non_rglr_under_section" => $under_section,
+            "non_rglr_periodicity" => $periodicity,
+            "non_rglr_daily_date" => $daily_date,
+            "non_rglr_period_month" => $period_month,
+            "non_rglr_period_year" => $period_year,
+            "non_rglr_f_period_month" => $f_period_month,
+            "non_rglr_f_period_year" => $f_period_year,
+            "non_rglr_t_period_month" => $t_period_month,
+            "non_rglr_t_period_year" => $t_period_year,
+            "non_rglr_finYear" => $finYear,
+            "non_rglr_due_date" => $due_date,
+            "non_rglr_event_date" => $event_date,
+            "non_rglr_due_notes" => $due_notes,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+        
+        $this->MNonRegularDueDates->save($eventDDUpdateArr);
+
+        if($this->db->transStatus() === FALSE){
+            
+            $this->db->transRollback();
+
+            $responseArr['status']=FALSE;
+            $responseArr['message']="Event Based Due Date details has not update :(";
+            $responseArr['userdata']=array();
+
+        }else{
+
+            $this->db->transCommit();
+
+            $insertLogArr['section']="Event Based Due Date";
+            $insertLogArr['message']="Event Based Due Date updated";
+            $insertLogArr['ip']=$this->IPAddress;
+            // $insertLogArr['macAddr']=strtok(exec('getmac'), ' ');
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $responseArr['status']=TRUE;
+            $responseArr['message']="Event Based Due Date details has been updated successfully :)";
+            $responseArr['userdata']=array();
+        }
+
+        echo json_encode($responseArr);
+    }
+
     public function delete_client_due_date()
     {
         $this->db->transBegin();
@@ -3291,6 +3793,96 @@ class Admin extends BaseController
                 
             $responseArr['status']=TRUE;
             $responseArr['message']="Client due date has been deleted successfully :)";
+            $responseArr['userdata']=array();
+        }
+
+        echo json_encode($responseArr);
+    }
+
+    public function delete_client_event_due_date()
+    {
+        $this->db->transBegin();
+        
+        $enableAct=false;
+
+        $due_date_id=$this->request->getPost('due_date_id');
+        $client_id=$this->request->getPost('client_id');
+        $act_id=$this->request->getPost('act_id');
+        
+        $eventActUpdateArr = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $eventActCondtnArr['non_regular_due_date_tbl.non_rglr_due_date_id']=$due_date_id;
+        $eventActCondtnArr['non_regular_due_date_tbl.fkClientId']=$client_id;
+
+        $query=$this->Mquery->updateData($tableName=$this->non_regular_due_date_tbl, $eventActUpdateArr, $eventActCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+        
+        $evtWorkUpdateArr = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $evtWorkCondtnUpdateArr['event_based_work_tbl.fk_event_based_due_date_id']=$due_date_id;
+        $evtWorkCondtnUpdateArr['event_based_work_tbl.fkClientId']=$client_id;
+
+        $query=$this->Mquery->updateData($tableName=$this->event_based_work_tbl, $evtWorkUpdateArr, $evtWorkCondtnUpdateArr, $likeCondtnArr=array(), $whereInArray=array());
+
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_date >=']=$fromDate;
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_date <=']=$toDate;
+        
+        $eventCondtnArr['non_regular_due_date_tbl.fkClientId']=$client_id;
+        $eventCondtnArr['non_regular_due_date_tbl.non_rglr_due_act']=$act_id;
+        $eventCondtnArr['non_regular_due_date_tbl.status']="1";
+
+        $eventJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=non_regular_due_date_tbl.non_rglr_due_act", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->non_regular_due_date_tbl, $colNames="non_regular_due_date_tbl.non_rglr_due_date_id", $eventCondtnArr, $likeCondtnArr=array(), $eventJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $eventDataArr=$query['userData'];
+        
+        if(empty($eventDataArr))
+        {
+            $enableAct=true;
+        }
+        
+        if($this->db->transStatus() === FALSE){
+            
+            $this->db->transRollback();
+            
+            $responseArr['enableAct']=FALSE;
+            $responseArr['status']=FALSE;
+            $responseArr['message']="Client's event due date has not delete :(";
+            $responseArr['userdata']=array();
+            
+        }else{
+            
+            $this->db->transCommit();
+            
+            $insertLogArr['section']="Client";
+            $insertLogArr['message']="Client's Event Due Date Deleted";
+            $insertLogArr['ip']=$this->IPAddress;
+            // $insertLogArr['macAddr']=$this->macAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+            
+            if($enableAct)
+                $responseArr['enableAct']=TRUE;
+            else
+                $responseArr['enableAct']=FALSE;
+                
+            $responseArr['status']=TRUE;
+            $responseArr['message']="Client's event due date has been deleted successfully :)";
             $responseArr['userdata']=array();
         }
 

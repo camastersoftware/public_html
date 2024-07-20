@@ -5,8 +5,8 @@
 <style>
     
     .clrBtn {
-        width: 13.33%;
-        padding: 25px;
+        width: 21.33%;
+        padding: 0px;
         color: #ffffff;
         font-size: 30px;
         cursor: pointer;
@@ -40,6 +40,11 @@
         border-bottom: 3px solid #333333;
         z-index: 11;
         transform: rotate(-45deg);
+    }
+
+    .clrBtn span{
+        color: #000000 !important;
+        font-size: 10px !important;
     }
     
     .none{
@@ -127,9 +132,15 @@
                                                                 <div class="form-group">
                                                                     <label>Select Prority:<small class="text-danger">*</small></label>
                                                                     <div class="grid-Wrapper">
-                                                                        <button type="button" class="clrBtn none active" data-clr="none" onclick="ColorPicker(1,'none',this);"></button>
-                                                                        <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker(2,'#f0f58b7d',this);"></button>
-                                                                        <button type="button" class="clrBtn red" data-clr="pink" onclick="ColorPicker(3,'pink',this);"></button>
+                                                                        <button type="button" class="clrBtn none active" data-clr="none" onclick="ColorPicker(1,'none',this);">
+                                                                            <span>Low</span>
+                                                                        </button>
+                                                                        <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker(2,'#f0f58b7d',this);">
+                                                                            <span>Medium</span>
+                                                                        </button>
+                                                                        <button type="button" class="clrBtn red" data-clr="pink" onclick="ColorPicker(3,'pink',this);">
+                                                                            <span>High</span>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>

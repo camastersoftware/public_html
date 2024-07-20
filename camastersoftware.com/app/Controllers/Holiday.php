@@ -14,6 +14,7 @@ class Holiday extends BaseController
         
         $this->Mholiday = new \App\Models\Mholiday();
         $this->Mconfig = new \App\Models\Mconfig();
+        $this->MYearConfig = new \App\Models\MYearConfig();
         $this->Mcommon = new \App\Models\Mcommon();
         $this->TableLib = new \App\Libraries\TableLib();
 
@@ -66,8 +67,13 @@ class Holiday extends BaseController
         // die();
 
         $this->data['holidayArr']=$holidayArr;
+
+        $configCondtn = array(
+            "year" => $holidayYr,
+            'status' => 1
+        );
         
-        $settingsArr = $this->Mconfig->where('status', 1)->get()->getRowArray();
+        $settingsArr = $this->MYearConfig->where($configCondtn)->get()->getRowArray();
         
         $this->data['settingsArr']=$settingsArr;
 

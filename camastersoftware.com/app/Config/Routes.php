@@ -7,8 +7,7 @@ $routes = Services::routes();
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
-if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
-{
+if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
 	require SYSTEMPATH . 'Config/Routes.php';
 }
 
@@ -131,6 +130,7 @@ $routes->post('/superadmin/delete_periodicity', 'SuperAdmin/Periodicity::delete'
 $routes->post('/remote/getCities', 'Remote/Sync::getCities');
 $routes->post('/remote/getAreas', 'Remote/Sync::getAreas');
 $routes->post('/getOptions', 'Remote/Extra::getOptions');
+$routes->post('/getFirmOptions', 'Remote/Extra::getFirmOptions');
 
 $routes->get('/superadmin/master_data', 'SuperAdmin/Main::master_data');
 $routes->match(['get', 'post'], '/superadmin/tax_calendar', 'SuperAdmin/Main::tax_calendar');
@@ -257,6 +257,9 @@ $routes->post('/delete_client_group', 'Remote/Admin::delete_client_group');
 $routes->post('/getActForm', 'Remote/Admin::getActForm');
 $routes->post('/search_due_date', 'Remote/Admin::search_due_date');
 $routes->post('/delete_client_due_date', 'Remote/Admin::delete_client_due_date');
+$routes->post('/delete_client_event_due_date', 'Remote/Admin::delete_client_event_due_date');
+$routes->post('/set_cust_due_date', 'Remote/Admin::set_cust_due_date');
+$routes->post('/edit_cust_due_date', 'Remote/Admin::edit_cust_due_date');
 
 $routes->get('/clients', 'Client::index');
 $routes->get('/create-client', 'Client::create_client');
@@ -404,6 +407,10 @@ $routes->match(['get', 'post'], '/inc-tax-forms', 'ComplianceSection/Income_tax2
 $routes->match(['get', 'post'], '/inc-tax-forms-filed', 'ComplianceSection/Income_tax2::inc_tax_forms_filed'); // removed
 $routes->post('/search-inc-tax-forms', 'ComplianceSection/Income_tax2::search_inc_tax_forms'); // removed
 $routes->get('/reset-inc-tax-forms', 'ComplianceSection/Income_tax2::reset_inc_tax_forms'); // removed
+$routes->get('/inc-event-based-due-dates', 'ComplianceSection/Income_tax3::event_based_due_dates');
+$routes->get('/inc-event-based-work/(:any)', 'ComplianceSection\Income_tax3::event_based_work_form/$1');
+$routes->post('/update-inc-event-based-work', 'ComplianceSection/Income_tax3::update_event_based_work_form');
+$routes->post('/update-inc-work-juniors', 'ComplianceSection/Income_tax3::update_inc_work_juniors');
 
 //------------------------------Rectification-----------------------------//
 $routes->get('/rectification', 'ComplianceSection/Income_tax::rectification');
@@ -422,16 +429,19 @@ $routes->post('/submit_scrutiny', 'Income_tax::submit_scrutiny');
 // $routes->get('/admin/appeals_scrutiny', 'Income_tax::appeals_scrutiny');
 
 //---------------------------Scrutiny---------------------------------//
-$routes->get('/scrutiny', 'ComplianceSection/Income_tax::scrutiny');
-$routes->get('scrutiny-case/(:any)', 'ComplianceSection\Income_tax::scrutiny_case');
-$routes->post('/update-scrutiny-notice-details', 'ComplianceSection/Income_tax::update_scrutiny_notice_details');
-$routes->post('/add-scrutiny-notice', 'ComplianceSection/Income_tax::add_scrutiny_notice');
-$routes->post('/edit-scrutiny-notice', 'ComplianceSection/Income_tax::edit_scrutiny_notice');
-$routes->post('/delete-scrutiny-notice', 'ComplianceSection/Income_tax::delete_scrutiny_notice');
-$routes->post('/add-scrutiny-notice-reply', 'ComplianceSection/Income_tax::add_scrutiny_notice_reply');
-$routes->post('/edit-scrutiny-notice-reply', 'ComplianceSection/Income_tax::edit_scrutiny_notice_reply');
-$routes->post('/delete-scrutiny-notice-reply', 'ComplianceSection/Income_tax::delete_scrutiny_notice_reply');
-$routes->post('/edit-scrutiny-final-outcome', 'ComplianceSection/Income_tax::edit_scrutiny_final_outcome');
+$routes->get('/it-scrutiny', 'ComplianceSection/Scrutiny::it_scrutiny');
+$routes->get('add-scrutiny-case', 'ComplianceSection\Scrutiny::add_scrutiny_case');
+$routes->post('insert-scrutiny-case', 'ComplianceSection\Scrutiny::insert_scrutiny_case');
+$routes->get('scrutiny-case/(:any)', 'ComplianceSection\Scrutiny::scrutiny_case');
+$routes->post('/update-scrutiny-basic-details', 'ComplianceSection/Scrutiny::update_scrutiny_basic_details');
+$routes->post('/update-scrutiny-notice-details', 'ComplianceSection/Scrutiny::update_scrutiny_notice_details');
+$routes->post('/add-scrutiny-notice', 'ComplianceSection/Scrutiny::add_scrutiny_notice');
+$routes->post('/edit-scrutiny-notice', 'ComplianceSection/Scrutiny::edit_scrutiny_notice');
+$routes->post('/delete-scrutiny-notice', 'ComplianceSection/Scrutiny::delete_scrutiny_notice');
+$routes->post('/add-scrutiny-notice-reply', 'ComplianceSection/Scrutiny::add_scrutiny_notice_reply');
+$routes->post('/edit-scrutiny-notice-reply', 'ComplianceSection/Scrutiny::edit_scrutiny_notice_reply');
+$routes->post('/delete-scrutiny-notice-reply', 'ComplianceSection/Scrutiny::delete_scrutiny_notice_reply');
+$routes->post('/edit-scrutiny-final-outcome', 'ComplianceSection/Scrutiny::edit_scrutiny_final_outcome');
 $routes->get('order-analysis/(:any)', 'ComplianceSection\Income_tax::order_analysis');
 $routes->get('edit-order-analysis/(:any)', 'ComplianceSection\Income_tax::edit_order_analysis');
 $routes->post('update-order-analysis', 'ComplianceSection\Income_tax::update_order_analysis');
@@ -775,6 +785,11 @@ $routes->post('/edit-client-se-password', 'ClientAdministration::edit_se_passwor
 $routes->get('/partnership-password', 'ClientAdministration::partnership_password');
 $routes->post('/edit-client-partnership-password', 'ClientAdministration::edit_partnership_password');
 
+$routes->get('/custom-due-dates', 'ClientAdministration::custom_due_dates');
+
+$routes->get('/dir-pt-password', 'ClientAdministration::dir_pt_password');
+$routes->post('/edit-client-dir-pt-password', 'ClientAdministration::edit_dir_pt_password');
+
 // Office Management
 $routes->get('/office-administration', 'OfficeAdministration::index');
 
@@ -802,7 +817,27 @@ $routes->post('/delete-general-password', 'OfficeAdministration::delete_general_
 $routes->get('/staff-administration', 'StaffAdministration::index');
 $routes->get('/my-attendance/(:any)', 'StaffAdministration::my_attendance/$1');
 $routes->get('/emp-attendance', 'StaffAdministration::emp_attendance');
+
+
+$routes->get('/expense-vouchers-list', 'StaffAdministration::expense_list');
+$routes->get('/expense-vouchers', 'StaffAdministration::expense_vouchers');
+$routes->get('/expense-vouchers/(:any)', 'StaffAdministration::expense_vouchers/$1');
+$routes->post('/save-expense', 'Remote/Staff::save_expense');
+
 $routes->get('/employees', 'StaffAdministration::employees');
+$routes->get('/articleship-leave-cal', 'StaffAdministration::articleship_leave_cal');
+$routes->get('/articleship-leave-cal/(:any)', 'StaffAdministration::articleship_leave_cal/$1');
+$routes->post('/update-articleship-leave-cal', 'StaffAdministration::save_articleship_leave_cal');
+$routes->get('/hierarchy-chart', 'StaffAdministration::hierarchy_chart');
+$routes->get('/all-staff', 'StaffAdministration::all_staff');
+$routes->get('/ca-staff', 'StaffAdministration::ca_staff');
+$routes->get('/articleship-staff', 'StaffAdministration::articleship_staff');
+// $routes->get('/create-chartered-accountant', 'User::create_chartered_accountant');
+$routes->get('/create-chartered-accountant/(:any)', 'StaffAdministration::create_chartered_accountant/$1');
+$routes->get('/create-articleship/(:any)', 'StaffAdministration::create_articleship/$1');
+$routes->post('/save-ca', 'Remote/Staff::save_ca');
+$routes->post('/save-articleship-staff', 'Remote/Staff::save_articleship');
+$routes->get('/payslip/(:any)', 'StaffAdministration::payslip/$1');
 $routes->get('/employee-salary-payable/(:any)', 'StaffAdministration::employee_salary_payable/$1');
 $routes->post('/update-employee-salary-payable', 'StaffAdministration::update_employee_salary_payable');
 $routes->get('/employee-salary-payable-details/(:any)', 'StaffAdministration::employee_salary_payable_details/$1');
@@ -831,6 +866,20 @@ $routes->post('/update-bill', 'Bill::update');
 $routes->get('/view-bill/(:any)', 'Bill::view/$1');
 $routes->post('/delete-bill', 'Bill::delete');
 
+// Non-Regular Due Date For
+$routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
+$routes->post('/add-non-regular-due-date-for', 'NonRegularDueDateFor::add');
+$routes->post('/edit-non-regular-due-date-for', 'NonRegularDueDateFor::updateData');
+$routes->post('/delete-non-regular-due-date-for', 'NonRegularDueDateFor::deleteData');
+
+// Non-Regular Due Dates
+$routes->get('non-regular-due-dates', 'NonRegularDueDates::index');
+$routes->get('/add-non-regular-due-date', 'NonRegularDueDates::add');
+$routes->post('/insert-non-regular-due-date', 'NonRegularDueDates::insertData');
+$routes->get('/edit-non-regular-due-date/(:any)', 'NonRegularDueDates::edit');
+$routes->post('/update-non-regular-due-date', 'NonRegularDueDates::updateData');
+$routes->post('/delete-non-regular-due-date', 'NonRegularDueDates::deleteData');
+
 //Utility
 $routes->post('/remote/utility/changeTheme', 'Remote/Utility::changeTheme');
 
@@ -841,6 +890,7 @@ $routes->get('TestCron', 'TestCron::index');
 
 //External API
 $routes->post('/add_request', 'Other::add_request');
+$routes->post('/send_otp', 'Other::send_otp');
 $routes->get('/tax_calendar_view', 'Other::tax_calendar');
 
 //UI
@@ -878,13 +928,25 @@ $routes->get('/admin/gst_audit_form', 'Admin/Ui_design::gst_audit_form');
 $routes->get('chat/(:any)', 'ChatSection::index/$1');
 $routes->post('chat-send-msg', 'ChatSection::sendMsg');
 $routes->post('chat-get-all-msg', 'ChatSection::getMsg');
+$routes->post('chat-get-all-users', 'ChatSection::getUserList');
 
 // Chat Code End
 
+// Payroll Code Start
+$routes->get('/staff-mgmt-payroll', 'Payroll::index');
+$routes->get('/salary-params', 'Payroll::salary_params');
+$routes->post('/add-salary-params', 'Payroll::add_salary_params');
+$routes->post('/edit-salary-params', 'Payroll::edit_salary_params');
+$routes->post('/delete-salary-params', 'Payroll::delete_salary_params');
+// Payroll Code End
 
 // Websocket Code Start
 $routes->get('websocket/startserver', 'WebSocketController::startServer');
 // Websocket Code End
+
+// DB Patch Work - Start
+$routes->get('updateNewDueDateOrganization', 'Utility/DatabasePatch::updateNewDueDateOrganization');
+// DB Patch Work - End
 
 /*
  * --------------------------------------------------------------------
@@ -899,7 +961,6 @@ $routes->get('websocket/startserver', 'WebSocketController::startServer');
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
-if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php'))
-{
+if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

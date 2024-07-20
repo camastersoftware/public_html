@@ -27,6 +27,11 @@ class Login extends BaseController
 
     public function index()
     {   
+        if(!empty($this->sessUserId))
+        {
+            return redirect()->to(base_url('home'));
+        }
+
         $everydayLabArr = $this->MeverydayLab->where('status', 1)
                     ->where('everydayLabDate', $this->currDate)
                     ->get()

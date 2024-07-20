@@ -61,7 +61,25 @@
                             <span class="help-block"></span>
                         </div>
                         <div class="form-group">
-                            <label>Captcha:<span class="req">*</span></label><br>
+                            <label>OTP:<span class="req" style="color:red;">*</span></label><br>
+                            <div class="form-group row">
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="demoMobileOTP" name="demoMobileOTP" value="" required="" title="Enter OTP" placeholder="Enter OTP" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4" required>
+                                    <input type="hidden" id="sendOtpUrl" value="<?= base_url('send_otp'); ?>" />
+                                </div>
+                                <div class="col-md-6 col-lg-6 mt-2">
+                                    <span id="countdownSpan"></span>
+                                    <a href="javascript:void(0);" class="text-primary sendOtpBtn" id="sendOtpBtnID">
+                                        <i class='bx bx-refresh'></i>&nbsp;Send OTP
+                                    </a>
+                                    <a href="javascript:void(0);" class="text-primary sendOtpBtn" id="reSendOtpBtnID">
+                                        <i class='bx bx-refresh'></i>&nbsp;Re-send OTP
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Captcha:<span class="req" style="color:red;">*</span></label><br>
                             <div class="form-group row">
                                 <div class="col-md-5 col-lg-5">
                                     <div id="drCaptchaDiv">

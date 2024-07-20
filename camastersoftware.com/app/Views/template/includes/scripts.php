@@ -78,59 +78,81 @@
                     "link": false, //Button to insert a link. Default true
                     "image": false, //Button to insert an image. Default true
                 }
-            });		
-            
-            //  $('.textarea').css("height", "400px");
+            });
         });
     </script>
 <?php endif; ?>
 
 <?php if(in_array('ckeditor', $jsArr)): ?>
-    <!--<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>-->
-    <!--<script src="https://cdn.ckeditor.com/4.23.0-lts/standard/ckeditor.js"></script>-->
+    <!--
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     
     <script>
-    
-    $(document).ready(function(){
-        CKEDITOR.replace( 'ckeditor_textarea', {
-        // CKEditor 4 configuration options
-          on: {
-            instanceReady: function (ev) {
-              // Set up synchronization between CKEditor and the hidden input field
-              ev.editor.on('change', function () {
-                $('.textarea_input').val(ev.editor.getData());
-              });
+        $(document).ready(function(){
+            CKEDITOR.replace( 'ckeditor_textarea', {
+            // CKEditor 4 configuration options
+                on: {
+                    instanceReady: function (ev) {
+                    // Set up synchronization between CKEditor and the hidden input field
+                    ev.editor.on('change', function () {
+                        $('.textarea_input').val(ev.editor.getData());
+                    });
+                    }
+                }
+            });
+
+            console.log("$('.ckeditor_textarea_elem').length", $('.ckeditor_textarea_elem').length);
+
+            if ($('.ckeditor_textarea_elem').length > 0) {
+                // Initialize CKEditor for each textarea
+                $('.ckeditor_textarea_elem').each(function(index) {
+                    var textarea = $(this).next('.textarea_input_elem');
+                    CKEDITOR.replace($(this).attr('id'), {
+                        on: {
+                            instanceReady: function (ev) {
+                                ev.editor.on('change', function () {
+                                    textarea.val(ev.editor.getData());
+                                });
+                            }
+                        }
+                    });
+                });
             }
-          }
         });
-    });
-            // ClassicEditor
-            // .create( document.querySelector( '#ckeditor_textarea' ) )
-            // .then( editor => {
-            //         console.log( editor );
-            // } )
-            // .catch( error => {
-            //         console.error( error );
-            // } );
-                                
-        // ClassicEditor
-        //   .create(document.querySelector('#ckeditor_textarea'), {
-        //     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-        //     // Add other configuration options as needed
-        //   })
-        //   .then(editor => {
-        //     // Set up synchronization between CKEditor and the hidden textarea
-        //     const textarea = document.getElementsByClassName('textarea_input');
-        //     editor.model.document.on('change', () => {
-        //         console.log("editor.getData()", editor.getData());
-        //       textarea.value = editor.getData();
-        //     });
-        //   })
-        //   .catch(error => {
-        //     console.error(error);
-        //   });
     </script>
+    -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            // Initialize Quill editor for the main textarea
+            var quill = new Quill('#ckeditor_textarea', {
+                theme: 'snow'
+            });
+
+            quill.on('text-change', function() {
+                $('.textarea_input').val(quill.root.innerHTML);
+            });
+
+            console.log("$('.ckeditor_textarea_elem').length", $('.ckeditor_textarea_elem').length);
+
+            // Initialize Quill editor for each textarea
+            if ($('.ckeditor_textarea_elem').length > 0) {
+                $('.ckeditor_textarea_elem').each(function(index) {
+                    var textarea = $(this).next('.textarea_input_elem');
+                    var quillElem = $(this)[0]; // Get the DOM element
+                    var quillInstance = new Quill(quillElem, {
+                        theme: 'snow'
+                    });
+
+                    quillInstance.on('text-change', function() {
+                        textarea.val(quillInstance.root.innerHTML);
+                    });
+                });
+            }
+        });
+    </script>
+
 <?php endif; ?>
 
 <script src="<?php echo base_url('assets/js/pages/component-animations-css3.js'); ?>"></script>
@@ -180,8 +202,25 @@
 
 <script>
     var requestMethod = "<?php echo $requestMethod; ?>";
-    console.log(requestMethod);
 </script>
 
 <script src="<?php echo base_url('assets/js/custom.js?v='.date('Ymd')); ?>"></script>
 <script src="<?php echo base_url('assets/js/get-back.js?v='.date('Ymd')); ?>"></script>
+
+<script>
+    // Save scroll position on scroll event
+    $(window).on('scroll', function() {
+        var scrollPosition = $(window).scrollTop();
+        // console.log("scrollPosition", scrollPosition);
+        sessionStorage.setItem('scrollPosition', scrollPosition);
+    });
+
+    // Restore scroll position on page load
+    $(window).on('load', function() {
+        var savedPosition = sessionStorage.getItem('scrollPosition');
+        // console.log('Saved scroll position:', savedPosition);
+        if (savedPosition !== null) {
+            $(window).scrollTop(savedPosition);
+        }
+    });
+</script>

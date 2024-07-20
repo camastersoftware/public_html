@@ -334,77 +334,27 @@
                                                                                                 <?php foreach($mthDDFDueDateForClientArray AS $e_inc_row): ?>
                                                                                                 
                                                                                                     <?php $hasData=true; ?>
-                                                                                                    
-                                                                                                    <?php $workPriorityColor=$e_inc_row['workPriorityColor']; ?>
-                                                                                                    <?php $isUrgentWork=$e_inc_row['isUrgentWork']; ?>
-                                                                                                    
-                                                                                                    <?php 
-                                                                                                        $eFillingDate="-";
-                                                                                                        if(!empty($e_inc_row['eFillingDate']) && $e_inc_row['eFillingDate']!="0000-00-00" && $e_inc_row['eFillingDate']!="1970-01-01")
-                                                                                                            $eFillingDate=date('d-m-Y', strtotime($e_inc_row['eFillingDate'])); 
-                                                                                                    ?>
-                                                                                                    
-                                                                                                    <?php 
-                                                                                                        $verificationDate="-";
-                                                                                                        if(!empty($e_inc_row['verificationDate']) && $e_inc_row['verificationDate']!="0000-00-00" && $e_inc_row['verificationDate']!="1970-01-01")
-                                                                                                            $verificationDate=date('d-m-Y', strtotime($e_inc_row['verificationDate'])); 
-                                                                                                    ?>
-                                                                                                    
-                                                                                                    <?php 
-                                                                                                        $set_prepared_by="";
-                                                                                                        if(!empty($e_inc_row['setPreparedShortName']))
-                                                                                                            $set_prepared_by=$e_inc_row['setPreparedShortName']; 
-                                                                                                    ?>
-                                                                                                    
-                                                                                                     <?php 
-                                                                                                        $isBillingDone="-";
-                                                                                                        if($e_inc_row['isBillingDone']==1)
-                                                                                                            $isBillingDone="Yes";
-                                                                                                        elseif($e_inc_row['isBillingDone']==2)
-                                                                                                            $isBillingDone="No"; 
-                                                                                                        else
-                                                                                                            $isBillingDone="-"; 
-                                                                                                    ?>
-                                                                                                    
-                                                                                                    <?php 
-                                                                                                        $isReceiptDone="-";
-                                                                                                        if($e_inc_row['isReceiptDone']==1)
-                                                                                                            $isReceiptDone="Yes";
-                                                                                                        elseif($e_inc_row['isReceiptDone']==2)
-                                                                                                            $isReceiptDone="No"; 
-                                                                                                        else
-                                                                                                            $isReceiptDone="-"; 
-                                                                                                    ?>
-                                                                                                    
-                                                                                                    <?php 
+
+                                                                                                    <?php $pt_enrol_paid_on = check_valid_date($e_inc_row['pt_enrol_paid_on']); ?>
+
+                                                                                                    <?php $pt_enrol_paid_on_comp = $pt_enrol_paid_on && !empty($pt_enrol_paid_on); ?>
+
+                                                                                                    <?php
                                                                                                         $rowColor="";
-                                                                                                        if($eFillingDate=='-')
+                                                                                                        if($pt_enrol_paid_on_comp)
                                                                                                         {
-                                                                                                            if($isUrgentWork==1)
-                                                                                                            {
-                                                                                                                $rowColor = 'urgent_work_clr';
-                                                                                                            }
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            $rowColor = 'hasCompleted';
-                                                                                                        }
-                                                                                                        
-                                                                                                        if(!empty($workPriorityColor) && $eFillingDate=='-')
-                                                                                                        {
-                                                                                                            if($workPriorityColor!="none")
-                                                                                                                $rowColor=$workPriorityColor;
+                                                                                                            $rowColor="hasCompleted";
                                                                                                         }
                                                                                                     ?>
                                                                                                 
                                                                                                     <tr class="row-1 tbl_row_clr" >
-                                                                                                        <td class="column-1" width="1%" nowrap>
+                                                                                                        <td class="column-1 <?= $rowColor; ?>" width="1%" nowrap>
                                                                                                             <?= $sr; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-2" width="5%" nowrap>
+                                                                                                        <td class="column-2 <?= $rowColor; ?>" width="5%" nowrap>
                                                                                                             <?= $e_inc_row['client_group_number']; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-3" width="15%" nowrap>
+                                                                                                        <td class="column-3 <?= $rowColor; ?>" width="15%" nowrap>
                                                                                                             <?php 
                                                                                                                 if(in_array($e_inc_row['orgType'], INDIVIDUAL_ARRAY))
                                                                                                                     $clientNameVar=$e_inc_row['clientName'];
@@ -424,13 +374,13 @@
                                                                                                                 ?>
                                                                                                             </a>
                                                                                                         </td>
-                                                                                                        <td class="column-4 text-center" width="10%" nowrap>
+                                                                                                        <td class="column-4 text-center <?= $rowColor; ?>" width="10%" nowrap>
                                                                                                             <?= $e_inc_row['client_org_short_name']; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-5 text-center" width="7%">
+                                                                                                        <td class="column-5 text-center <?= $rowColor; ?>" width="7%">
                                                                                                             <?= (!empty($e_inc_row['client_document_number'])) ? $e_inc_row['client_document_number'] : "-"; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-6 text-center" width="7%" nowrap>
+                                                                                                        <td class="column-6 text-center <?= $rowColor; ?>" width="7%" nowrap>
                                                                                                             <?php if($e_inc_row['juniors']!=""): ?>
                                                                                                                 <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $e_inc_row['juniors']; ?>">
                                                                                                                     <?php 
@@ -444,10 +394,10 @@
                                                                                                                 -
                                                                                                             <?php endif; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-7 text-center" width="7%">
+                                                                                                        <td class="column-7 text-center <?= $rowColor; ?>" width="7%">
                                                                                                             <?= (!empty($e_inc_row['seniorName'])) ? $e_inc_row['seniorName'] : "-"; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-9 text-center" nowrap>
+                                                                                                        <td class="column-9 text-center <?= $rowColor; ?>" nowrap>
                                                                                                             <?php
                                                                                                                 if($e_inc_row['periodicity']=="1")
                                                                                                                 {
@@ -467,13 +417,13 @@
                                                                                                                 }
                                                                                                             ?>
                                                                                                         </td>
-                                                                                                        <td class="column-10 text-right">
+                                                                                                        <td class="column-10 text-right <?= $rowColor; ?>">
                                                                                                             <?= (!empty($e_inc_row['pt_enrol_amt_paid'])) ? amount_format($e_inc_row['pt_enrol_amt_paid']) : "-"; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-11 text-center">
+                                                                                                        <td class="column-11 text-center <?= $rowColor; ?>">
                                                                                                             <?= (check_valid_date($e_inc_row['pt_enrol_paid_on'])) ? date('d-m-Y', strtotime($e_inc_row['pt_enrol_paid_on'])) : "-"; ?>
                                                                                                         </td>
-                                                                                                        <td class="column-12 text-center">
+                                                                                                        <td class="column-12 text-center <?= $rowColor; ?>">
                                                                                                             <?= (!empty($e_inc_row['pt_enrol_pmt_mode'])) ? $e_inc_row['pt_enrol_pmt_mode'] : "-"; ?>
                                                                                                         </td>
                                                                                                         <td class="column-13 text-center">

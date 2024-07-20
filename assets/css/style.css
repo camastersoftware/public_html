@@ -23064,7 +23064,7 @@ img.away, img.busy, img.offline, img.online {
 
 .main-header1 .app-menu:hover{
     background: #f99d27 !important;
-    height: 36px !important;
+    height: 33px !important;
     border-radius: 6px !important;
     color: #fff !important;
 }
@@ -23106,6 +23106,12 @@ DataTables_Table_0_wrapper .btn-secondary {
 
 .fs_14{
     font-size: 14px !important;
+}
+
+.theme-primary .btn-success:hover, .theme-primary .btn-success:active, .theme-primary .btn-success:focus, .theme-primary .btn-success.active {
+  background-color: #005495 !important;
+  border-color: #005495 !important;
+  color: #ffffff !important;
 }
 
 /*# sourceMappingURL=style.css.map */

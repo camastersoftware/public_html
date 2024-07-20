@@ -5,9 +5,9 @@
 <?php endif; ?>
 
 <?php if(!empty($resultArr)): ?>
-	<?php foreach($resultArr AS $e_city): ?>
-		<?php $cityId=$e_city['act_option_map_id']; ?>
-		<?php $cityName=$e_city['act_option_name']; ?>
-		<option value="<?php echo $cityId; ?>" <?php if($set_value==$cityId): ?>selected<?php endif; ?> ><?php echo $cityName; ?></option>
+	<?php foreach($resultArr AS $e_row): ?>
+		<?php $rowId=$e_row['act_option_map_id']; ?>
+		<?php $rowName=$e_row['act_option_name']; ?>
+		<option value="<?php echo $rowId; ?>" <?php if($set_value==$rowId): ?>selected<?php endif; ?> ><?php echo $rowName; ?></option>
 	<?php endforeach; ?>
 <?php endif; ?>

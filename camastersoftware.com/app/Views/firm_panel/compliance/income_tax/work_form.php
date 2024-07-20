@@ -707,7 +707,9 @@
                                             <div class="col-md-12 mt-30 text-center">
                                                 <input type="hidden" name="juniors" id="juniors" value="<?php echo $workArr['juniors']; ?>">
                                                 <input type="hidden" name="juniorIds" id="juniorIds" value="">
+                                                <input type="hidden" name="asmtYear" id="asmtYear" value="<?php echo $asmtYear; ?>">
                                                 <input type="hidden" name="workId" id="workId" value="<?php echo $workId; ?>">
+                                                <input type="hidden" name="fkClientId" id="fkClientId" value="<?= $workArr['fkClientId']; ?>">
                                                 <input type="hidden" name="refundId" id="refundId" value="<?= $workArr['refundId']; ?>">
                                                 <input type="hidden" name="workPriority" id="workPriority" value="<?= $workArr['workPriority']; ?>" />
                                                 <input type="hidden" name="workPriorityColor" id="workPriorityColor" value="<?= $workArr['workPriorityColor']; ?>" />
@@ -845,12 +847,9 @@
                 }
                 
             });
-            console.log(selectedJnrArr);
             
             selectedJnrText=selectedJnrArr.join(', ');
             selectedJnrIdsText=selectedJnrIds.join(', ');
-
-            console.log(selectedJnrText);
 
             $('#juniors').val(selectedJnrText);
             $('#juniorIds').val(selectedJnrIdsText);
@@ -864,38 +863,13 @@
         
         $('.add_jnr').on('click', function(){
             var junior_clone = $('#junior_clone').clone();
-            console.log('junior_clone', junior_clone);
             $('.junior_div').append(junior_clone);
         });
 
         $('body').on('click', '.del_jnr', function(){
             $(this).parents('.jnr_div').remove();
+            $('.juniorId').trigger('change');
         });
-        
-        /*
-        $('body').on('submit', '.work_data_form', function(e){
-
-            e.preventDefault();
-            var workFormData = $('.work_data_form').serializeArray();
-
-            // $('.work_data_form').submit();
-
-            var indexed_array = {};
-            
-            console.log(workFormData);
-        
-            $.map(workFormData, function(n, i){
-                indexed_array[n['name']] = n['value'];
-            });
-
-            var postingUrl = base_url+'/income_tax/work_form/'+workId;
-
-            $.post(postingUrl,indexed_array, function(data, status){
-                window.location.href=postingUrl;
-            });
-
-        });
-        */
         
         $('.def_rect:checked').trigger('click');
         $('.is_doc_rec:checked').trigger('click');
@@ -1047,9 +1021,7 @@
         var val= y.innerHTML;
         
         var activeState = document.getElementsByClassName("clrBtn");
-        console.log(activeState);
         for(i=0; i<activeState.length; i++){
-            // console.log(activeState)+1;
             activeState[i].classList.remove('active');
         }
         y.classList.add('active');

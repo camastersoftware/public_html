@@ -145,7 +145,7 @@
                             </a>
                         </div>
                         <div class="col-md-3 col-12 text-justify-center">
-                            <a href="<?php echo base_url('scrutiny'); ?>">
+                            <a href="<?php echo base_url('it-scrutiny'); ?>">
                                 <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                     <div class="box-body box-p_new menu_box_new">
                                         <p nowrap class="not_in_use">Asst-Scrutiny</p>
@@ -176,6 +176,15 @@
                                 <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                     <div class="box-body box-p_new menu_box_new">
                                         <p class="not_in_use">Outdoor Works</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-12 text-justify-center">
+                            <a href="<?php echo base_url('inc-event-based-due-dates'); ?>"> 
+                                <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                    <div class="box-body box-p_new menu_box_new">
+                                        <p class="not_in_use" style="font-size: 14px !important;">Event Based Due Dates</p>
                                     </div>
                                 </div>
                             </a>

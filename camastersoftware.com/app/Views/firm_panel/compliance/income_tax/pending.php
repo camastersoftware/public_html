@@ -322,6 +322,9 @@
                                                         
                                                             <?php $hasData=true; ?>
                                                             
+                                                            <?php $workId = $e_inc_row['workId']; ?>
+                                                            <?php $uniqueRowId = $sr.$workId; ?>
+                                                            
                                                             <?php $workDone=$e_inc_row['workDone']; ?>
                                                             <?php $workPriorityColor=$e_inc_row['workPriorityColor']; ?>
                                                             <?php $isUrgentWork=$e_inc_row['isUrgentWork']; ?>
@@ -344,7 +347,7 @@
                                                                     $set_prepared_by=$e_inc_row['setPreparedShortName']; 
                                                             ?>
                                                             
-                                                             <?php 
+                                                            <?php 
                                                                 $isBillingDone="-";
                                                                 if($e_inc_row['isBillingDone']==1)
                                                                     $isBillingDone="Yes";
@@ -388,6 +391,16 @@
                                                                     $rowColor = 'hasCompleted';
                                                                 }
                                                             ?>
+
+                                                            <?php
+                                                                $juniorIdsWorkArr = array();
+                                                                
+                                                                if(!empty($jnrIdsWorkArr[$workId]))
+                                                                {
+                                                                    $juniorIdsWorkArr=$jnrIdsWorkArr[$workId];
+                                                                }
+
+                                                            ?>
                                                         
                                                             <tr class="row-1 tbl_row_clr" >
                                                                 <td class="column-1 <?= $rowColor; ?>" width="1%" nowrap>
@@ -427,7 +440,7 @@
                                                                             </a>
                                                                             <?php
                                                                                 if(!empty($workFormUrl))
-                                                                                    $workFormUrlVar=base_url($workFormUrl.$e_inc_row['workId']);
+                                                                                    $workFormUrlVar=base_url($workFormUrl.$workId);
                                                                                 else
                                                                                     $workFormUrlVar="javascript:void(0);";
                                                                             ?>
@@ -453,19 +466,74 @@
                                                                             echo "-"; 
                                                                     ?>
                                                                 </td>
-                                                                <td class="column-6 text-center <?= $rowColor; ?>" width="7%" nowrap>
-                                                                    <?php if($e_inc_row['juniors']!=""): ?>
-                                                                        <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $e_inc_row['juniors']; ?>">
-                                                                            <?php 
-                                                                                if(strlen($e_inc_row['juniors'])>10)
-                                                                                    echo substr_replace($e_inc_row['juniors'], "...", 10); 
-                                                                                else
-                                                                                    echo $e_inc_row['juniors'];
-                                                                            ?>
+                                                                <td class="column-6 <?= $rowColor; ?>" width="7%" nowrap >
+                                                                    <div class="text-center" data-toggle="tooltip" data-original-title="<?= $e_inc_row['juniors']; ?>">
+                                                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#updateJuniorStaff<?= $uniqueRowId ?>">
+                                                                            <?php if($e_inc_row['juniors']!=""): ?>
+                                                                                <?php
+                                                                                    $juniorArray = explode(", ", $e_inc_row['juniors']);
+                                                                                    if(count($juniorArray)>1)
+                                                                                    {
+                                                                                        echo $juniorArray[0]."+"; 
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        echo $e_inc_row['juniors'];
+                                                                                    }
+                                                                                ?>
+                                                                            <?php else: ?>
+                                                                                -
+                                                                            <?php endif; ?>
                                                                         </a>
-                                                                    <?php else: ?>
-                                                                        -
-                                                                    <?php endif; ?>
+                                                                    </div>
+                                                                    <!-- Modal -->
+                                                                    <div id="updateJuniorStaff<?= $uniqueRowId ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-md">
+                                                                            <div class="modal-content">
+                                                                                <form action="<?php echo base_url('update-inc-work-juniors'); ?>" method="POST" >
+                                                                                    <div class="modal-header">
+                                                                                        <h4 class="modal-title" id="myModalLabel">Change Junior Staff Allotment</h4>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-12 col-lg-12">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Currently Alloted To : </label>
+                                                                                                    <span><?= $e_inc_row['juniors']; ?></span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-12 col-lg-12">
+                                                                                                <div class="form-group">
+                                                                                                    <select class="form-control select2 selectWorkJuniors" name="juniorsIds[]" id="juniorIds_<?= $uniqueRowId; ?>" data-unique_id="<?= $uniqueRowId; ?>" multiple="multiple" data-placeholder="Select Juniors" style="width:100%;">
+                                                                                                        <option value="">Select Juniors</option>
+                                                                                                        <?php if(!empty($getUserList)): ?>
+                                                                                                            <?php foreach($getUserList AS $e_usr_val): ?>
+                                                                                                                <?php if(!empty($juniorIdsWorkArr)): ?>
+                                                                                                                    <option value="<?= $e_usr_val['userId']; ?>" data-short="<?= $e_usr_val['userShortName']; ?>" <?= (in_array($e_usr_val['userId'], $juniorIdsWorkArr)) ? "selected":""; ?>><?= $e_usr_val['userFullName']; ?></option>
+                                                                                                                <?php else: ?>
+                                                                                                                    <option value="<?= $e_usr_val['userId']; ?>" data-short="<?= $e_usr_val['userShortName']; ?>"><?= $e_usr_val['userFullName']; ?></option>
+                                                                                                                <?php endif; ?>
+                                                                                                            <?php endforeach; ?>
+                                                                                                        <?php endif; ?>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer text-right" style="width: 100%;">
+                                                                                        <input type="hidden" name="workId" id="workId" value="<?= $workId; ?>">
+                                                                                        <input type="hidden" name="juniors" id="juniors_<?= $uniqueRowId ?>" value="<?= $e_inc_row['juniors']; ?>">
+                                                                                        <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                                                                                        <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                            <!-- /.modal-content -->
+                                                                        </div>
+                                                                        <!-- /.modal-dialog -->
+                                                                    </div>
+                                                                    <!-- /.modal -->
                                                                 </td>
                                                                 <td class="column-7 text-center <?= $rowColor; ?>" width="7%">
                                                                     <?= $e_inc_row['seniorName']; ?>
@@ -782,14 +850,32 @@
         
         $("body").on("click", '.nav-link', function() {
             var selected_mth_tab = $(this).data("mth");
-            console.log('selected_mth_tab', selected_mth_tab);
             $('input[name="selected_mth_tab"]').val(selected_mth_tab);
+        });
+
+        $(".selectWorkJuniors").on("change", function(){
+
+            var unqiueId = $(this).data("unique_id");
+
+            var juniorDropdwon = "#juniorIds_"+unqiueId;
+            var juniorNamesInput = "#juniors_"+unqiueId;
+
+            $(juniorNamesInput).val("");
+
+            var selectedJuniors = $(juniorDropdwon).find('option:selected').map(function() {
+                return $(this).data('short');
+            }).get();
+
+            // Format as comma-separated string
+            var selectedJuniorNames = selectedJuniors.join(', ');
+
+            // Display the formatted string
+            $(juniorNamesInput).val(selectedJuniorNames);
+
         });
     });
     
     var sel_mth_tab = $('input[name="selected_mth_tab"]').val();
-    
-    console.log('sel_mth_tab', sel_mth_tab);
     
     $('.nav-tabs a[href="#'+sel_mth_tab+'"]').tab('show');
     

@@ -97,7 +97,7 @@
         
         .clrBtn {
             width: 13.33%;
-            padding: 25px;
+            padding: 0px;
             color: #ffffff;
             font-size: 30px;
             cursor: pointer;
@@ -131,6 +131,11 @@
             border-bottom: 3px solid #333333;
             z-index: 11;
             transform: rotate(-45deg);
+        }
+
+        .clrBtn span{
+            color: #000000 !important;
+            font-size: 10px !important;
         }
         
         .none{
@@ -276,7 +281,7 @@
     						    <a class="nav-link nav-link_hd active" href="<?php echo base_url('todolist'); ?>" role="tab">
     						        <span class="hidden-xs-down ml-15">
     						            <span class="tabs_title font-weight-bold">
-    						               <p class="title_p">My To Do List</p> 
+    						                <p class="title_p">My To Do List</p> 
     						            </span>
     						        </span>
     						    </a> 
@@ -554,9 +559,15 @@
                                     <div class="form-group">
                                         <label>Select Prority<small class="text-danger">*</small></label>
                                         <div class="grid-Wrapper">
-                                            <button type="button" class="clrBtn none <?php if($e_row['tdPriority']==1): ?>active<?php endif; ?>" data-clr="none" data-id="<?php echo $e_row['tdId']; ?>" onclick="EditColorPicker(1,'none',this);"></button>
-                                            <button type="button" class="clrBtn yellow <?php if($e_row['tdPriority']==2): ?>active<?php endif; ?>" data-clr="#f0f58b7d" data-id="<?php echo $e_row['tdId']; ?>" onclick="EditColorPicker(2,'#f0f58b7d',this);"></button>
-                                            <button type="button" class="clrBtn red <?php if($e_row['tdPriority']==3): ?>active<?php endif; ?>" data-clr="pink" data-id="<?php echo $e_row['tdId']; ?>" onclick="EditColorPicker(3,'pink',this);"></button>
+                                            <button type="button" class="clrBtn none <?php if($e_row['tdPriority']==1): ?>active<?php endif; ?>" data-clr="none" data-id="<?php echo $e_row['tdId']; ?>" onclick="EditColorPicker(1,'none',this);">
+                                                <span>Low</span>
+                                            </button>
+                                            <button type="button" class="clrBtn yellow <?php if($e_row['tdPriority']==2): ?>active<?php endif; ?>" data-clr="#f0f58b7d" data-id="<?php echo $e_row['tdId']; ?>" onclick="EditColorPicker(2,'#f0f58b7d',this);">
+                                                <span>Medium</span>
+                                            </button>
+                                            <button type="button" class="clrBtn red <?php if($e_row['tdPriority']==3): ?>active<?php endif; ?>" data-clr="pink" data-id="<?php echo $e_row['tdId']; ?>" onclick="EditColorPicker(3,'pink',this);">
+                                                <span>High</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -626,9 +637,15 @@
                                 <div class="form-group">
                                     <label>Select Prority<small class="text-danger">*</small></label>
                                     <div class="grid-Wrapper">
-                                        <button type="button" class="clrBtn none active" data-clr="none" onclick="ColorPicker(1,'none',this);"></button>
-                                        <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker(2,'#f0f58b7d',this);"></button>
-                                        <button type="button" class="clrBtn red" data-clr="pink" onclick="ColorPicker(3,'pink',this);"></button>
+                                        <button type="button" class="clrBtn none active" data-clr="none" onclick="ColorPicker(1,'none',this);">
+                                            <span>Low</span>
+                                        </button>
+                                        <button type="button" class="clrBtn yellow" data-clr="#f0f58b7d" onclick="ColorPicker(2,'#f0f58b7d',this);">
+                                            <span>Medium</span>
+                                        </button>
+                                        <button type="button" class="clrBtn red" data-clr="pink" onclick="ColorPicker(3,'pink',this);">
+                                            <span>High</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

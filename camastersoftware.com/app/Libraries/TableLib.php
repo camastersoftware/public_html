@@ -57,6 +57,9 @@ class TableLib
         $tableArr['due_date_for_group_map_tbl']=$superAdminDB.".due_date_for_group_map_tbl";
         $tableArr['menu_tbl']=$superAdminDB.".menu_tbl";
         $tableArr['sub_menu_tbl']=$superAdminDB.".sub_menu_tbl";
+        $tableArr['sms_config']=$superAdminDB.".sms_config";
+        $tableArr['otp_tbl']=$superAdminDB.".otp_tbl";
+        $tableArr['user_category_tbl']=$superAdminDB.".user_category_tbl";
 
         //Admin
         $tableArr['client_act_map_tbl']=$adminDB.".client_act_map_tbl";
@@ -109,8 +112,18 @@ class TableLib
         $tableArr['bill_description_tbl']=$adminDB.".bill_description_tbl";
         $tableArr['user_chat_connection_tbl']=$adminDB.".user_chat_connection_tbl";
         $tableArr['user_message_tbl']=$adminDB.".user_message_tbl";
+		$tableArr['chartered_accuntant_tbl']=$adminDB.".chartered_accuntant_tbl";
+        $tableArr['articleship_staff_tbl']=$adminDB.".articleship_staff_tbl";
+        $tableArr['expense_voucher_tbl']=$adminDB.".expense_voucher_tbl";
+        $tableArr['articleship_leave_tbl']=$adminDB.".articleship_leave_tbl";
+		$tableArr['non_regular_due_date_tbl']=$adminDB.".non_regular_due_date_tbl";
+        $tableArr['non_regular_due_date_for_tbl']=$adminDB.".non_regular_due_date_for_tbl";
+        $tableArr['firm_salary_parameters_tbl']=$adminDB.".firm_salary_parameters_tbl";
+        $tableArr['event_based_work_tbl']=$adminDB.".event_based_work_tbl";
+        $tableArr['scrutiny_tbl']=$adminDB.".scrutiny_tbl";
+        $tableArr['calender_year_config_tbl']=$adminDB.".calender_year_config_tbl";
+        $tableArr['reminder_user_map_tbl']=$adminDB.".reminder_user_map_tbl";
         
-           
         return $tableArr;
 	}
 }

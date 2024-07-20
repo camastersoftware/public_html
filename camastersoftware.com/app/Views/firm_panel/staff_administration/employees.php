@@ -63,9 +63,12 @@
                         <?= $pageTitle ?>
                     </h4>
                     <div class="text-right flex-grow">
-                       <a href="<?php echo base_url('staff-administration'); ?>">
+                       <a href="<?php echo base_url('payroll'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right" style="">Back</button>
                         </a>
+                        <!-- <a href="<?php //echo base_url('employee-payable-summary'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1 mr-1" style="">Payable Summary</button>
+                        </a> -->
                     </div>
                 </div>
                 <div class="box-body">
@@ -150,6 +153,7 @@
                                                     <div class="dropdown-menu" style="will-change: transform;">
                                                         <a class="dropdown-item" href="<?php echo base_url('employee-salary-payable/'.$e_row['userId']); ?>" >Salary Payable</a>
                                                         <a class="dropdown-item" href="<?php echo base_url('employee-salary-payable-details/'.$e_row['userId']); ?>" >Salary Payable Details</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('payslip/'.$e_row['userId']); ?>" >Payslip</a>
                                                     </div>
                                                 </div>
                                             </td>

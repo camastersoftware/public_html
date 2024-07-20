@@ -7,8 +7,65 @@ class Sms_lib
     {
         $this->Msms = new Msms();
     }
-    
+
 	public function send($smsDataArr)
+	{
+        $to=$smsDataArr['to'];
+        $msg=$smsDataArr['message'];
+        
+        $smsConfigArr=$this->Msms->where('status', 1)->first();
+		
+		$response['status']=FALSE;
+        $response['message']="SMS Configuration not found...";
+        
+        if(!empty($smsConfigArr))
+        {
+            $smsUrl=$smsConfigArr['url'];
+            $senderId=$smsConfigArr['senderId'];
+            $apiKey=urlencode($smsConfigArr['apiKey']);
+            
+        	// Message details
+			$numbers = "91".$to;
+			$sender = urlencode($senderId);
+			$message = $msg;
+		
+			// Prepare data for POST request
+			$dataArr = array('apikey' => $apiKey, 'numbers' => $numbers, "sender" => $sender, "message" => $message);
+
+			// /*
+			$crl = curl_init($smsUrl);
+			curl_setopt($crl, CURLOPT_POST, true);
+			curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($crl, CURLOPT_POSTFIELDS, $dataArr);
+			
+			$res = curl_exec($crl);
+		
+			if(!$res) 
+			{
+				$response_err="";
+				$response_err.="Message could not be sent.";
+				$response_err.='Error: "' . curl_error($crl) . '" - Code: ' . curl_errno($crl);
+		
+				$response['status']=FALSE;
+				$response['message']=$response_err;
+			}
+			else
+			{
+				$response['status']=TRUE;
+				$response['message']="OTP Sent";
+			}
+		
+			curl_close($crl);
+			// */
+        }
+
+		// $response['status']=TRUE;
+		// $response['message']=$msg;
+
+		return $response;
+	}
+    
+	public function sendOld($smsDataArr)
 	{
         $to=$smsDataArr['to'];
         $msg=$smsDataArr['message'];

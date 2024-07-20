@@ -180,12 +180,44 @@
     $(document).ready(function(){
         
         initializeTimepicker(minuteStep=1);
-        // //Timepicker
-        // $('.timepicker').timepicker({
-        //     showInputs: false,
-        //     minuteStep : 5
-        // });
+
+        $('#setAddInTime').change(function() {
+            if ($(this).is(':checked')) {
+                setCurrentTime('.addInTimeInput');
+            } else {
+                $('.addInTimeInput').val("");
+            }
+        });
+
+        $('#setAddOutTime').change(function() {
+            if ($(this).is(':checked')) {
+                setCurrentTime('.addOutTimeInput');
+            } else {
+                $('.addOutTimeInput').val("");
+            }
+        });
+
+        $('.setEditInTime').change(function() {
+            let dataId = $(this).data('id');
+            if ($(this).is(':checked')) {
+                setCurrentTime('.editInTimeInput'+dataId);
+            } else {
+                $('.editInTimeInput'+dataId).val("");
+            }
+        });
+
+        $('.setEditOutTime').change(function() {
+            let dataId = $(this).data('id');
+            if ($(this).is(':checked')) {
+                setCurrentTime('.editOutTimeInput'+dataId);
+            } else {
+                $('.editOutTimeInput'+dataId).val("");
+            }
+        });
+
+        $('#setAddInTime').trigger("click");
     });
+
     function initializeTimepicker(minuteStep) {
         if (document.readyState === 'complete') {
             $('.timepicker').timepicker('remove');
@@ -201,6 +233,28 @@
             'minuteStep': minuteStep,
             'defaultTime': false
         });
+    }
+
+    function setCurrentTime(selector) {
+        var currentTime = new Date();
+        var hours = currentTime.getHours();
+        var minutes = currentTime.getMinutes();
+        var formattedTime = formatTime(hours, minutes);
+        $(selector).timepicker('setTime', formattedTime);
+    }
+
+    function formatTime(hours, minutes) {
+        var period = 'AM';
+        if (hours >= 12) {
+            period = 'PM';
+            if (hours > 12) {
+                hours -= 12;
+            }
+        } else if (hours === 0) {
+            hours = 12;
+        }
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return hours + ':' + minutes + ' ' + period;
     }
 </script>
 <?= $this->endSection(); ?>

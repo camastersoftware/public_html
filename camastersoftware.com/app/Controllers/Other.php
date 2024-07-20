@@ -17,14 +17,17 @@ class Other extends BaseController
         $this->Mstate = new \App\Models\Mstate();
         $this->Mdue_date = new \App\Models\Mdue_date();
         $this->Mdemo = new \App\Models\Mdemo();
+        $this->Motp = new \App\Models\Motp();
         $this->Mcommon = new \App\Models\Mcommon();
         $this->TableLib = new \App\Libraries\TableLib();
+        $this->Sms_lib = new \App\Libraries\Sms_lib();
 
         $tableArr=$this->TableLib->get_tables();
 
         $this->ext_due_date_master_tbl=$tableArr['ext_due_date_master_tbl'];
         $this->tax_payer_due_date_map_tbl=$tableArr['tax_payer_due_date_map_tbl'];
         $this->organisation_type_tbl=$tableArr['organisation_type_tbl'];
+        $this->due_date_type_tbl=$tableArr['due_date_type_tbl'];
         
         $currMth=date('n');
         
@@ -208,8 +211,9 @@ class Other extends BaseController
         $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS applicable_form_tbl', "condtn"=>"applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form", "type"=>"left");
         $taxJoinArr[]=array("tbl"=>'act_tbl', "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
         $taxJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1", "type"=>"left");
-        
-        $query=$this->Mcommon->getRecords($tableName="due_date_master_tbl", $colNames="due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, , GROUP_CONCAT(DISTINCT(organisation_type_tbl.organisation_type_name)) AS tax_payers, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_date_month, ext_due_date_master_tbl.extended_date_notes, ext_due_date_master_tbl.is_extended, ext_due_date_master_tbl.isFirst, ext_due_date_master_tbl.next_extended_date", $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $taxJoinArr[]=array("tbl"=>$this->due_date_type_tbl, "condtn"=>"due_date_type_tbl.dueDateTypeId=due_date_for_tbl.due_date_type", "type"=>"left");
+
+        $query=$this->Mcommon->getRecords($tableName="due_date_master_tbl", $colNames="due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, , GROUP_CONCAT(DISTINCT(organisation_type_tbl.organisation_type_name)) AS tax_payers, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_date_month, ext_due_date_master_tbl.extended_date_notes, ext_due_date_master_tbl.is_extended, ext_due_date_master_tbl.isFirst, ext_due_date_master_tbl.next_extended_date, due_date_type_tbl.dueDateTypeShortName", $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $dueDatesArr=$query['userData'];
 
@@ -257,44 +261,154 @@ class Other extends BaseController
 	
 	public function add_request()
 	{
-	    $demoReqName=$this->request->getPost('demoReqName');
-	    $demoReqEmail=$this->request->getPost('demoReqEmail');
-	    $demoReqMobile=$this->request->getPost('demoReqMobile');
-	    $ipAddress=$this->request->getIPAddress();
-	    
-	    $insertArr=[
-            'demoReqName'=>$demoReqName,
-            'demoReqEmail'=>$demoReqEmail,
-            'demoReqMobile'=>$demoReqMobile,
-            'demoReqDateTime'=>date('Y-m-d H:i:s'),
-            'isReplied' => 2,
-            'ipAddress' => $ipAddress,
+        $demoReqName=$this->request->getPost('demoReqName');
+        $demoReqEmail=$this->request->getPost('demoReqEmail');
+        $demoReqMobile=$this->request->getPost('demoReqMobile');
+        $demoMobileOTP=$this->request->getPost('demoMobileOTP');
+        $ipAddress=$this->request->getIPAddress();
+
+        $updateCondtn = [
+            'mobileNo' => $demoReqMobile,
+            'status' => 1
+        ];
+
+        $mobOtpData = $this->Motp->where($updateCondtn)
+                        ->get()
+                        ->getRowArray();
+
+        if(!empty($mobOtpData))
+        {
+            $mobOtp=$mobOtpData['otp'];
+
+            if($demoMobileOTP==$mobOtp)
+            {
+                $updateOTPCondtn = [
+                    'mobileNo' => $demoReqMobile,
+                    'status' => 1
+                ];
+                
+                $updateOTPData = [
+                    'status' => 2,
+                    'updatedBy' => $this->adminId,
+                    'updatedDateTime' => $this->currTimeStamp
+                ];
+                
+                $this->Motp->where($updateOTPCondtn)
+                                ->set($updateOTPData)
+                                ->update();
+
+                $insertArr=[
+                    'demoReqName'=>$demoReqName,
+                    'demoReqEmail'=>$demoReqEmail,
+                    'demoReqMobile'=>$demoReqMobile,
+                    'demoReqDateTime'=>date('Y-m-d H:i:s'),
+                    'isReplied' => 2,
+                    'ipAddress' => $ipAddress,
+                    'status' => 1,
+                    'createdBy' => $this->adminId,
+                    'createdDatetime' => $this->currTimeStamp
+                ];
+                
+                if($this->Mdemo->save($insertArr))
+                {
+                    $insertLogArr['section']=$this->section;
+                    $insertLogArr['message']=$this->section." Added";
+                    $insertLogArr['ip']=$this->IPAddress;
+                    // $insertLogArr['macAddr']=$this->macAddress;
+                    $insertLogArr['createdBy']=$this->adminId;
+                    $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+                    $this->Mcommon->insertLog($insertLogArr);
+                    
+                    $resData['msg']="Thank you for your demo request.";
+                    $resData['status']=TRUE;
+                }
+                else
+                {
+                    $resData['msg']="Demo request not added, Please try again.";
+                    $resData['status']=FALSE;
+                }
+            }
+            else
+            {
+                $resData['msg']="OTP not matched, Please try again.";
+                $resData['status']=FALSE;
+            }
+        }
+        else
+        {
+            $resData['msg']="Something went wrong, Please try again.";
+            $resData['status']=FALSE;
+        }
+        
+        echo json_encode($resData);
+	}
+
+	public function send_otp()
+	{
+        $demoReqMobile=$this->request->getPost('demoReqMobile');
+
+        $updateCondtn = [
+            'mobileNo' => $demoReqMobile,
+            'status' => 1
+        ];
+        
+        $updateData = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDateTime' => $this->currTimeStamp
+        ];
+        
+        $this->Motp->where($updateCondtn)
+                        ->set($updateData)
+                        ->update();
+
+        $otp = rand(1111,9999);
+
+        $insertArr=[
+            'mobileNo' => $demoReqMobile,
+            'otp' => $otp,
+            'ipAddress' => $this->IPAddress,
             'status' => 1,
             'createdBy' => $this->adminId,
             'createdDatetime' => $this->currTimeStamp
         ];
-	    
-	    if($this->Mdemo->save($insertArr))
-	    {
-	        $insertLogArr['section']=$this->section;
-            $insertLogArr['message']=$this->section." Added";
-            $insertLogArr['ip']=$this->IPAddress;
-            // $insertLogArr['macAddr']=$this->macAddress;
-            $insertLogArr['createdBy']=$this->adminId;
-            $insertLogArr['createdDatetime']=$this->currTimeStamp;
 
-            $this->Mcommon->insertLog($insertLogArr);
-            
-	        $resData['msg']="Thank you for your demo request.";
-	        $resData['status']=TRUE;
-	    }
-	    else
-	    {
-	        $resData['msg']="Demo request not added, Please try again.";
-	        $resData['status']=FALSE;
-	    }
-	    
-	    echo json_encode($resData);
+        if($this->Motp->save($insertArr))
+        {
+            $message = 'OTP to reset password on Motorpark is '.$otp.' and is valid for 10 mins. Do not share this OTP to anyone for security purposes.';
+
+            $smsDataArr['to'] = $demoReqMobile;
+            $smsDataArr['message'] = $message;
+
+            $smsResData=$this->Sms_lib->send($smsDataArr);
+
+            if($smsResData['status']==TRUE)
+            {
+                $insertLogArr['section']=$this->section;
+                $insertLogArr['message']="OTP Sent";
+                $insertLogArr['ip']=$this->IPAddress;
+                $insertLogArr['createdBy']=$this->adminId;
+                $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+                $this->Mcommon->insertLog($insertLogArr);
+                
+                $resData['msg']="OTP Sent";
+                $resData['status']=TRUE;
+            }
+            else
+            {
+                $resData['msg']="Gateway error, OTP not sent.";
+                $resData['status']=FALSE;
+            }
+        }
+        else
+        {
+            $resData['msg']="Something went wrong, OTP not sent.";
+            $resData['status']=FALSE;
+        }
+        
+        echo json_encode($resData);
 	}
 }
 ?>

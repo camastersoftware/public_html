@@ -95,7 +95,7 @@ fixed
 .fixed .main-header1 {
     margin-top: 70px;
     background-color: #005495 !important;
-    height: 44px;
+    height: 42px;
 }
 
 .fixed .main-header1 .navbar{
@@ -655,7 +655,7 @@ section.mt-40{
 .fu_count{
     width: 60px !important;
     display: inline-block !important;
-    text-align: end !important;
+    /* text-align: end !important; */
 }
 
 .mr_my_work{
@@ -888,8 +888,12 @@ table tr td a {
 .floatingButtonWrap {
     display: block;
     position: fixed;
-    bottom: 45px;
-    right: 45px;
+    /* bottom: 45px; */
+    bottom: 615px !important;
+    right: 225px;
+    
+    /* bottom: 315px !important; */
+    /* right: 45px; */
     z-index: 999999999;
 }
 
@@ -898,26 +902,70 @@ table tr td a {
 }
 .floatingButton {
     display: block;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 35px;
     text-align: center;
     background: #005495;
-    background: #005495;
-    background: #005495;
+    /* background: #005495; */
+    /* background: #005495; */
     color: #fff;
-    line-height: 50px;
+    line-height: 20px;
     position: absolute;
     border-radius: 50% 50%;
-    bottom: 0px;
+    bottom: 8px;
     right: 0px;
-    border: 5px solid #f99d27 !important;
+    /* border: 5px solid #f99d27 !important; */
     /* opacity: 0.3; */
     opacity: 1;
     transition: all 0.4s;
 }
 
 .floatingButton .fa {
-    margin-top:3px;
-    font-size: 40px !important;
+    /* margin-top:3px; */
+    font-size:32px !important;
 }
-/*Chat Section Float Button End*/
+
+/* Add this style to your existing CSS or in a style block */
+.bell-icon {
+    position: relative;
+    top: -8px; /* Adjust the position based on your design */
+    right: -56px; /* Adjust the position based on your design */
+    background-color: red; /* Background color for the badge */
+    color: white; /* Text color for the badge */
+    border-radius: 50%; /* Make it a circle */
+    padding: 4px 8px; /* Adjust the padding based on your design */
+    font-size: 12px; /* Adjust the font size based on your design */
+}
+
+.notify-point-icon {
+    position: relative;
+    top: -14px;
+    right: -98px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.1px 3px;
+    font-size: 4px;
+}
+
+.notify-point-icon-btn {
+    position: relative;
+    right: 14px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.1px 3px;
+    font-size: 4px;
+    vertical-align: text-top;
+}
+
+.nav-profile-img{
+    width: 50px;
+    border-radius: 50%;
+    padding: 0px;
+    border: 2px solid #f99d27;
+    height: 40px;
+    float: left;
+    cursor: pointer;
+}
+

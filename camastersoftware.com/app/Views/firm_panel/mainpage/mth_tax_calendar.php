@@ -52,6 +52,10 @@ table.dataTable {
 .theme-primary .btn-info {
   height: 25px !important;
 }
+
+.font_bold{
+    font-weight: bold !important;
+}
 </style>
 
 <?php
@@ -148,8 +152,9 @@ if(!empty($taxCalIsAdminCookie))
                                     <thead>
                                         <tr class="row-1">
                                             <th class="column-1">Due Date</th>
+                                            <th class="column-7">Form</th>
+                                            <th class="column-7">Type</th>
                                             <th class="column-2">Due Date For</th>
-                                            <!--<th class="column-7">Form</th>-->
                                             <?php if($taxCalTypeAdminCookie!="1"): ?>
                                             <th class="column-3">Act</th>
                                             <?php endif; ?>
@@ -183,7 +188,7 @@ if(!empty($taxCalIsAdminCookie))
                                                 <?php if($taxCalTypeAdminCookie=="1"): ?>
                                                     <?php if($currAct!=$prevAct): ?>
                                                         <tr class="row-2 tax_act_head">
-                                                            <td colspan="10" class="column-1"><?php echo $e_row['act_name']; ?></td>
+                                                            <td colspan="12" class="column-1"><?php echo $e_row['act_name']; ?></td>
                                                         </tr>
                                                     <?php endif; ?>
                                                 <?php endif; ?>
@@ -192,15 +197,32 @@ if(!empty($taxCalIsAdminCookie))
                                                 <?php $extended_date_notes=htmlspecialchars_decode(html_entity_decode($e_row['due_notes'])); ?>
                                                 <tr class="row-3 <?php if($e_row['is_extended']==1): ?>ext_date_row<?php endif; ?>" style="background-color:<?php if($e_row['is_extended']==2): ?>#96c7f242<?php else: ?><?php echo EXT_DUE_DATE_STYLE; ?><?php endif; ?>;">
                                                     <td class="column-1 column_date" nowrap><?php echo date('d-m-Y', strtotime($e_row['extended_date'])); ?></td>
+                                                    <td class="column-7 text-center font_bold" nowrap>
+                                                        <?php
+                                                            if(!empty($e_row['act_option_name5']))
+                                                                echo $e_row['act_option_name5']; 
+                                                            else
+                                                                echo "N/A"; 
+                                                        ?>
+                                                    </td>
+                                                    <td class="column-7 text-center" nowrap>
+                                                        <?php
+                                                            if(!empty($e_row['dueDateTypeShortName']))
+                                                                echo $e_row['dueDateTypeShortName']; 
+                                                            else
+                                                                echo "N/A"; 
+                                                        ?>
+                                                    </td>
                                                     <td class="column-2" nowrap>
                                                         <?php 
-                                                            if(!empty($e_row['act_option_name5']))
-                                                                $ddForm = $e_row['act_option_name5']; 
-                                                            else
-                                                                $ddForm = "N/A";
+                                                            // if(!empty($e_row['act_option_name5']))
+                                                            //     $ddForm = $e_row['act_option_name5']; 
+                                                            // else
+                                                            //     $ddForm = "N/A";
                                                         ?>
                                                         <?php if(!empty($e_row['act_option_name1'])): ?>
-                                                            <?php $dueDateForStr=$ddForm."-".$e_row['act_option_name1']; ?>
+                                                            <?php //$dueDateForStr=$ddForm."-".$e_row['act_option_name1']; ?>
+                                                            <?php $dueDateForStr=$e_row['act_option_name1']; ?>
                                                                 
                                                             <?php if(strlen($dueDateForStr)>50): ?>
                                                             
@@ -214,16 +236,6 @@ if(!empty($taxCalIsAdminCookie))
                                                             <div class="text-center">N/A</div>
                                                         <?php endif; ?>
                                                     </td>
-                                                    <!--
-                                                    <td class="column-7 text-center" nowrap>
-                                                        <?php
-                                                            // if(!empty($e_row['act_option_name5']))
-                                                            //     echo $e_row['act_option_name5']; 
-                                                            // else
-                                                            //     echo "N/A"; 
-                                                        ?>
-                                                    </td>
-                                                    -->
                                                     <?php if($taxCalTypeAdminCookie!="1"): ?>
                                                     <td class="column-3 text-center" nowrap><?php echo $e_row['act_name']; ?></td>
                                                     <?php endif; ?>
@@ -324,7 +336,7 @@ if(!empty($taxCalIsAdminCookie))
                                                             $datediff = $now - $your_date;
                                                             
                                                             if($your_date>$now)
-                                                                echo abs(round($datediff / (60 * 60 * 24)));
+                                                                echo abs((float)round($datediff / (60 * 60 * 24)));
                                                             else
                                                                 echo "-";
                                                             */
@@ -388,9 +400,9 @@ if(!empty($taxCalIsAdminCookie))
                                         <?php else: ?>
                                             <tr>
                                                 <?php if($taxCalTypeAdminCookie==1): ?>
-                                                    <td colspan="8"><center>No Records</center></td>
+                                                    <td colspan="10"><center>No Records</center></td>
                                                 <?php else: ?>
-                                                    <td colspan="9"><center>No Records</center></td>
+                                                    <td colspan="11"><center>No Records</center></td>
                                                 <?php endif; ?>
                                             </tr>
                                         <?php endif; ?>

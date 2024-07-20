@@ -265,7 +265,7 @@ if(!empty($dueDateStateCookie) || !empty($dueDateFinYearCookie))
                                                                 $datediff = $now - $your_date;
                                                                 
                                                                 if($your_date>$now)
-                                                                    echo abs(round($datediff / (60 * 60 * 24)));
+                                                                    echo abs((float)round($datediff / (60 * 60 * 24)));
                                                                 else
                                                                     echo "-";
                                                             ?>
@@ -514,7 +514,7 @@ if(!empty($dueDateStateCookie) || !empty($dueDateFinYearCookie))
                                                                 $datediff = $now - $your_date;
                                                                 
                                                                 if($your_date>$now)
-                                                                    echo abs(round($datediff / (60 * 60 * 24)));
+                                                                    echo abs((float)round($datediff / (60 * 60 * 24)));
                                                                 else
                                                                     echo "-";
                                                             ?>

@@ -7,6 +7,7 @@ class ShiftDueDateNextYearCron extends BaseController
     {
         $this->section="Crons";
         $this->Mfirm = new \App\Models\Mfirm();
+        $this->MorganisationType = new \App\Models\MorganisationType();
         $this->ConnectDb = new \App\Libraries\ConnectDb();
         $this->TableLib = new \App\Libraries\TableLib();
         $tableArr=$this->TableLib->get_tables();
@@ -18,21 +19,39 @@ class ShiftDueDateNextYearCron extends BaseController
         $currMth=date('n');
         $currYr=date('Y');
         
-        if($currMth<=3)
-            $prevYear=$currYr;
-        else
-            $prevYear=$currYr-1;
+        // if($currMth<=3)
+        //     $prevYear=$currYr;
+        // else
+        //     $prevYear=$currYr-1;
+
+        $prevYear=$currYr-1;
         
         $this->dueYear=$prevYear."-".(substr($prevYear+1, 2));
     }
 
 	public function index()
 	{
-	    echo "Cron Started...";
+	    $this->MTestCron = new \App\Models\MTestCron();
+
+        $cronRunMsg = "Cron run successfully at - ".$this->currTimeStamp;
+	    
+	    $testCronInsertArr=array(
+            'testDesc' => $cronRunMsg
+        );
+        
+        $this->MTestCron->save($testCronInsertArr);
+        
+        die($cronRunMsg);
+        
+        die("Access Denied");
+	    echo "Cron Started for ".$this->dueYear." ...";
 	    
 	    $this->db->transBegin();
+
+        $organisationTypes=$this->MorganisationType->where('organisation_type_tbl.status', 1)
+                        ->findAll();
 	    
-	    log_message('error', 'Cron Start');
+	    log_message('error', 'Cron Start for '.$this->dueYear);
 	   
         $taxCalFinYearAdminCookie=$this->dueYear;
             
@@ -67,6 +86,7 @@ class ShiftDueDateNextYearCron extends BaseController
                 $periodicityVal=$e_dd['periodicity'];
                 $nextDueDate=date('Y-m-d', strtotime($e_dd['due_date']." +1 years"));
                 $ddFinYear=$e_dd['finYear'];
+                $is_all_tax_payer=$e_dd['is_all_tax_payer'];
                 
                 $ddFinYearArr=explode('-', $ddFinYear);
         
@@ -116,10 +136,11 @@ class ShiftDueDateNextYearCron extends BaseController
                 $e_dd['due_date']=$nextDueDate;
                 $e_dd['isExt']=2;
                 $e_dd['byCron']=1;
+                $e_dd['last_due_date_id']=$ddId;
                 $e_dd['createdDatetime']=$this->currTimeStamp;
                 
                 $nextYrDueDateInsertArr[]=$e_dd;
-                               
+                
                 $query=$this->Mcommon->insert($tableName=$this->due_date_master_tbl, $nextYrDueDateInsertArr, $returnType="");
                 
                 if($query['status']==TRUE)
@@ -153,17 +174,38 @@ class ShiftDueDateNextYearCron extends BaseController
                         
                         if(!empty($taxPayerArr))
                         {
-                            foreach($taxPayerArr AS $e_tax_payer)
+                            if($is_all_tax_payer==1)
                             {
-                                $taxPayerInsertArr[]=array(
-                                    'fk_due_date_id'=>$due_date_id,
-                                    'fk_org_type_id'=>$e_tax_payer['fk_org_type_id'],
-                                    'byCron' => 1,
-                                    'status' => 1,
-                                    'createdBy' => $this->adminId,
-                                    'createdDatetime' => $this->currTimeStamp
-                                );
+                                if(!empty($organisationTypes))
+                                {
+                                    foreach($organisationTypes AS $e_org_data)
+                                    {
+                                        $taxPayerInsertArr[]=array(
+                                            'fk_due_date_id' => $due_date_id,
+                                            'fk_org_type_id' => $e_org_data["organisation_type_id"],
+                                            'byCron' => 1,
+                                            'status' => 1,
+                                            'createdBy' => $this->adminId,
+                                            'createdDatetime' => $this->currTimeStamp
+                                        );
+                                    }
+                                }
                             }
+                            else
+                            {
+                                foreach($taxPayerArr AS $e_tax_payer)
+                                {
+                                    $taxPayerInsertArr[]=array(
+                                        'fk_due_date_id'=>$due_date_id,
+                                        'fk_org_type_id'=>$e_tax_payer['fk_org_type_id'],
+                                        'byCron' => 1,
+                                        'status' => 1,
+                                        'createdBy' => $this->adminId,
+                                        'createdDatetime' => $this->currTimeStamp
+                                    );
+                                }
+                            }
+                            
                             
                             if(!empty($taxPayerInsertArr))
                                 $this->Mcommon->insert($tableName=$this->tax_payer_due_date_map_tbl, $taxPayerInsertArr, $returnType="");
@@ -234,7 +276,7 @@ class ShiftDueDateNextYearCron extends BaseController
 	    $ca_firm_db_user=FIRM_DB_USERNAME;
         $ca_firm_db_pass=FIRM_DB_PASSWORD;
         // $ca_firm_db_name='camaster_ca_firm_'.$caFirmId;
-        $ca_firm_db_name='camastersoftware_ca_firm_'.$caFirmId;
+        $ca_firm_db_name=FIRM_DB_NAME.$caFirmId;
         
 	    $this->adminDB = [
             'DSN'      => '',
@@ -263,6 +305,7 @@ class ShiftDueDateNextYearCron extends BaseController
         if($this->adminDBConn)
 	    {
             $this->work_tbl=$ca_firm_db_name.".work_tbl";
+            $this->work_junior_map_tbl=$ca_firm_db_name.".work_junior_map_tbl";
             
     	    $workCondtnArr['work_tbl.fk_due_date_id']=$ddId;
             $workCondtnArr['work_tbl.status']=1;
@@ -279,53 +322,122 @@ class ShiftDueDateNextYearCron extends BaseController
                     $uniqueId=strtoupper(substr(str_shuffle(uniqid()), 0, 4));
     
                     $workCode="WORKID_".$uniqueId;
+
+                    $clientWorkInsertArr=array();
     
                     $clientWorkInsertArr[] = [
                         'workCode'=>$workCode,
                         'fk_due_date_id'=>$due_date_id,
                         'fkClientId'=>$e_wrk['fkClientId'],
+                        'juniors'=>$e_wrk['juniors'],
+                        'seniorId'=>$e_wrk['seniorId'],
                         'byCron' => 1,
                         'status' => 1,
                         'createdBy' => $this->adminId,
                         'createdDatetime' => $this->currTimeStamp
                     ];
-                }
-                
-                if(!empty($clientWorkInsertArr))
-                {
-                    // $query=$this->Mcommon->cronInsert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="", $connectionArr=$connectionArray);
+
                     $query=$this->Mcommon->insert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="");
-                    
+
                     if($query['status']==TRUE)
                     {
-                        $caFirmMsg='Work has been shifted successfully for Firm : '.$caFirmId;
+                        $workId=$query['lastID'];
+
+                        $jnrCondtnArr=array();
+
+                        $jnrCondtnArr['work_junior_map_tbl.fkWorkId']=$e_wrk['workId'];
+                        $jnrCondtnArr['work_junior_map_tbl.status']="1";
                         
-                        log_message('error', $caFirmMsg);
+                        $query=$this->Mcommon->getRecords($tableName=$this->work_junior_map_tbl, $colNames="work_junior_map_tbl.fkWorkId, work_junior_map_tbl.fkUserId", $jnrCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
                         
-                        $insertLogArr['section']=$this->section;
-                        $insertLogArr['message']=$caFirmMsg;
-                        $insertLogArr['ip']=$this->IPAddress;
-                        $insertLogArr['createdBy']=$this->adminId;
-                        $insertLogArr['createdDatetime']=$this->currTimeStamp;
-            
-                        $this->Mcommon->insertLog($insertLogArr);
-                        
-                        echo "<br>";
-                        echo "<br>".$caFirmMsg;
-                    }
-                    else
-                    {
-                        $caFirmMsg='Work has not Shifted for Firm : '.$caFirmId;
-                        
-                        log_message('error', $caFirmMsg);
-                        
-                        echo "<br>";
-                        echo "<br>".$caFirmMsg;
+                        $jnrList=$query['userData'];
+
+                        if(!empty($jnrList))
+                        {
+                            $junrInsertArr=array();
+
+                            foreach($jnrList AS $e_jnr)
+                            {
+                                $junrInsertArr[] = [
+                                    'fkWorkId'=>$workId,
+                                    'fkUserId'=>$e_jnr['fkUserId'],
+                                    'status' => 1,
+                                    'createdBy' => $this->adminId,
+                                    'createdDatetime' => $this->currTimeStamp
+                                ];
+                            }
+
+                            $this->Mcommon->insert($tableName=$this->work_junior_map_tbl, $junrInsertArr, $returnType="");
+                        }
                     }
                 }
+                
+                // if(!empty($clientWorkInsertArr))
+                // {
+                //     // $query=$this->Mcommon->cronInsert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="", $connectionArr=$connectionArray);
+                //     // $query=$this->Mcommon->insert($tableName=$this->work_tbl, $clientWorkInsertArr, $returnType="");
+                    
+                //     if($query['status']==TRUE)
+                //     {
+                //         $caFirmMsg='Work has been shifted successfully for Firm : '.$caFirmId;
+                        
+                //         log_message('error', $caFirmMsg);
+                        
+                //         $insertLogArr['section']=$this->section;
+                //         $insertLogArr['message']=$caFirmMsg;
+                //         $insertLogArr['ip']=$this->IPAddress;
+                //         $insertLogArr['createdBy']=$this->adminId;
+                //         $insertLogArr['createdDatetime']=$this->currTimeStamp;
+            
+                //         $this->Mcommon->insertLog($insertLogArr);
+                        
+                //         echo "<br>";
+                //         echo "<br>".$caFirmMsg;
+                //     }
+                //     else
+                //     {
+                //         $caFirmMsg='Work has not Shifted for Firm : '.$caFirmId;
+                        
+                //         log_message('error', $caFirmMsg);
+                        
+                //         echo "<br>";
+                //         echo "<br>".$caFirmMsg;
+                //     }
+                // }
             }
 	    }
 	    
+        if($this->adminDBConn->transStatus() === FALSE){
+            
+            $this->adminDBConn->transRollback();
+            
+            $caFirmMsg='Work has not Shifted for Firm : '.$caFirmId;
+                        
+            log_message('error', $caFirmMsg);
+            
+            echo "<br>";
+            echo "<br>".$caFirmMsg;
+
+        }else{
+
+            $this->adminDBConn->transCommit();
+
+            $caFirmMsg='Work has been shifted successfully for Firm : '.$caFirmId;
+                        
+            log_message('error', $caFirmMsg);
+            
+            $insertLogArr['section']=$this->section;
+            $insertLogArr['message']=$caFirmMsg;
+            $insertLogArr['ip']=$this->IPAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mcommon->insertLog($insertLogArr);
+            
+            echo "<br>";
+            echo "<br>".$caFirmMsg;
+        }
+
 	    $this->adminDBConn->close();
 	    
 	    $workCondtnArr=array();

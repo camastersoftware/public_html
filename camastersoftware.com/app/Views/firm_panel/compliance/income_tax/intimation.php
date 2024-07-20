@@ -389,6 +389,7 @@
                                                 <input type="hidden" name="refundId" id="refundId" value="<?php echo $workDataArr['refundId']; ?>">
                                                 <input type="hidden" name="demandId" id="demandId" value="<?php echo $workDataArr['demandId']; ?>">
                                                 <input type="hidden" name="workId" id="workId" value="<?php echo $workDataArr['workId']; ?>">
+                                                <input type="hidden" name="isScrutiny" id="isScrutiny" value="<?php echo $workDataArr['isScrutiny']; ?>">
                                                 <a href="<?= base_url('processing'); ?>">
                                                     <button type="button" class="btn btn-dark text-left">Back</button>
                                                 </a>

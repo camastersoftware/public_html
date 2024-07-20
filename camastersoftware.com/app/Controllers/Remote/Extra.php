@@ -6,6 +6,7 @@ class Extra extends BaseController
     public function __construct()
     {
         $this->Mact_option = new \App\Models\Mact_option();
+        // $this->MNonRegularDueDateFor = new \App\Models\MNonRegularDueDateFor();
     }
 
     public function getOptions()
@@ -26,6 +27,25 @@ class Extra extends BaseController
         $this->data['resultArr']=$resultArr;
 
         return view('remote/admin/getOptions', $this->data);
+    }
+
+    public function getFirmOptions()
+    {
+        $this->MNonRegularDueDateFor = new \App\Models\MNonRegularDueDateFor();
+        
+        $due_act=$this->request->getPost('due_act');
+        $set_value=$this->request->getPost('set_value');
+        
+        $this->data['set_value']=$set_value;
+
+        $resultArr=$this->MNonRegularDueDateFor->where('non_regular_due_date_for_tbl.fkActId', $due_act)
+            ->where('non_regular_due_date_for_tbl.status', 1)
+            ->orderBy('non_regular_due_date_for_tbl.non_regular_due_date_for_name', 'ASC')
+            ->findAll();
+
+        $this->data['resultArr']=$resultArr;
+
+        return view('remote/admin/getFirmOptions', $this->data);
     }
 
 }

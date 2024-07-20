@@ -38,6 +38,7 @@ class Duedate extends BaseController
         $this->tax_payer_due_date_map_tbl=$tableArr['tax_payer_due_date_map_tbl'];
         $this->organisation_type_tbl=$tableArr['organisation_type_tbl'];
         $this->periodicity_tbl=$tableArr['periodicity_tbl'];
+        $this->due_date_type_tbl=$tableArr['due_date_type_tbl'];
 
         $currMth=date('n');
         
@@ -291,8 +292,9 @@ class Duedate extends BaseController
         $taxJoinArr[]=array("tbl"=>'act_option_map_tbl AS applicable_form_tbl', "condtn"=>"applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form", "type"=>"left");
         $taxJoinArr[]=array("tbl"=>'act_tbl', "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
         $taxJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1", "type"=>"left");
-        
-        $query=$this->Mcommon->getRecords($tableName="due_date_master_tbl", $colNames="due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, GROUP_CONCAT(DISTINCT(organisation_type_tbl.organisation_type_name)) AS tax_payers, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_date_month, ext_due_date_master_tbl.ext_due_date_master_id, ext_due_date_master_tbl.extended_date_notes, ext_due_date_master_tbl.ext_doc_file, ext_due_date_master_tbl.is_extended, ext_due_date_master_tbl.isFirst, ext_due_date_master_tbl.next_extended_date", $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $taxJoinArr[]=array("tbl"=>$this->due_date_type_tbl, "condtn"=>"due_date_type_tbl.dueDateTypeId=due_date_for_tbl.due_date_type", "type"=>"left");
+
+        $query=$this->Mcommon->getRecords($tableName="due_date_master_tbl", $colNames="due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, GROUP_CONCAT(DISTINCT(organisation_type_tbl.organisation_type_name)) AS tax_payers, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_date_month, ext_due_date_master_tbl.ext_due_date_master_id, ext_due_date_master_tbl.extended_date_notes, ext_due_date_master_tbl.ext_doc_file, ext_due_date_master_tbl.is_extended, ext_due_date_master_tbl.isFirst, ext_due_date_master_tbl.next_extended_date, due_date_type_tbl.dueDateTypeShortName", $taxCondtnArr, $likeCondtnArr=array(), $taxJoinArr, $singleRow=FALSE, $taxOrderByArr, $taxGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $dueDatesArr=$query['userData'];
 
@@ -465,6 +467,9 @@ class Duedate extends BaseController
 	{
         $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
 
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
@@ -717,6 +722,9 @@ class Duedate extends BaseController
 
         $this->data['due_date_id']=$due_date_id;
 
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+        
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
         $this->data['jsArr']=$jsArr;
 

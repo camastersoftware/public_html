@@ -16,6 +16,10 @@ class ClientAdministration extends BaseController
         $this->MclientDocumentMap = new \App\Models\MclientDocumentMap();
         $this->MdigitalCertificateClassMaster = new \App\Models\MdigitalCertificateClassMaster();
         $this->MclientsCredetialsAdministration = new \App\Models\MclientsCredetialsAdministration();
+        $this->Mact = new \App\Models\Mact();
+        $this->Mperiodicity = new \App\Models\Mperiodicity();
+        $this->Mstate = new \App\Models\Mstate();
+        $this->MorganisationType = new \App\Models\MorganisationType();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -124,8 +128,9 @@ class ClientAdministration extends BaseController
         $clientCondtnArr['ccat.client_id !=']='';
         $clientCondtnArr['ccat.client_administration_model_id']='2';
         // $clientWhereInArray['client_tbl.clientId']=$digitalCertificateClientIdArr;
-        $clientOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $clientOrderByArr['ccat.end_date']="ASC";
         $clientOrderByArr['organisation_type_tbl.sortingBy']="ASC";
+        $clientOrderByArr['client_tbl.clientId']="ASC";
         
         $clientJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"ccat.client_id=client_tbl.clientId AND ccat.status=1", "type"=>"left");
         $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
@@ -1115,6 +1120,153 @@ class ClientAdministration extends BaseController
 	    }
     	    
 	    return redirect()->route('partnership-password');
+	}
+
+    public function custom_due_dates()
+	{
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('ckeditor');
+        $this->data['cssArr']=$cssArr;
+        
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'ckeditor');
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Custom Due Dates";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $clientDinCondtnArr['client_tbl.status']=1;
+        $clientDinCondtnArr['client_tbl.isOldClient']=2;
+        
+        $clientDinWhereInArray['client_tbl.clientBussOrganisationType']=INDIVIDUAL_ARRAY;
+        
+        $clientDinOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $clientDinOrderByArr['organisation_type_tbl.sortingBy']="ASC";
+        
+        $clientDinJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $clientDinJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientName, client_tbl.clientBussOrganisationType AS orgType", $clientDinCondtnArr, $likeCondtnArr=array(), $clientDinJoinArr, $singleRow=FALSE, $clientDinOrderByArr, $groupByArr=array(), $clientDinWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $clientList=$query['userData'];
+        
+        $this->data['clientList']=$clientList;
+        
+        $actArr = $this->Mact->where('status', 1)
+                    ->findAll();
+
+        $this->data['actArr']=$actArr;
+
+        $periodArr = $this->Mperiodicity->where('status', 1)
+                    ->findAll();
+
+        $this->data['periodArr']=$periodArr;
+
+        $stateList = $this->Mstate->where('status', 1)
+                    ->findAll();
+
+        $this->data['stateList']=$stateList;
+        
+        $organisationTypes=$this->MorganisationType->where('organisation_type_tbl.status', 1)
+                        ->findAll();
+
+        $this->data['organisationTypes']=$organisationTypes;
+
+        return view('firm_panel/client_administration/custom_due_dates', $this->data);
+	}
+
+    public function dir_pt_password()
+	{
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Password Management - Directors/Partners";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+        
+        $clientCondtnArr['client_tbl.status']=1;
+        $clientCondtnArr['client_tbl.isOldClient']=2;
+        $clientCondtnArr['client_document_map_tbl.client_document_number !=']="";
+        $clientOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $clientOrderByArr['organisation_type_tbl.sortingBy']="ASC";
+        
+        $clientJoinArr[]=array("tbl"=>$this->clients_credetials_administration_tbl." AS ccat", "condtn"=>"ccat.client_id=client_tbl.clientId AND ccat.client_administration_model_id=9 AND ccat.status=1", "type"=>"left");
+        $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $clientJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $clientJoinArr[]=array("tbl"=>$this->client_document_map_tbl, "condtn"=>"client_document_map_tbl.fk_client_id=client_tbl.clientId AND client_document_map_tbl.fk_client_document_id=4 AND client_document_map_tbl.status=1", "type"=>"left");
+
+        $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_tbl.clientRegDocument, client_group_tbl.client_group, client_group_tbl.client_group_number, organisation_type_tbl.organisation_type_name, organisation_type_tbl.shortName, ccat.clients_credetials_administration_id, ccat.login_username, ccat.password, ccat.llp_login_username, ccat.llp_password, ccat.notes, client_document_map_tbl.client_document_number AS dinNo", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $clientOrderByArr, $groupByArr=array(), $clientWhereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getClientList=$query['userData'];
+        
+        $this->data['getClientList']=$getClientList;
+        
+        $currentDate = date('Y-m-d');
+        
+        $this->data['currentDate']=$currentDate;
+
+        return view('firm_panel/client_administration/dir_pt', $this->data);
+	}
+	
+	public function edit_dir_pt_password()
+	{
+	    $clients_credetials_administration_id=$this->request->getPost('clients_credetials_administration_id');
+	    $client_id=$this->request->getPost('client_id');
+	    $login_username=$this->request->getPost('login_username');
+	    $login_password=$this->request->getPost('login_password');
+	    $llp_login_username=$this->request->getPost('llp_login_username');
+	    $llp_password=$this->request->getPost('llp_password');
+	    $notes = $this->request->getPost('notes');
+	    
+	    $insertArr=[
+            'clients_credetials_administration_id'  => $clients_credetials_administration_id,
+            'client_administration_model_id'        => 9,
+            'client_id'                             => $client_id,
+            'login_username'                        => $login_username,
+            'password'                              => $login_password,
+            'llp_login_username'                    => $llp_login_username,
+            'llp_password'                          => $llp_password,
+            'notes'                                 => $notes,
+            'updatedBy'                             => $this->adminId,
+            'updatedDatetime'                       => $this->currTimeStamp
+        ];
+	    
+	    if($this->MclientsCredetialsAdministration->save($insertArr))
+	    {
+	        $insertLogArr['section']=$this->section;
+            $insertLogArr['message']=$this->section." Updated";
+            $insertLogArr['ip']=$this->IPAddress;
+            // $insertLogArr['macAddr']=$this->macAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mcommon->insertLog($insertLogArr);
+            
+	        $this->session->setFlashdata('successMsg', "Directors/Partners Credentials of Client has been updated successfully :)");
+	    }
+	    else
+	    {
+	        $this->session->setFlashdata('errorMsg', "Directors/Partners Credentials of Client has not updated :(");
+	    }
+    	    
+	    return redirect()->route('dir-pt-password');
 	}
 }
 ?>

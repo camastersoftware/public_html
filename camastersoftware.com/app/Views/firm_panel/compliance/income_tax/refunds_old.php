@@ -258,7 +258,7 @@
                                                                 <?php if($e_inc_row['totalIncome']>=0): ?>
                                                                     <?= amount_format($e_inc_row['totalIncome']); ?>
                                                                 <?php else: ?>
-                                                                    <?= "(".amount_format(abs($e_inc_row['totalIncome'])).")"; ?>
+                                                                    <?= "(".amount_format(abs((float)$e_inc_row['totalIncome'])).")"; ?>
                                                                 <?php endif; ?>
                                                             </div>
                                                         <?php else: ?>
@@ -271,7 +271,7 @@
                                                                 <?php if($e_inc_row['refundDue']>=0): ?>
                                                                     <?= amount_format($e_inc_row['refundDue']); ?>
                                                                 <?php else: ?>
-                                                                    <?= "(".amount_format(abs($e_inc_row['refundDue'])).")"; ?>
+                                                                    <?= "(".amount_format(abs((float)$e_inc_row['refundDue'])).")"; ?>
                                                                 <?php endif; ?>
                                                             </div>
                                                         <?php else: ?>
