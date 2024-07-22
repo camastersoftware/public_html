@@ -633,6 +633,18 @@
                         </div>
                         <div class="col-md-4 col-lg-4">
                             <div class="form-group row">
+                                <label class="col-lg-4 col-md-4">E-Verify : </label>
+                                <div class="col-lg-6 col-md-6">
+                                    <select class="form-control" name="ftr_e_verify" id="ftr_e_verify">
+                                        <option value="">Select</option>
+                                        <option value="1" <?= $ftr_e_verify==1 ? "selected":""; ?>>Done</option>
+                                        <option value="2" <?= $ftr_e_verify==2 ? "selected":""; ?>>Pending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group row">
                                 <label class="col-lg-4 col-md-4">Junior : </label>
                                 <div class="col-lg-6 col-md-6">
                                     <select class="form-control select2" name="ftr_junior" id="ftr_junior" style="width:100%;">
@@ -657,18 +669,6 @@
                                                 <option value="<?= $e_usr_val['userId']; ?>" <?= $ftr_staff==$e_usr_val['userId'] ? "selected":""; ?>><?= $e_usr_val['userFullName']; ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-4">
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-md-4">E-Verify : </label>
-                                <div class="col-lg-6 col-md-6">
-                                    <select class="form-control" name="ftr_e_verify" id="ftr_e_verify">
-                                        <option value="">Select</option>
-                                        <option value="1" <?= $ftr_e_verify==1 ? "selected":""; ?>>Done</option>
-                                        <option value="2" <?= $ftr_e_verify==2 ? "selected":""; ?>>Pending</option>
                                     </select>
                                 </div>
                             </div>
@@ -705,6 +705,18 @@
                                         <option value="">Select</option>
                                         <option value="1" <?= $ftr_receipt==1 ? "selected":""; ?>>Done</option>
                                         <option value="2" <?= $ftr_receipt==2 ? "selected":""; ?>>Pending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-md-4">Sort By % : </label>
+                                <div class="col-lg-6 col-md-6">
+                                    <select class="form-control" name="ftr_sortby_percent" id="ftr_sortby_percent">
+                                        <option value="">Select</option>
+                                        <option value="asc" <?= $ftr_sortby_percent=="asc" ? "selected":""; ?>>ASC</option>
+                                        <option value="desc" <?= $ftr_sortby_percent=="desc" ? "selected":""; ?>>DESC</option>
                                     </select>
                                 </div>
                             </div>
