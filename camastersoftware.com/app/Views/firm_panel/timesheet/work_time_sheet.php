@@ -141,6 +141,8 @@
                             <a href="javascript:void(0);" data-toggle="modal" data-target="#addTimeSheetModal">
                                 <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Add</button>
                             </a>
+                            &nbsp;
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark get_back" style="">Back</button>
                         </div>
                     </div>
                 </div>

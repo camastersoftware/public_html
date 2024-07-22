@@ -268,6 +268,7 @@ class Income_tax3 extends BaseController
         $ftr_set_by = $this->getMyCookie($ddfId."_set_by_cookie");
         $ftr_billing = $this->getMyCookie($ddfId."_billing_cookie");
         $ftr_receipt = $this->getMyCookie($ddfId."_receipt_cookie");
+        $ftr_sortby_percent = $this->getMyCookie($ddfId."_sortby_percent");
         
         if(!empty($ftr_clientgrp))
             $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
@@ -289,6 +290,7 @@ class Income_tax3 extends BaseController
         $this->data['ftr_set_by']=$ftr_set_by;
         $this->data['ftr_billing']=$ftr_billing;
         $this->data['ftr_receipt']=$ftr_receipt;
+        $this->data['ftr_sortby_percent']=$ftr_sortby_percent;
         
         $fin_year_arr=explode("-", $this->sessDueDateYear);
     
@@ -353,9 +355,24 @@ class Income_tax3 extends BaseController
             $workCustomWhereArray[]="work_tbl.eFillingDate!='' AND work_tbl.eFillingDate!='0000-00-00' AND work_tbl.eFillingDate!='1970-01-01'";
         }
         
-        $workOrderByArr['act_tbl.act_name']="ASC";
-        $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
-        $workOrderByArr['client_group_tbl.client_group_number']="ASC";
+        if(!empty($ftr_sortby_percent))
+        {
+            if($ftr_sortby_percent == "asc")
+            {
+                $workOrderByArr['work_tbl.workDone']="ASC";
+            }
+            elseif($ftr_sortby_percent == "desc")
+            {
+                $workOrderByArr['work_tbl.workDone']="DESC";
+            }
+            $workOrderByArr['work_tbl.workId']="ASC";
+        }
+        else
+        {
+            $workOrderByArr['act_tbl.act_name']="ASC";
+            $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
+            $workOrderByArr['client_group_tbl.client_group_number']="ASC";
+        }
         
         $workGroupByArr=array('due_date_master_tbl.due_date_for', 'due_date_master_tbl.due_date_id', 'client_tbl.clientId');
         
@@ -547,6 +564,7 @@ class Income_tax3 extends BaseController
         $ftr_set_by = $this->getMyCookie($ddfId."_set_by_cookie");
         $ftr_billing = $this->getMyCookie($ddfId."_billing_cookie");
         $ftr_receipt = $this->getMyCookie($ddfId."_receipt_cookie");
+        $ftr_sortby_percent = $this->getMyCookie($ddfId."_sortby_percent");
         
         if(!empty($ftr_clientgrp))
             $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
@@ -568,6 +586,7 @@ class Income_tax3 extends BaseController
         $this->data['ftr_set_by']=$ftr_set_by;
         $this->data['ftr_billing']=$ftr_billing;
         $this->data['ftr_receipt']=$ftr_receipt;
+        $this->data['ftr_sortby_percent']=$ftr_sortby_percent;
         
         $fin_year_arr=explode("-", $this->sessDueDateYear);
     
@@ -633,9 +652,24 @@ class Income_tax3 extends BaseController
             $workCustomWhereArray[]="work_tbl.eFillingDate!='' AND work_tbl.eFillingDate!='0000-00-00' AND work_tbl.eFillingDate!='1970-01-01'";
         }
         
-        $workOrderByArr['act_tbl.act_name']="ASC";
-        $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
-        $workOrderByArr['client_group_tbl.client_group_number']="ASC";
+        if(!empty($ftr_sortby_percent))
+        {
+            if($ftr_sortby_percent == "asc")
+            {
+                $workOrderByArr['work_tbl.workDone']="ASC";
+            }
+            elseif($ftr_sortby_percent == "desc")
+            {
+                $workOrderByArr['work_tbl.workDone']="DESC";
+            }
+            $workOrderByArr['work_tbl.workId']="ASC";
+        }
+        else
+        {
+            $workOrderByArr['act_tbl.act_name']="ASC";
+            $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
+            $workOrderByArr['client_group_tbl.client_group_number']="ASC";
+        }
         
         $workGroupByArr=array('due_date_master_tbl.due_date_for', 'due_date_master_tbl.due_date_id', 'client_tbl.clientId');
         
@@ -754,6 +788,7 @@ class Income_tax3 extends BaseController
         $ftr_set_by=$this->request->getPost("ftr_set_by");
         $ftr_billing=$this->request->getPost("ftr_billing");
         $ftr_receipt=$this->request->getPost("ftr_receipt");
+        $ftr_sortby_percent=$this->request->getPost("ftr_sortby_percent");
         
         $cookieExpirationTime = time()+3600;
             
@@ -796,6 +831,11 @@ class Income_tax3 extends BaseController
             $this->setMyCookie($ddfId."_receipt_cookie", $ftr_receipt, $cookieExpirationTime);
         else
             $this->setMyCookie($ddfId."_receipt_cookie", "", $cookieExpirationTime);
+
+        if(!empty($ftr_sortby_percent))
+            $this->setMyCookie($ddfId."_sortby_percent", $ftr_sortby_percent, $cookieExpirationTime);
+        else
+            $this->setMyCookie($ddfId."_sortby_percent", "", $cookieExpirationTime);
             
         if($ftr_type==1)
             return redirect()->to(base_url($this->secPrefixUrl."-ddf-pending/".$ddfId));
@@ -818,6 +858,7 @@ class Income_tax3 extends BaseController
         $this->setMyCookie($ddfId."_set_by_cookie", '', $cookieExpirationTime);
         $this->setMyCookie($ddfId."_billing_cookie", '', $cookieExpirationTime);
         $this->setMyCookie($ddfId."_receipt_cookie", '', $cookieExpirationTime);
+        $this->setMyCookie($ddfId."_sortby_percent", '', $cookieExpirationTime);
         
         if($ftr_type==1)
             return redirect()->to(base_url($this->secPrefixUrl."-ddf-pending/".$ddfId));
