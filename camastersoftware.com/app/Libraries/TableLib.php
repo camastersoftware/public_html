@@ -123,6 +123,7 @@ class TableLib
         $tableArr['scrutiny_tbl']=$adminDB.".scrutiny_tbl";
         $tableArr['calender_year_config_tbl']=$adminDB.".calender_year_config_tbl";
         $tableArr['reminder_user_map_tbl']=$adminDB.".reminder_user_map_tbl";
+        $tableArr['time_sheet_tbl']=$adminDB.".time_sheet_tbl";
         
         return $tableArr;
 	}

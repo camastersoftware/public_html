@@ -534,7 +534,7 @@
                                                                                                             <div class="btn-group">
                                                                                                                 <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
                                                                                                                 <div class="dropdown-menu" style="will-change: transform;">
-                                                                                                                    <a class="dropdown-item" href="javascript:void(0);<?php //echo base_url('client/edit_client/'.$e_row['clientId']); ?>" >
+                                                                                                                    <a class="dropdown-item" href="<?= base_url('time-sheet-list/'.$e_inc_row['workId']); ?>" >
                                                                                                                         <i class="fa fa-calendar"></i>&nbsp;Time Sheet
                                                                                                                     </a>
                                                                                                                 </div>
