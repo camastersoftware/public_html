@@ -969,3 +969,11 @@ table tr td a {
     cursor: pointer;
 }
 
+.proj_primary_clr {
+    color: #f99d27 !important;
+}
+
+.anchor{
+    cursor: pointer !important;
+}
+
