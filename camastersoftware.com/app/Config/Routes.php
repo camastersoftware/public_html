@@ -876,9 +876,16 @@ $routes->post('/delete-non-regular-due-date-for', 'NonRegularDueDateFor::deleteD
 $routes->get('non-regular-due-dates', 'NonRegularDueDates::index');
 $routes->get('/add-non-regular-due-date', 'NonRegularDueDates::add');
 $routes->post('/insert-non-regular-due-date', 'NonRegularDueDates::insertData');
-$routes->get('/edit-non-regular-due-date/(:any)', 'NonRegularDueDates::edit');
+$routes->get('/edit-non-regular-due-date/(:any)', 'NonRegularDueDates::edit/$1');
 $routes->post('/update-non-regular-due-date', 'NonRegularDueDates::updateData');
 $routes->post('/delete-non-regular-due-date', 'NonRegularDueDates::deleteData');
+
+// TimeSheet
+$routes->get('/time-sheet-list', 'TimeSheet::index');
+$routes->get('/work-time-sheet-list/(:any)', 'TimeSheet::work_time_sheet/$1');
+$routes->post('/insert-time-sheet-data', 'TimeSheet::insertData');
+$routes->post('/update-time-sheet-data', 'TimeSheet::updateData');
+$routes->post('/delete-time-sheet-data', 'TimeSheet::deleteData');
 
 //Utility
 $routes->post('/remote/utility/changeTheme', 'Remote/Utility::changeTheme');
