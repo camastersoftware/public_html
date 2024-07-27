@@ -1372,6 +1372,11 @@ class Llp extends BaseController
                     $receiptComment="";
                 }
 
+                if(!empty($eFillingDate))
+                {
+                    $workDone=100;
+                }
+
                 $wkUpdateArr = [
                     'isDocRecvd'=>$isDocRecvd,
                     'docRecvdDate'=>$docRecvdDateVal,
@@ -3291,6 +3296,1092 @@ class Llp extends BaseController
         $this->data['navArr']=$navArr;
 
         return view('firm_panel/compliance/llp/mis_menu', $this->data);
+    }
+
+    public function position_of_returns()
+    {
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+        
+        ini_set('memory_limit', '-1');
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="LLP - MIS Report - Position of Returns";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+        
+        $workWhereInArray=array();
+        
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+        
+        $asmtYear="N/A";
+        if($this->currentMth>3)
+        {
+            $fY=$this->currentYear;
+            $lY=substr($this->currentYear+1, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        else
+        {
+            $fY=$this->currentYear-1;
+            $lY=substr($this->currentYear, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        
+        $this->data['asmtYear']=$asmtYear;
+
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+
+        $actVal = "6"; // LLP
+        
+        $workWhereInArray['due_date_for_tbl.act_option_map_id']=LLP_RET_DDF_ARRAY;
+        $workCondtnArr['act_tbl.act_id']=$actVal;
+
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['act_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+        // $workCondtnArr['client_tbl.clientStatus']="1";
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        // $workCondtnArr['tax_payer_tbl.status']=1;
+        $workCondtnArr['tax_payer_due_date_map_tbl.status']=1;
+        $workCondtnArr['organisation_type_tbl.status']=1;
+        $workCondtnArr['due_date_for_tbl.status']=1;
+        // $workCondtnArr['act_tbl.act_id']=1;
+        $workCondtnArr['work_tbl.workId !=']='';
+        
+        $workOrderByArr['act_tbl.act_name']="ASC";
+        $workOrderByArr['group_category_tbl.group_category_id']="ASC";
+        $workOrderByArr['client_group_tbl.client_group_id']="ASC";
+        
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->tax_payer_due_date_map_tbl, "condtn"=>"tax_payer_due_date_map_tbl.fk_due_date_id=due_date_master_tbl.due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=tax_payer_due_date_map_tbl.fk_org_type_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl.' AS org_type_tbl', "condtn"=>"org_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->group_category_tbl, "condtn"=>"group_category_tbl.group_category_id=client_group_tbl.client_group_category", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.eFillingDate, group_category_tbl.group_category_id, client_group_tbl.client_group_id, client_group_tbl.client_group_number, client_group_tbl.client_group, due_date_for_tbl.act_option_map_id, due_date_for_tbl.act_option_name, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $workGroupByArr=array(), $workWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+
+        $this->data['workDataArr']=$workDataArr;
+        
+        $dueDateForArr=array();
+        $incRetDDFArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_tx)
+            {
+                $dueDateForArr[$e_tx['act_option_map_id']]=$e_tx['act_option_name'];
+                $cliDueDateForArr[$e_tx['act_option_map_id']][$e_tx['client_group_id']]=$e_tx;
+                $incRetDDFArr[$e_tx['act_due_month']][$e_tx['act_option_map_id']][$e_tx['client_group_id']][$e_tx['workId']]=$e_tx;
+            }
+        }
+        
+        $this->data['dueDateForArr']=$dueDateForArr;
+        $this->data['cliDueDateForArr']=$cliDueDateForArr;
+        $this->data['incRetDDFArr']=$incRetDDFArr;
+        
+        $misAssignArr=array();
+        $misFiledArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            $cliDDFArr=array_unique(array_column($workDataArr, 'act_option_map_id'));
+            $cliGrpWorkAssignArr=array_unique(array_column($workDataArr, 'client_group_id'));
+            
+            if(!empty($cliDDFArr))
+            {
+                foreach($cliDDFArr AS $e_wrk_asgn)
+                {
+                    for($m_no=1;$m_no<13;$m_no++)
+                    {
+                        if(isset($incRetDDFArr[$m_no][$e_wrk_asgn]))
+                        {
+                            if(!empty($cliGrpWorkAssignArr))
+                            {
+                                foreach($cliGrpWorkAssignArr AS $e_wrk_asgn_grp)
+                                {
+                                    if(isset($incRetDDFArr[$m_no][$e_wrk_asgn][$e_wrk_asgn_grp]))
+                                    {
+                                        $incRetDDFArray=$incRetDDFArr[$m_no][$e_wrk_asgn][$e_wrk_asgn_grp];
+                                        
+                                        if(!empty($incRetDDFArray))
+                                        {
+                                            $misAssignArr[$m_no][$e_wrk_asgn][$e_wrk_asgn_grp]=count($incRetDDFArray);
+                                            
+                                            foreach($incRetDDFArray AS $e_wrk_file)
+                                            {
+                                                $eFillingDate=$e_wrk_file['eFillingDate'];
+                                                
+                                                if(!empty($eFillingDate) && $eFillingDate!="0000-00-00" && $eFillingDate!="1970-01-01")
+                                                {
+                                                    $misFiledArr[$m_no][$e_wrk_asgn][$e_wrk_asgn_grp][]=$eFillingDate;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        $this->data['misAssignArr']=$misAssignArr;
+        $this->data['misFiledArr']=$misFiledArr;
+        
+        $allotedCondtnArr['client_group_tbl.status']=1;
+        $allotedCondtnArr['client_tbl.status']=1;
+        $allotedCondtnArr['work_tbl.status']=1;
+        $allotedCondtnArr['work_junior_map_tbl.status']=1;
+        
+        $allotedJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientGroup=client_group_tbl.client_group_id AND client_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->work_tbl, "condtn"=>"work_tbl.fkClientId=client_tbl.clientId AND work_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->work_junior_map_tbl, "condtn"=>"work_junior_map_tbl.fkWorkId=work_tbl.workId AND work_junior_map_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->user_tbl." AS jnr_user_tbl", "condtn"=>"jnr_user_tbl.userId=work_junior_map_tbl.fkUserId AND jnr_user_tbl.status=1", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->client_group_tbl, $colNames='client_group_tbl.client_group_id, client_tbl.clientId, work_tbl.seniorId, work_junior_map_tbl.fkUserId, user_tbl.userShortName AS seniorName, jnr_user_tbl.userShortName AS juniorName', $allotedCondtnArr, $likeCondtnArr=array(), $allotedJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $allotedList=$query['userData'];
+        
+        $clientJnrArray=array();
+        $clientSnrArray=array();
+        
+        if(!empty($allotedList))
+        {
+            foreach($allotedList AS $e_allot)
+            {
+                if(!empty($e_allot['juniorName']))
+                    $clientJnrArray[$e_allot['client_group_id']][$e_allot['fkUserId']]=$e_allot['juniorName'];
+                    
+                if(!empty($e_allot['seniorName']))
+                    $clientSnrArray[$e_allot['client_group_id']][$e_allot['seniorId']]=$e_allot['seniorName'];
+            }
+        }
+        
+        $this->data['clientJnrArray']=$clientJnrArray;
+        $this->data['clientSnrArray']=$clientSnrArray;
+        
+        return view('firm_panel/compliance/llp/position_of_returns', $this->data);
+    }
+    
+    public function position_of_returns_client()
+    {
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+        
+        ini_set('memory_limit', '-1');
+        
+        $clientGroupId=$uri->getSegment(2);
+        $ddfId=$uri->getSegment(3);
+        $mth_nm_tab=$uri->getSegment(4);
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="LLP - MIS Report - Position of Returns(Client-Wise)";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+        $this->data['mth_nm_tab']=$mth_nm_tab;
+        
+        $workWhereInArray=array();
+        
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+        
+        $asmtYear="N/A";
+        if($this->currentMth>3)
+        {
+            $fY=$this->currentYear;
+            $lY=substr($this->currentYear+1, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        else
+        {
+            $fY=$this->currentYear-1;
+            $lY=substr($this->currentYear, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        
+        $this->data['asmtYear']=$asmtYear;
+
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+        
+        $actVal = "6"; // LLP
+        
+        $workWhereInArray['due_date_for_tbl.act_option_map_id']=LLP_RET_DDF_ARRAY;
+        $workCondtnArr['act_tbl.act_id']=$actVal;
+
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['client_group_tbl.client_group_id']=$clientGroupId;
+        $workCondtnArr['act_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+        // $workCondtnArr['client_tbl.clientStatus']="1";
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        // $workCondtnArr['tax_payer_tbl.status']=1;
+        $workCondtnArr['tax_payer_due_date_map_tbl.status']=1;
+        $workCondtnArr['organisation_type_tbl.status']=1;
+        $workCondtnArr['due_date_for_tbl.status']=1;
+        
+        $workOrderByArr['act_tbl.act_name']="ASC";
+        $workOrderByArr['group_category_tbl.group_category_id']="ASC";
+        $workOrderByArr['client_group_tbl.client_group_id']="ASC";
+        
+        // $workGroupByArr=array('client_group_tbl.client_group_category', 'client_tbl.clientGroup');
+        
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1 AND due_date_for_tbl.act_option_map_id=".$ddfId, "type"=>"left");
+        // $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS tax_payer_tbl', "condtn"=>"tax_payer_tbl.act_option_map_id=due_date_master_tbl.tax_payer", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->tax_payer_due_date_map_tbl, "condtn"=>"tax_payer_due_date_map_tbl.fk_due_date_id=due_date_master_tbl.due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=tax_payer_due_date_map_tbl.fk_org_type_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl.' AS org_type_tbl', "condtn"=>"org_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->group_category_tbl, "condtn"=>"group_category_tbl.group_category_id=client_group_tbl.client_group_category", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        
+        // $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.workCode, work_tbl.fk_due_date_id, work_tbl.isDocRecvd, work_tbl.juniors, user_tbl.userFullName AS seniorName, work_tbl.workDone, due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, due_date_master_tbl.due_date_id, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_map_id AS tax_payer_id, tax_payer_tbl.act_option_name AS act_option_name2, due_date_master_tbl.due_act, client_group_tbl.client_group_number, client_tbl.clientId, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientBussOrganisation, client_tbl.clientBussOrganisationType AS orgType", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $workWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.eFillingDate, group_category_tbl.group_category_id, client_group_tbl.client_group_id, client_tbl.clientId, client_tbl.clientName, client_tbl.clientBussOrganisation, client_tbl.clientBussOrganisationType AS orgType, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $workGroupByArr=array(), $workWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+        
+        // echo $query['query'];
+        // print_r($workDataArr);
+        // die();
+
+        $this->data['workDataArr']=$workDataArr;
+        
+        $incRetDDFArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_tx)
+            {
+                $incRetDDFArr[$e_tx['act_due_month']][$e_tx['clientId']][$e_tx['workId']]=$e_tx;
+            }
+        }
+        
+        $this->data['incRetDDFArr']=$incRetDDFArr;
+        
+        $misAssignArr=array();
+        $misFiledArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            $cliWorkAssignArr=array_unique(array_column($workDataArr, 'clientId'));
+            
+            if(!empty($cliWorkAssignArr))
+            {
+                foreach($cliWorkAssignArr AS $e_wrk_asgn)
+                {
+                    for($m_no=1;$m_no<13;$m_no++)
+                    {
+                        if(isset($incRetDDFArr[$m_no][$e_wrk_asgn]))
+                        {
+                            $incRetDDFArray=$incRetDDFArr[$m_no][$e_wrk_asgn];
+                            
+                            if(!empty($incRetDDFArray))
+                            {
+                                $misAssignArr[$m_no][$e_wrk_asgn]=count($incRetDDFArray);
+                                
+                                foreach($incRetDDFArray AS $e_wrk_file)
+                                {
+                                    $eFillingDate=$e_wrk_file['eFillingDate'];
+                                    
+                                    if(!empty($eFillingDate) && $eFillingDate!="0000-00-00" && $eFillingDate!="1970-01-01")
+                                    {
+                                        $misFiledArr[$m_no][$e_wrk_asgn][]=$eFillingDate;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        $this->data['misAssignArr']=$misAssignArr;
+        $this->data['misFiledArr']=$misFiledArr;
+        
+        $clientCondtnArr['client_tbl.status']=1;
+        $clientCondtnArr['client_tbl.clientGroup']=$clientGroupId;
+
+        $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_tbl.clientDob, client_tbl.clientBussIncorporationDate", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr=array(), $singleRow=FALSE, $clientOrderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getClientList=$query['userData'];
+        
+        $this->data['getClientList']=$getClientList;
+        
+        $ctr=0;
+        $clientReturnsArr=array();
+        
+        if(!empty($getClientList))
+        {
+            foreach($getClientList AS $k_client=>$e_client)
+            {
+                for($m_no=1;$m_no<13;$m_no++)
+                {
+                    if($e_client['orgType']==8)
+                    {
+                        if(!empty($e_client['clientBussOrganisation']))
+                            $clientName=$e_client['clientName']." (".$e_client['clientBussOrganisation'].")";
+                        else
+                            $clientName=$e_client['clientName'];
+                    }
+                    elseif($e_client['orgType']==9)
+                        $clientName=$e_client['clientName'];
+                    else
+                        $clientName=$e_client['clientBussOrganisation'];
+                        
+                    $clientId=$e_client['clientId'];
+                    
+                    $assignCount=0;
+                    if(isset($misAssignArr[$m_no][$clientId]))
+                        $assignCount=$misAssignArr[$m_no][$clientId];
+                    else
+                        $assignCount=0;
+                    
+                    $filedCount=0;
+                    if(isset($misFiledArr[$m_no][$clientId]))
+                    {
+                        $misFiledArray=$misFiledArr[$m_no][$clientId];
+                        
+                        if(!empty($misFiledArray))
+                            $filedCount=count($misFiledArray);
+                        else
+                            $filedCount=0;
+                    }
+                    
+                    $pendingCount=$assignCount-$filedCount;
+                    
+                    if($assignCount==0 && $assignCount==0 && $pendingCount==0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        $ctr++;
+                        $clientReturnsArr[$m_no][$k_client]['sr']=$ctr;
+                        $clientReturnsArr[$m_no][$k_client]['clientId']=$clientId;
+                        $clientReturnsArr[$m_no][$k_client]['clientName']=$clientName;
+                        $clientReturnsArr[$m_no][$k_client]['assignCount']=$assignCount;
+                        $clientReturnsArr[$m_no][$k_client]['filedCount']=$filedCount;
+                        $clientReturnsArr[$m_no][$k_client]['pendingCount']=$pendingCount;
+                    }
+                }
+            }
+        }
+        
+        // $clientReturnsArray=array();
+        
+        // if(!empty($clientReturnsArr))
+        // {
+        //     $clientReturnsArray = array_column($clientReturnsArr, 'clientName');
+
+        //     array_multisort($clientReturnsArray, SORT_ASC, $clientReturnsArr);
+        // }
+        
+        // print_r($clientReturnsArray);
+        // die();
+        
+        $this->data['clientReturnsArr']=$clientReturnsArr;
+        
+        $allotedCondtnArr['client_group_tbl.client_group_id']=$clientGroupId;
+        $allotedCondtnArr['client_group_tbl.status']=1;
+        $allotedCondtnArr['client_tbl.status']=1;
+        $allotedCondtnArr['work_tbl.status']=1;
+        $allotedCondtnArr['work_junior_map_tbl.status']=1;
+        
+        $allotedJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientGroup=client_group_tbl.client_group_id AND client_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->work_tbl, "condtn"=>"work_tbl.fkClientId=client_tbl.clientId AND work_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->work_junior_map_tbl, "condtn"=>"work_junior_map_tbl.fkWorkId=work_tbl.workId AND work_junior_map_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $allotedJoinArr[]=array("tbl"=>$this->user_tbl." AS jnr_user_tbl", "condtn"=>"jnr_user_tbl.userId=work_junior_map_tbl.fkUserId AND jnr_user_tbl.status=1", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->client_group_tbl, $colNames='client_group_tbl.client_group_id, client_tbl.clientId, work_tbl.seniorId, work_junior_map_tbl.fkUserId, user_tbl.userShortName AS seniorName, jnr_user_tbl.userShortName AS juniorName', $allotedCondtnArr, $likeCondtnArr=array(), $allotedJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $allotedList=$query['userData'];
+        
+        $clientJnrArray=array();
+        $clientSnrArray=array();
+        
+        if(!empty($allotedList))
+        {
+            foreach($allotedList AS $e_allot)
+            {
+                if(!empty($e_allot['juniorName']))
+                    $clientJnrArray[$e_allot['clientId']][$e_allot['fkUserId']]=$e_allot['juniorName'];
+                    
+                if(!empty($e_allot['seniorName']))
+                    $clientSnrArray[$e_allot['clientId']][$e_allot['seniorId']]=$e_allot['seniorName'];
+            }
+        }
+        
+        $this->data['clientJnrArray']=$clientJnrArray;
+        $this->data['clientSnrArray']=$clientSnrArray;
+        
+        $ddfCond["act_option_map_id"]=$ddfId;
+        $ddfCond["status"]=1;
+        
+        $dueDateForData=$this->Mact_option->where($ddfCond)->first();
+
+        $this->data['dueDateForData']=$dueDateForData;
+        
+        return view('firm_panel/compliance/llp/position_of_returns_client', $this->data);
+    }
+    
+    public function staff_wise_position()
+    {
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+        
+        ini_set('memory_limit', '-1');
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="LLP - MIS Report - Staff-wise Position";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+        
+        $workWhereInArray=array();
+        
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+        
+        $asmtYear="N/A";
+        if($this->currentMth>3)
+        {
+            $fY=$this->currentYear;
+            $lY=substr($this->currentYear+1, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        else
+        {
+            $fY=$this->currentYear-1;
+            $lY=substr($this->currentYear, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        
+        $this->data['asmtYear']=$asmtYear;
+
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+        
+        $actVal = "6"; // LLP
+        
+        $workWhereInArray['due_date_for_tbl.act_option_map_id']=LLP_RET_DDF_ARRAY;
+        $workCondtnArr['act_tbl.act_id']=$actVal;
+
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['act_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        $workCondtnArr['tax_payer_due_date_map_tbl.status']=1;
+        $workCondtnArr['organisation_type_tbl.status']=1;
+        $workCondtnArr['due_date_for_tbl.status']=1;
+        $workCondtnArr['work_tbl.workId !=']='';
+        
+        $workOrderByArr['act_tbl.act_name']="ASC";
+        $workOrderByArr['group_category_tbl.group_category_id']="ASC";
+        $workOrderByArr['client_group_tbl.client_group_id']="ASC";
+        
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->tax_payer_due_date_map_tbl, "condtn"=>"tax_payer_due_date_map_tbl.fk_due_date_id=due_date_master_tbl.due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=tax_payer_due_date_map_tbl.fk_org_type_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl.' AS org_type_tbl', "condtn"=>"org_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->group_category_tbl, "condtn"=>"group_category_tbl.group_category_id=client_group_tbl.client_group_category", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->work_junior_map_tbl, "condtn"=>"work_junior_map_tbl.fkWorkId=work_tbl.workId AND work_junior_map_tbl.status=1", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.eFillingDate, group_category_tbl.group_category_id, client_group_tbl.client_group_id, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month, work_tbl.seniorId, work_junior_map_tbl.fkUserId AS juniorId, user_tbl.userFullName, user_tbl.userShortName", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $workGroupByArr=array(), $workWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+
+        $this->data['workDataArr']=$workDataArr;
+        
+        $incRetSeniorArr=array();
+        $incRetJuniorArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_tx)
+            {
+                // $incRetSeniorArr[$e_tx['act_due_month']][$e_tx['seniorId']][$e_tx['workId']]=$e_tx;
+                $incRetJuniorArr[$e_tx['act_due_month']][$e_tx['juniorId']][$e_tx['workId']]=$e_tx;
+            }
+        }
+        
+        $this->data['incRetSeniorArr']=$incRetSeniorArr;
+        $this->data['incRetJuniorArr']=$incRetJuniorArr;
+        
+        $misSeniorAssignArr=array();
+        $misSeniorFiledArr=array();
+        
+        $misJuniorAssignArr=array();
+        $misJuniorFiledArr=array();
+        
+        $misAssignArray=array();
+        $misFiledArray=array();
+        
+        if(!empty($workDataArr))
+        {
+            // $seniorWorkAssignArr=array_unique(array_column($workDataArr, 'seniorId'));
+            $juniorWorkAssignArr=array_unique(array_column($workDataArr, 'juniorId'));
+            
+            $userWorkAssignArr=array();
+            
+            if(!empty($seniorWorkAssignArr) && !empty($juniorWorkAssignArr))
+            {
+                $userWorkAssignArr = array_unique(array_merge($seniorWorkAssignArr, $juniorWorkAssignArr));
+            }
+            elseif(!empty($seniorWorkAssignArr) && empty($juniorWorkAssignArr))
+            {
+                $userWorkAssignArr = $seniorWorkAssignArr;
+            }
+            elseif(empty($seniorWorkAssignArr) && !empty($juniorWorkAssignArr))
+            {
+                $userWorkAssignArr = $juniorWorkAssignArr;
+            }
+            
+            for($m_no=1;$m_no<13;$m_no++)
+            {
+                if(!empty($seniorWorkAssignArr))
+                {
+                    foreach($seniorWorkAssignArr AS $e_snr)
+                    {
+                        if(isset($incRetSeniorArr[$m_no][$e_snr]))
+                        {
+                            $incRetSeniorArray=$incRetSeniorArr[$m_no][$e_snr];
+                            
+                            if(!empty($incRetSeniorArray))
+                            {
+                                $misSeniorAssignArr[$m_no][$e_snr]=count($incRetSeniorArray);
+                                
+                                foreach($incRetSeniorArray AS $e_wrk_file)
+                                {
+                                    $eFillingDate=$e_wrk_file['eFillingDate'];
+                                    
+                                    if(!empty($eFillingDate) && $eFillingDate!="0000-00-00" && $eFillingDate!="1970-01-01")
+                                    {
+                                        $misSeniorFiledArr[$m_no][$e_snr][]=$eFillingDate;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if(!empty($juniorWorkAssignArr))
+                {
+                    foreach($juniorWorkAssignArr AS $e_jnr)
+                    {
+                        if(isset($incRetJuniorArr[$m_no][$e_jnr]))
+                        {
+                            $incRetJuniorArray=$incRetJuniorArr[$m_no][$e_jnr];
+                            
+                            if(!empty($incRetJuniorArray))
+                            {
+                                $misJuniorAssignArr[$m_no][$e_jnr]=count($incRetJuniorArray);
+                                
+                                foreach($incRetJuniorArray AS $e_wrk_file)
+                                {
+                                    $eFillingDate=$e_wrk_file['eFillingDate'];
+                                    
+                                    if(!empty($eFillingDate) && $eFillingDate!="0000-00-00" && $eFillingDate!="1970-01-01")
+                                    {
+                                        $misJuniorFiledArr[$m_no][$e_jnr][]=$eFillingDate;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        for($m_no=1;$m_no<13;$m_no++)
+        {
+            if(!empty($userWorkAssignArr))
+            {
+                foreach($userWorkAssignArr AS $e_usr)
+                {
+                    $misSeniorAssignArray=array();
+                    $misJuniorAssignArray=array();
+                    
+                    if(isset($misSeniorAssignArr[$m_no][$e_usr]))
+                    {
+                        $misSeniorAssignArray=$misSeniorAssignArr[$m_no][$e_usr];
+                    }
+                    
+                    if(isset($misJuniorAssignArr[$m_no][$e_usr]))
+                    {
+                        $misJuniorAssignArray=$misJuniorAssignArr[$m_no][$e_usr];
+                    }
+                    
+                    if(!empty($misSeniorAssignArray) && !empty($misJuniorAssignArray))
+                    {
+                        $misAssignArray[$m_no][$e_usr] = $misSeniorAssignArray + $misJuniorAssignArray;
+                    }
+                    elseif(!empty($misSeniorAssignArray) && empty($misJuniorAssignArray))
+                    {
+                        $misAssignArray[$m_no][$e_usr] = $misSeniorAssignArray;
+                    }
+                    elseif(empty($misSeniorAssignArray) && !empty($misJuniorAssignArray))
+                    {
+                        $misAssignArray[$m_no][$e_usr] = $misJuniorAssignArray;
+                    }
+                    
+                    $misSeniorFiledArray=array();
+                    $misJuniorFiledArray=array();
+                    
+                    if(isset($misSeniorFiledArr[$m_no][$e_usr]))
+                    {
+                        $misSeniorFiledArray=count($misSeniorFiledArr[$m_no][$e_usr]);
+                    }
+                    
+                    if(isset($misJuniorFiledArr[$m_no][$e_usr]))
+                    {
+                        $misJuniorFiledArray=count($misJuniorFiledArr[$m_no][$e_usr]);
+                    }
+                    
+                    if(!empty($misSeniorFiledArray) && !empty($misJuniorFiledArray))
+                    {
+                        $misFiledArray[$m_no][$e_usr] = $misSeniorFiledArray + $misJuniorFiledArray;
+                    }
+                    elseif(!empty($misSeniorFiledArray) && empty($misJuniorFiledArray))
+                    {
+                        $misFiledArray[$m_no][$e_usr] = $misSeniorFiledArray;
+                    }
+                    elseif(empty($misSeniorFiledArray) && !empty($misJuniorFiledArray))
+                    {
+                        $misFiledArray[$m_no][$e_usr] = $misJuniorFiledArray;
+                    }
+                }
+            }
+        }
+        
+        $this->data['userWorkAssignArr']=$userWorkAssignArr;
+        $this->data['misAssignArray']=$misAssignArray;
+        $this->data['misFiledArray']=$misFiledArray;
+        
+        $userCondtnArr['user_tbl.status']=1;
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->user_tbl, $colNames='user_tbl.userId, user_tbl.userFullName, user_tbl.userShortName', $userCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $userList=$query['userData'];
+        
+        $this->data['userList']=$userList;
+
+        return view('firm_panel/compliance/llp/staff_wise_position', $this->data);
+    }
+    
+    public function staff_wise_position_client_wise()
+    {
+        $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+        
+        $retUserId=$uri->getSegment(2);
+        $mth_nm_tab=$uri->getSegment(3);
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+        $this->data['jsArr']=$jsArr;
+
+        $pageTitle="LLP - MIS Report - Staff-wise Position(Client-wise)";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+        $this->data['mth_nm_tab']=$mth_nm_tab;
+        
+        $workWhereInArray=array();
+        
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+        
+        $asmtYear="N/A";
+        if($this->currentMth>3)
+        {
+            $fY=$this->currentYear;
+            $lY=substr($this->currentYear+1, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        else
+        {
+            $fY=$this->currentYear-1;
+            $lY=substr($this->currentYear, 2);
+            
+            $asmtYear=$fY."-".$lY;
+        }
+        
+        $this->data['asmtYear']=$asmtYear;
+
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+        
+        $actVal = "6"; // LLP
+        
+        $workWhereInArray['due_date_for_tbl.act_option_map_id']=LLP_RET_DDF_ARRAY;
+        $workCondtnArr['act_tbl.act_id']=$actVal;
+
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['act_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+        // $workCondtnArr['client_tbl.clientStatus']="1";
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        // $workCondtnArr['tax_payer_tbl.status']=1;
+        $workCondtnArr['tax_payer_due_date_map_tbl.status']=1;
+        $workCondtnArr['organisation_type_tbl.status']=1;
+        $workCondtnArr['due_date_for_tbl.status']=1;
+        // $workCondtnArr['act_tbl.act_id']=1;
+        
+        $workOrderByArr['act_tbl.act_name']="ASC";
+        $workOrderByArr['group_category_tbl.group_category_id']="ASC";
+        $workOrderByArr['client_group_tbl.client_group_id']="ASC";
+        
+        $workCustomWhereArray[]="(work_tbl.seniorId='".$retUserId."' || work_junior_map_tbl.fkUserId='".$retUserId."')";
+        
+        // $workGroupByArr=array('client_group_tbl.client_group_category', 'client_tbl.clientGroup');
+        
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        // $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS tax_payer_tbl', "condtn"=>"tax_payer_tbl.act_option_map_id=due_date_master_tbl.tax_payer", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->tax_payer_due_date_map_tbl, "condtn"=>"tax_payer_due_date_map_tbl.fk_due_date_id=due_date_master_tbl.due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=tax_payer_due_date_map_tbl.fk_org_type_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl.' AS org_type_tbl', "condtn"=>"org_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->group_category_tbl, "condtn"=>"group_category_tbl.group_category_id=client_group_tbl.client_group_category", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->work_junior_map_tbl, "condtn"=>"work_junior_map_tbl.fkWorkId=work_tbl.workId AND work_junior_map_tbl.status=1 AND work_junior_map_tbl.fkUserId='".$retUserId."'", "type"=>"left");
+        
+        // $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.workCode, work_tbl.fk_due_date_id, work_tbl.isDocRecvd, work_tbl.juniors, user_tbl.userFullName AS seniorName, work_tbl.workDone, due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, due_date_master_tbl.due_date_id, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_map_id AS tax_payer_id, tax_payer_tbl.act_option_name AS act_option_name2, due_date_master_tbl.due_act, client_group_tbl.client_group_number, client_tbl.clientId, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientBussOrganisation, client_tbl.clientBussOrganisationType AS orgType", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $workWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.eFillingDate, group_category_tbl.group_category_id, client_group_tbl.client_group_id, client_tbl.clientId, client_tbl.clientName, client_tbl.clientBussOrganisation, client_tbl.clientBussOrganisationType AS orgType, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month, work_tbl.seniorId, work_junior_map_tbl.fkUserId AS juniorId, user_tbl.userFullName, user_tbl.userShortName", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $workGroupByArr=array(), $workWhereInArray, $workCustomWhereArray, $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+
+        $this->data['workDataArr']=$workDataArr;
+        
+        $incRetClientArr=array();
+        $incRetSeniorArr=array();
+        $incRetJuniorArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_tx)
+            {
+                $incRetClientArr[$e_tx['clientId']]=$e_tx['clientId'];
+                // $incRetSeniorArr[$e_tx['act_due_month']][$e_tx['seniorId']][$e_tx['clientId']][$e_tx['workId']]=$e_tx;
+                
+                if(!empty($e_tx['juniorId']))
+                    $incRetJuniorArr[$e_tx['act_due_month']][$e_tx['juniorId']][$e_tx['clientId']][$e_tx['workId']]=$e_tx;
+            }
+        }
+        
+        $this->data['incRetSeniorArr']=$incRetSeniorArr;
+        $this->data['incRetJuniorArr']=$incRetJuniorArr;
+        
+        $misSeniorAssignArr=array();
+        $misSeniorFiledArr=array();
+        
+        $misJuniorAssignArr=array();
+        $misJuniorFiledArr=array();
+        
+        $misAssignArray=array();
+        $misFiledArray=array();
+        
+        if(!empty($workDataArr))
+        {
+            // $seniorWorkAssignArr=array_unique(array_column($workDataArr, 'seniorId'));
+            $juniorWorkAssignArr=array_unique(array_column($workDataArr, 'juniorId'));
+            
+            $userWorkAssignArr=array();
+            
+            if(!empty($seniorWorkAssignArr) && !empty($juniorWorkAssignArr))
+            {
+                $userWorkAssignArr = array_unique(array_merge($seniorWorkAssignArr, $juniorWorkAssignArr));
+            }
+            elseif(!empty($seniorWorkAssignArr) && empty($juniorWorkAssignArr))
+            {
+                $userWorkAssignArr = $seniorWorkAssignArr;
+            }
+            elseif(empty($seniorWorkAssignArr) && !empty($juniorWorkAssignArr))
+            {
+                $userWorkAssignArr = $juniorWorkAssignArr;
+            }
+            
+            for($m_no=1;$m_no<13;$m_no++)
+            {
+                if(!empty($seniorWorkAssignArr))
+                {
+                    foreach($seniorWorkAssignArr AS $e_snr)
+                    {
+                        if(!empty($incRetClientArr))
+                        {
+                            foreach($incRetClientArr AS $e_cli)
+                            {
+                                if(isset($incRetSeniorArr[$m_no][$e_snr][$e_cli]))
+                                {
+                                    $incRetSeniorArray=$incRetSeniorArr[$m_no][$e_snr][$e_cli];
+                                    
+                                    if(!empty($incRetSeniorArray))
+                                    {
+                                        $misSeniorAssignArr[$m_no][$e_snr][$e_cli]=count($incRetSeniorArray);
+                                        
+                                        foreach($incRetSeniorArray AS $e_wrk_file)
+                                        {
+                                            $eFillingDate=$e_wrk_file['eFillingDate'];
+                                            
+                                            if(!empty($eFillingDate) && $eFillingDate!="0000-00-00" && $eFillingDate!="1970-01-01")
+                                            {
+                                                $misSeniorFiledArr[$m_no][$e_snr][$e_cli][]=$eFillingDate;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if(!empty($juniorWorkAssignArr))
+                {
+                    foreach($juniorWorkAssignArr AS $e_jnr)
+                    {
+                        if(!empty($incRetClientArr))
+                        {
+                            foreach($incRetClientArr AS $e_cli)
+                            {
+                                if(isset($incRetJuniorArr[$m_no][$e_jnr][$e_cli]))
+                                {
+                                    $incRetJuniorArray=$incRetJuniorArr[$m_no][$e_jnr][$e_cli];
+                                    
+                                    if(!empty($incRetJuniorArray))
+                                    {
+                                        $misJuniorAssignArr[$m_no][$e_jnr][$e_cli]=count($incRetJuniorArray);
+                                        
+                                        foreach($incRetJuniorArray AS $e_wrk_file)
+                                        {
+                                            $eFillingDate=$e_wrk_file['eFillingDate'];
+                                            
+                                            if(!empty($eFillingDate) && $eFillingDate!="0000-00-00" && $eFillingDate!="1970-01-01")
+                                            {
+                                                $misJuniorFiledArr[$m_no][$e_jnr][$e_cli][]=$eFillingDate;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        for($m_no=1;$m_no<13;$m_no++)
+        {
+            if(!empty($userWorkAssignArr))
+            {
+                foreach($userWorkAssignArr AS $e_usr)
+                {
+                    if(!empty($incRetClientArr))
+                    {
+                        foreach($incRetClientArr AS $e_cli)
+                        {
+                            $misSeniorAssignArray=array();
+                            $misJuniorAssignArray=array();
+                            
+                            if(isset($misSeniorAssignArr[$m_no][$e_usr][$e_cli]))
+                            {
+                                $misSeniorAssignArray=$misSeniorAssignArr[$m_no][$e_usr][$e_cli];
+                            }
+                            
+                            if(isset($misJuniorAssignArr[$m_no][$e_usr][$e_cli]))
+                            {
+                                $misJuniorAssignArray=$misJuniorAssignArr[$m_no][$e_usr][$e_cli];
+                            }
+                            
+                            if(!empty($misSeniorAssignArray) && !empty($misJuniorAssignArray))
+                            {
+                                $misAssignArray[$m_no][$e_cli] = $misSeniorAssignArray + $misJuniorAssignArray;
+                            }
+                            elseif(!empty($misSeniorAssignArray) && empty($misJuniorAssignArray))
+                            {
+                                $misAssignArray[$m_no][$e_cli] = $misSeniorAssignArray;
+                            }
+                            elseif(empty($misSeniorAssignArray) && !empty($misJuniorAssignArray))
+                            {
+                                $misAssignArray[$m_no][$e_cli] = $misJuniorAssignArray;
+                            }
+                            
+                            $misSeniorFiledArray=array();
+                            $misJuniorFiledArray=array();
+                            
+                            if(isset($misSeniorFiledArr[$m_no][$e_usr][$e_cli]))
+                            {
+                                $misSeniorFiledArray=count($misSeniorFiledArr[$m_no][$e_usr][$e_cli]);
+                            }
+                            
+                            if(isset($misJuniorFiledArr[$m_no][$e_usr][$e_cli]))
+                            {
+                                $misJuniorFiledArray=count($misJuniorFiledArr[$m_no][$e_usr][$e_cli]);
+                            }
+                            
+                            if(!empty($misSeniorFiledArray) && !empty($misJuniorFiledArray))
+                            {
+                                $misFiledArray[$m_no][$e_cli] = $misSeniorFiledArray + $misJuniorFiledArray;
+                            }
+                            elseif(!empty($misSeniorFiledArray) && empty($misJuniorFiledArray))
+                            {
+                                $misFiledArray[$m_no][$e_cli] = $misSeniorFiledArray;
+                            }
+                            elseif(empty($misSeniorFiledArray) && !empty($misJuniorFiledArray))
+                            {
+                                $misFiledArray[$m_no][$e_cli] = $misJuniorFiledArray;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        $this->data['misAssignArray']=$misAssignArray;
+        $this->data['misFiledArray']=$misFiledArray;
+        
+        $getClientList=array();
+        
+        if(!empty($incRetClientArr))
+        {
+            $clientCondtnArr['client_tbl.status']=1;
+            $clientWhereInArray['client_tbl.clientId']=$incRetClientArr;
+            
+            $clientOrderByArr['client_group_tbl.client_group_number']='ASC';
+            $clientOrderByArr['client_tbl.clientId']='ASC';
+            
+            $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_tbl.clientGroup=client_group_tbl.client_group_id AND client_tbl.status=1", "type"=>"left");
+    
+            $query=$this->Mcommon->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_group_tbl.client_group_number", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $clientOrderByArr, $groupByArr=array(), $clientWhereInArray, $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+            
+            $getClientList=$query['userData'];
+        }
+        
+        $this->data['getClientList']=$getClientList;
+        
+        $clientReturnsArr=array();
+        
+        if(!empty($getClientList))
+        {
+            foreach($getClientList AS $k_client=>$e_client)
+            {
+                for($m_no=1;$m_no<13;$m_no++)
+                {
+                    if($e_client['orgType']==8)
+                        $clientName=$e_client['clientName']." (".$e_client['clientBussOrganisation'].")";
+                    elseif($e_client['orgType']==9 || $e_client['orgType']==22 || $e_client['orgType']==23)
+                        $clientName=$e_client['clientName'];
+                    else
+                        $clientName=$e_client['clientBussOrganisation'];
+                        
+                    $clientId=$e_client['clientId'];
+                    $client_group_number=$e_client['client_group_number'];
+                    
+                    $assignCount=0;
+                    if(isset($misAssignArray[$m_no][$clientId]))
+                        $assignCount=$misAssignArray[$m_no][$clientId];
+                    else
+                        $assignCount=0;
+                    
+                    $filedCount=0;
+                    if(isset($misFiledArray[$m_no][$clientId]))
+                        $filedCount=$misFiledArray[$m_no][$clientId];
+                    else
+                        $filedCount=0;
+                    
+                    $pendingCount=$assignCount-$filedCount;
+                    
+                    $clientReturnsArr[$m_no][$k_client]['sr']=$k_client+1;
+                    $clientReturnsArr[$m_no][$k_client]['clientId']=$clientId;
+                    $clientReturnsArr[$m_no][$k_client]['client_group_number']=$client_group_number;
+                    $clientReturnsArr[$m_no][$k_client]['clientName']=$clientName;
+                    $clientReturnsArr[$m_no][$k_client]['assignCount']=$assignCount;
+                    $clientReturnsArr[$m_no][$k_client]['filedCount']=$filedCount;
+                    $clientReturnsArr[$m_no][$k_client]['pendingCount']=$pendingCount;
+                }
+            }
+        }
+        
+        $this->data['clientReturnsArr']=$clientReturnsArr;
+        
+        $userCondtnArr['user_tbl.status']=1;
+        $userCondtnArr['user_tbl.userId']=$retUserId;
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->user_tbl, $colNames='user_tbl.userId, user_tbl.userFullName, user_tbl.userShortName', $userCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=TRUE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $userDataArr=$query['userData'];
+        
+        $this->data['userDataArr']=$userDataArr;
+        
+        return view('firm_panel/compliance/llp/staff_wise_position_client_wise', $this->data);
     }
     
     public function mis_returns_summary()

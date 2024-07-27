@@ -301,9 +301,15 @@
                                                                                                     }
                                                                                                 }
                                                                                             }
+
+                                                                                            $allFiled = false;
+                                                                                            if($assignCount == $filedCount)
+                                                                                            {
+                                                                                                $allFiled = true;
+                                                                                            }
                                                                                         ?>
                                                                                         <?php if($assignCount!=0): ?>
-                                                                                            <tr class="row-1">
+                                                                                            <tr class="row-1 <?php if($allFiled): ?>hasCompleted<?php endif;?>">
                                                                                                 <td class="column-1" width="50px"><?= $sr; ?></td>
                                                                                                 <td class="column-2 text-center" width="100px">
                                                                                                     <a href="<?php echo base_url('tds-tcs-position-of-returns-client/'.$e_grp['client_group_id'].'/'.$ddfId.'/'.$mth_nm_tab); ?>" >
