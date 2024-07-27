@@ -104,10 +104,6 @@
         color: #fff !important;
         background-color: #f99d27 !important;
     }
-    
-    .tablepress tbody tr td {
-      background: #96c7f242;
-    }
 </style>
 
 <!-- Main content -->
@@ -216,13 +212,19 @@
                                                                         $filedCount=0;
                                                                     
                                                                     $pendingCount=$assignCount-$filedCount;
+
+                                                                    $allFiled = false;
+                                                                    if($assignCount == $filedCount)
+                                                                    {
+                                                                        $allFiled = true;
+                                                                    }
                                                                     
                                                                     $sumAssignCount+=$assignCount;
                                                                     $sumFiledCount+=$filedCount;
                                                                     $sumPendingCount+=$pendingCount;
                                                                 ?>
                                                                 <?php if($assignCount!=0): ?>
-                                                                    <tr class="row-1">
+                                                                    <tr class="row-1 <?php if($allFiled): ?>hasCompleted<?php endif; ?>">
                                                                         <td class="column-1" width="10px"><?= $sr; ?></td>
                                                                         <td class="column-2" width="150px" nowrap>
                                                                             <a href="<?= base_url('inc_tax_mis_client_staff/'.$userId.'/'.$mth_nm_tab); ?>" >

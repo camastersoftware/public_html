@@ -783,8 +783,8 @@
                                 <div class="col-lg-6 col-md-6">
                                     <select class="form-control" name="ftr_sortby_percent" id="ftr_sortby_percent">
                                         <option value="">Select</option>
-                                        <option value="asc" <?= $ftr_sortby_percent=="asc" ? "selected":""; ?>>ASC</option>
-                                        <option value="desc" <?= $ftr_sortby_percent=="desc" ? "selected":""; ?>>DESC</option>
+                                        <option value="asc" <?= $ftr_sortby_percent=="asc" ? "selected":""; ?>>Ascending</option>
+                                        <option value="desc" <?= $ftr_sortby_percent=="desc" ? "selected":""; ?>>Descending</option>
                                     </select>
                                 </div>
                             </div>
