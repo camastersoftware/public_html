@@ -205,7 +205,7 @@
                                                         }
                                                     }
                                                 ?>
-                                                <td class="text-center mthData">
+                                                <td class="text-center mthData <?php if($filingDate!="-"): ?>hasCompleted<?php endif; ?>">
                                                     <?= $filingDate; ?>
                                                 </td>
                                             <?php endfor; ?>

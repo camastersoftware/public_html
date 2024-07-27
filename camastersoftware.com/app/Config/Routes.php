@@ -498,6 +498,10 @@ $routes->get('/llp-return-register', 'ComplianceSection/Llp::return_filed_regist
 $routes->get('/llp-assessee-ledger', 'ComplianceSection/Llp::assessee_ledger');
 $routes->get('/llp-assessee-ledger-client/(:any)', 'ComplianceSection\Llp::assessee_ledger_client/$1');
 $routes->get('/llp-mis-menu', 'ComplianceSection\Llp::mis_menu');
+$routes->get('/llp-position-of-returns', 'ComplianceSection\Llp::position_of_returns');
+$routes->get('/llp-position-of-returns-client/(:any)/(:any)/(:any)', 'ComplianceSection\Llp::position_of_returns_client/$1/$2/$3');
+$routes->get('/llp-staff-wise-position', 'ComplianceSection\Llp::staff_wise_position');
+$routes->get('/llp-staff-wise-summary-client-wise/(:any)', 'ComplianceSection\Llp::staff_wise_position_client_wise/$1');
 $routes->get('/llp-mis-returns-summary', 'ComplianceSection\Llp::mis_returns_summary');
 $routes->get('/llp-mis-staff-summary', 'ComplianceSection\Llp::mis_staff_summary');
 $routes->get('/llp-deed-details', 'ComplianceSection/Llp::deed_details');

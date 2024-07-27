@@ -216,13 +216,19 @@
                                                                         $filedCount=0;
                                                                     
                                                                     $pendingCount=$assignCount-$filedCount;
+
+                                                                    $allFiled = false;
+                                                                    if($assignCount == $filedCount)
+                                                                    {
+                                                                        $allFiled = true;
+                                                                    }
                                                                     
                                                                     $sumAssignCount+=$assignCount;
                                                                     $sumFiledCount+=$filedCount;
                                                                     $sumPendingCount+=$pendingCount;
                                                                 ?>
                                                                 <?php if($assignCount!=0): ?>
-                                                                    <tr class="row-1">
+                                                                    <tr class="row-1 <?php if($allFiled): ?>hasCompleted<?php endif; ?>">
                                                                         <td class="column-1" width="10px"><?= $sr; ?></td>
                                                                         <td class="column-2" width="150px" nowrap>
                                                                             <a href="<?= base_url('gst-staff-wise-summary-client-wise/'.$userId.'/'.$mth_nm_tab); ?>" >

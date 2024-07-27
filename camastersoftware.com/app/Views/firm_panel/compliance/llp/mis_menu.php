@@ -26,6 +26,24 @@
 				<div class="box-body">
                     <div class="row">
                         <div class="col-md-3 col-12 text-justify-center">
+                            <a href="<?php echo base_url('llp-position-of-returns'); ?>">
+                                <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                    <div class="box-body box-p_new menu_box_new">
+                                        <p>Position of Returns</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-12 text-justify-center">
+                            <a href="<?php echo base_url('llp-staff-wise-position'); ?>">
+                                <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                    <div class="box-body box-p_new menu_box_new">
+                                        <p>Staff-wise Position</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-12 text-justify-center">
                             <a href="<?php echo base_url('llp-mis-returns-summary'); ?>">
                                 <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                     <div class="box-body box-p_new menu_box_new">

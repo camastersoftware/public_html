@@ -220,10 +220,14 @@
                                                             <?php if(!empty($clientReturnsArr[$a])): ?>
                                                                 <?php foreach($clientReturnsArr[$a] AS $e_client): ?>
                                                                     <?php
+                                                                        $assignCount = $e_client['assignCount'];
+                                                                        $filedCount = $e_client['filedCount'];
+                                                                        $pendingCount = $e_client['pendingCount'];
+
                                                                         $clientId=$e_client['clientId'];
-                                                                        $sumAssignCount+=$e_client['assignCount'];
-                                                                        $sumFiledCount+=$e_client['filedCount'];
-                                                                        $sumPendingCount+=$e_client['pendingCount'];
+                                                                        $sumAssignCount+=$assignCount;
+                                                                        $sumFiledCount+=$filedCount;
+                                                                        $sumPendingCount+=$pendingCount;
                                                                         
                                                                         $seniorStr="-";
                                                                         $seniorStrPlus = '';
@@ -290,15 +294,21 @@
                                                                                 }
                                                                             }
                                                                         }
+
+                                                                        $allFiled = false;
+                                                                        if($assignCount == $filedCount)
+                                                                        {
+                                                                            $allFiled = true;
+                                                                        }
                                                                     ?>
-                                                                    <tr class="row-1">
+                                                                    <tr class="row-1 <?php if($allFiled): ?>hasCompleted<?php endif; ?>">
                                                                         <td class="column-1" width="50px"><?= $e_client['sr']; ?></td>
                                                                         <td class="column-2" width="250px" nowrap><?= $e_client['clientName']; ?></td>
                                                                         <td class="column-2 text-center" width="100px" <?php if($juniorStrPlus!=''): ?> data-toggle="tooltip" data-original-title="<?php echo $juniorStrPlus; ?>" style="cursor: pointer;" <?php endif; ?>><?= $juniorStr; ?></td>
                                                                         <td class="column-2 text-center" width="100px" <?php if($seniorStrPlus!=''): ?> data-toggle="tooltip" data-original-title="<?php echo $seniorStrPlus; ?>" style="cursor: pointer;"  <?php endif; ?>><?= $seniorStr; ?></td>
-                                                                        <td class="column-3 text-center"><?= $e_client['assignCount']; ?></td>
-                                                                        <td class="column-3 text-center"><?= $e_client['filedCount']; ?></td>
-                                                                        <td class="column-3 text-center"><?= $e_client['pendingCount']; ?></td>
+                                                                        <td class="column-3 text-center"><?= $assignCount; ?></td>
+                                                                        <td class="column-3 text-center"><?= $filedCount; ?></td>
+                                                                        <td class="column-3 text-center"><?= $pendingCount; ?></td>
                                                                     </tr>
                                                                     <?php $sr++; ?>
                                                                 <?php endforeach; ?>
