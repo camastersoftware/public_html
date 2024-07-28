@@ -17,6 +17,10 @@ td.column_date {
     font-weight: bold !important;
 }
 
+table.dataTable{
+    margin-top: 0px !important;
+}
+
 .tablepress tbody td, .tablepress tfoot th {
     border: 1px solid #015aacab !important;
     /*color: #000;*/
@@ -25,7 +29,7 @@ td.column_date {
 </style>
 
     <!-- Main content -->
-    <section class="content mt-40">
+    <section class="content mt-35">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-12">
                 <div class="box">
