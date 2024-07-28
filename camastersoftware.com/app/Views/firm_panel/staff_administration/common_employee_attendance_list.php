@@ -88,7 +88,7 @@
                                             echo " "; 
                                     ?>
                                 </td>
-                                <td class="text-center" width="5%" nowrap>
+                                <td class="text-left" width="5%" nowrap>
                                     <span <?php if(!empty($e_row['remarks']) && strlen($e_row['remarks'])>45): ?> data-toggle="tooltip" data-original-title="<?= $e_row['remarks']; ?>" style="cursor: pointer;" <?php endif; ?>>
                                         <?php 
                                             if(!empty($e_row['remarks']))
