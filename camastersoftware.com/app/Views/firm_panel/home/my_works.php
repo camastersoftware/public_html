@@ -164,17 +164,41 @@
             <div class="box box-default">
                 <div class="box-header with-border">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-4">
                             <h4 class="box-title font-weight-bold"><?php echo $pageTitle; ?></h4>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-8 text-right">
+                            <a href="<?= base_url('todolist'); ?>">
+                                <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="To Do List">
+                                    <i class="fa-solid fa-list"></i>
+                                </button>
+                            </a>
+                            &nbsp;&nbsp;
                             <a href="<?= base_url('reminder'); ?>">
                                 <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Reminder">
-                                    Reminder
+                                    <i class="fa-solid fa-bell"></i>
                                 </button>
                                 <?php if ($isReminderPresent) : ?>
                                     <i class="notify-point-icon-btn"></i>
                                 <?php endif; ?>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a href="<?php echo base_url('chat/0'); ?>">
+                                <button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Chat">
+                                    <i class="fa fa-comments"></i>
+                                </button>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a href="<?php echo base_url('my-attendance/'.$sessUserLoginID); ?>">
+                                <button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Attendance">
+                                    <i class="fa-solid fa-fingerprint"></i>
+                                </button>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);">
+                                <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Time Sheet">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
                             </a>
                             &nbsp;&nbsp;
                             <a href="<?= base_url('my_works_filed'); ?>">
@@ -183,12 +207,10 @@
                                 </button>
                             </a>
                             &nbsp;&nbsp;
-                            <a href="<?php echo base_url('my-attendance/'.$sessUserLoginID); ?>">
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-danger add_client_top">My Attendance</button>
-                            </a>
-                            &nbsp;&nbsp;
-                            <a href="<?php echo base_url('chat/0'); ?>">
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-success add_client_top">Chat</button>
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#Modalfilter-intax">
+                                <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Filter">
+                                    <i class="fa fa-filter"></i>&nbsp;Filter
+                                </button>
                             </a>
                             &nbsp;&nbsp;
                             <a href="<?php echo base_url('home'); ?>">
@@ -218,11 +240,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 text-right">
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#Modalfilter-intax">
-                                <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Filter">
-                                    <i class="fa fa-filter"></i>&nbsp;Filter
-                                </button>
-                            </a>
+                            
                         </div>
                     </div>
                         
