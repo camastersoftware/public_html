@@ -178,9 +178,7 @@
                                 <button type="button" class="waves-effect waves-light btn btn-sm btn-danger add_client_top">My Attendance</button>
                             </a>
                             &nbsp;&nbsp;
-                            <a href="<?php echo base_url('home'); ?>">
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right" style="">Back</button>
-                            </a>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right get_back" style="">Back</button>
                         </div>
                     </div>
                 </div>
