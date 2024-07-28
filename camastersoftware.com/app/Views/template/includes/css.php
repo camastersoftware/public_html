@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/css/skin_color.css?v='.date('YmdHis')); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/project.css?v='.date('YmdHis')); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/loader.css?v='.date('YmdHis')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/icons/font-awesome/css/fontawesome.css?v='.date('YmdHis')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/icons/font-awesome/css/brands.css?v='.date('YmdHis')); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/icons/font-awesome/css/solid.css?v='.date('YmdHis')); ?>">
     
     <?php if(in_array('tooltip', $cssArr)): ?>
         <link rel="stylesheet" href="<?php echo base_url('assets/css/custom-tooltip.css?v='.date('YmdHis')); ?>">

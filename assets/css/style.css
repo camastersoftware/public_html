@@ -78,7 +78,7 @@ Waves
 /*Body*/
 @import url(color_theme.css);
 @import url(style_rtl.css);
-@import url(../../assets/icons/font-awesome/css/font-awesome.css);
+/* @import url(../../assets/icons/font-awesome/css/font-awesome.css); */
 @import url(../../assets/icons/Ionicons/css/ionicons.css);
 @import url(../../assets/icons/themify-icons/themify-icons.css);
 @import url(../../assets/icons/linea-icons/linea.css);
