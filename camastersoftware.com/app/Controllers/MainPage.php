@@ -1529,24 +1529,29 @@ class MainPage extends BaseController
 
 		$jsArr=array('jquery-ui', 'perfect-scrollbar-master', 'fullcalendar', 'calendar');
 		$this->data['jsArr']=$jsArr;
+
+        $getDueDate = $this->request->getGet('date');
+
+        $actDateFormat=date('d-m-Y', strtotime($getDueDate));
 		
-		$pageTitle="Acts";
+		$pageTitle="Due Dates On : ".$actDateFormat;
 		$this->data['pageTitle']=$pageTitle;
 
 		$navArr=array();
 
 		$navArr[0]['active']=true;
-		$navArr[0]['title']="Acts";
+		$navArr[0]['title']=$pageTitle;
 
 		$this->data['navArr']=$navArr;
 
-		$actDate=date('Y-m-d', strtotime($this->request->getGet('date')));
-		$actDay=date('d', strtotime($this->request->getGet('date')));
+		$actDate=date('Y-m-d', strtotime($getDueDate));
+		$actDay=date('d', strtotime($getDueDate));
 
+		$this->data['actDateFormat']=$actDateFormat;
 		$this->data['actDate']=$actDate;
 		$this->data['actDay']=$actDay;
 
-		$dueDatesArr = $this->Mdue_date->select('due_date_master_tbl.*, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_name AS act_option_name2, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date')
+		$dueDatesArr = $this->Mdue_date->select('due_date_master_tbl.*, act_tbl.act_name, act_tbl.act_short_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_name AS act_option_name2, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, ext_due_date_master_tbl.extended_date, ext_due_date_master_tbl.ext_doc_file, due_date_type_tbl.dueDateTypeShortName')
 				->join('act_option_map_tbl AS due_date_for_tbl', 'due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for', 'left')
 				->join('act_option_map_tbl AS tax_payer_tbl', 'tax_payer_tbl.act_option_map_id=due_date_master_tbl.tax_payer', 'left')
 				->join('act_option_map_tbl AS under_section_tbl', 'under_section_tbl.act_option_map_id=due_date_master_tbl.under_section', 'left')
@@ -1554,7 +1559,7 @@ class MainPage extends BaseController
 				->join('act_option_map_tbl AS applicable_form_tbl', 'applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form', 'left')
 				->join('act_tbl', 'act_tbl.act_id=due_date_master_tbl.due_act', 'left')
 				->join($this->ext_due_date_master_tbl, 'ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1', 'left')
-				// ->where('due_date_master_tbl.due_date', $actDate)
+				->join($this->due_date_type_tbl, 'due_date_type_tbl.dueDateTypeId=due_date_for_tbl.due_date_type', 'left')
 				->where('ext_due_date_master_tbl.extended_date', $actDate)
 				->where('ext_due_date_master_tbl.is_extended', 2)
 				->where('due_date_master_tbl.status', 1)

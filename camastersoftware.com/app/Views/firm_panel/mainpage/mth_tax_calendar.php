@@ -49,12 +49,13 @@ table.dataTable {
   font-size: 15px !important;
 }
 
-.theme-primary .btn-info {
-  height: 25px !important;
-}
-
 .font_bold{
     font-weight: bold !important;
+}
+
+.theme-primary .btnPrimClr {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 </style>
 
@@ -353,27 +354,30 @@ if(!empty($taxCalIsAdminCookie))
                                                         <?php endif; ?>
                                                     </td>
                                                     <td class="column-10" nowrap>
-                                                        
+                                                        <?php
+                                                            $emptyDDFDocs = false;
+                                                            if(empty($extended_date_notes) && empty($e_row['ext_doc_file'])){
+                                                                $emptyDDFDocs = true;
+                                                            }
+
+                                                            $disabledDropdown = $emptyDDFDocs ? 'disabled' : '';
+                                                        ?>
                                                         <div class="btn-group mb-5">
-                                                            <button type="button" class="waves-effect waves-light btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                            <button type="button" class="waves-effect waves-light btn btn-sm btn-info btnPrimClr dropdown-toggle <?= $disabledDropdown; ?>" data-toggle="dropdown" aria-expanded="false">Action</button>
                                                             <div class="dropdown-menu" style="will-change: transform;">
                                                                 <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?php echo $k_row; ?>">View Note</a>
-                                                                <?php if($e_row['is_extended']==2): ?>
+                                                                <?php if($e_row['is_extended']==2 && !empty($e_row['ext_doc_file'])): ?>
                                                                     <a class="dropdown-item" href="<?php echo base_url("uploads/admin/due_date/".$e_row['ext_doc_file']); ?>" target="_blank">View Document</a>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
-                                                        
-                                                        <!--<button type="button" class="waves-effect waves-light btn btn-primary mb-5" data-toggle="modal" data-target="#modal_view<?php //echo $k_row; ?>">-->
-                                                        <!--    Note-->
-                                                        <!--</button>-->
 
                                                         <!-- Modal -->
                                                         <div class="modal fade" id="modal_view<?php echo $k_row; ?>" tabindex="-1">
                                                             <div class="modal-dialog modal-xl">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title">Acts Details</h5>
+                                                                        <h5 class="modal-title">Note</h5>
                                                                         <button type="button" class="close" data-dismiss="modal">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>

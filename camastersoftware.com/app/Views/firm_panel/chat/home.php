@@ -72,9 +72,7 @@
                         ?>
                     </h4>
                     <div class="text-right flex-grow">
-                        <a href="<?= base_url('users'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right">Back</button>
-                        </a>
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right get_back">Back</button>
                     </div>
                 </div>
                 <!-- /.box-header -->
