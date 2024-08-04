@@ -70,16 +70,9 @@
                         ?>
                     </h4>
                     <div class="text-right flex-grow">
-
-                        <a href="<?php echo base_url('master_data'); ?>">
+                        <a href="<?php echo base_url('staff-administration'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Back</button>
                         </a>
-                        <!-- <a href="<?php echo base_url('create-chartered-accountant/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add CA</button>
-                        </a>
-                        <a href="<?php echo base_url('create-articleship/0'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right ml-1" style="">Add Articleship</button>
-                        </a> -->
                     </div>
                 </div>
                 <!-- /.box-header -->

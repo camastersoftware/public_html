@@ -229,6 +229,9 @@
                     </h4>
                     <div class="text-right flex-grow">
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_group_btn">Create New Group</button>
+                        <a href="<?php echo base_url('masters-menu'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark" style="">Back</button>
+                        </a>
                     </div>
                 </div>
                 <!-- /.box-header -->

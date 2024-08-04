@@ -26,46 +26,28 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-3 col-12">
-                                <a href="<?php echo base_url('getMasterClientData'); ?>">
+                                <a href="<?php echo base_url('clients'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p class="font-weight-500">Clients</p>
+                                            <p class="font-weight-500">Create/Edit Client</p>
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-12">
-                                <a href="<?php echo base_url('getMasterOldClientData'); ?>">
+                                <a href="<?php echo base_url('groups'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p class="font-weight-500">Clients Left</p>
+                                            <p class="font-weight-500">Create/Edit Group</p>
                                         </div>
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('din-dsc-client-list'); ?>">
+                            <div class="col-md-3 col-12">
+                                <a href="<?php echo base_url('users'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p>DSC Management</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('password-mgmt'); ?>">
-                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
-                                        <div class="box-body box-p_new menu_box_new">
-                                            <p>Password Mgmt</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('custom-due-dates'); ?>">
-                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
-                                        <div class="box-body box-p_new menu_box_new">
-                                            <p>Custom Due Date</p>
+                                            <p class="font-weight-500">Create/Edit User</p>
                                         </div>
                                     </div>
                                 </a>
