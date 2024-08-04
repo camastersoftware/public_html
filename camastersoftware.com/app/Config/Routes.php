@@ -287,6 +287,7 @@ $routes->post('/delete-user-document-file', 'Remote/Admin::delete_user_document_
 $routes->get('/master_data', 'MainPage::master_data');
 $routes->get('/get_client_report', 'MainPage::getClientReport');
 $routes->get('/getClientMonthWiseReport/(:any)', 'MainPage::getClientMonthWiseReport/$1');
+$routes->get('/getClientActWiseReport/(:any)', 'MainPage::getClientActWiseReport/$1');
 $routes->get('/accountFinance', 'MainPage::accountFinance');
 $routes->get('/tax_calendar_menu', 'MainPage::tax_calendar_menu');
 // $routes->get('/act-wise-tax-calendar', 'MainPage::act_wise_tax_calendar');
