@@ -108,8 +108,8 @@
                 <div class="box-header with-border flexbox">
                     <h4 class="box-title font-weight-bold text-center"><?php echo $pageTitle; ?></h4>
                     <div class="text-right flex-grow">
-                        <a href="<?php echo base_url('getClientActWiseReport/'.$clientId); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit" style="">Act-wise</button>
+                        <a href="<?php echo base_url('getClientMonthWiseReport/'.$clientId); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit" style="">Month-wise</button>
                         </a>
                         <a href="<?php echo base_url('get_client_report'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark">Back</button>
@@ -121,23 +121,22 @@
                         <section>
                             <h4 class="text-center font-weight-bold"><?= $clientNameVar; ?></h4>
                             <div class="row sel_act_due_date">
-                                <?php if(!empty($workMthArr)): ?>
-                                    <?php foreach($workMthArr AS $k_mth_id=>$e_mth): ?>
+                                <?php if(!empty($actArr)): ?>
+                                    <?php foreach($actArr AS $e_act): ?>
                                         <?php
-                                            if(isset($workListArr[$k_mth_id]))
-                                                $wkListArr=$workListArr[$k_mth_id];
+                                            if(isset($workListArr[$e_act["act_id"]]))
+                                                $wkListArr=$workListArr[$e_act["act_id"]];
                                             else
                                                 $wkListArr=array();
                                         ?>
                                         <?php if(!empty($wkListArr)): ?>
                                             <div class="col-lg-12 col-md-12">
-                                                <h4 class="income-tax-head text-center"><?php echo $e_mth; ?></h4>
+                                                <h4 class="income-tax-head text-center"><?php echo $e_act["act_name"]; ?></h4>
                                                 <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer allot_due_date">
                                                     <thead>
                                                         <tr class="row-1">
                                                             <th class="column-7" style="width: 7% !important;">Due Date</th>
                                                             <th class="column-1" style="width: 32% !important;">Due Date For</th>
-                                                            <th class="column-1" style="width: 8% !important;">Act</th>
                                                             <th class="column-3" style="width: 10% !important;">Section</th>
                                                             <th class="column-4" style="width: 11% !important;">Form</th>
                                                             <th class="column-5" style="width: 10% !important;">Periodicity</th>
@@ -153,8 +152,7 @@
                                                                 if(!empty($e_row['eFillingDate']) && $e_row['eFillingDate']!="0000-00-00" && $e_row['eFillingDate']!="1970-01-01")
                                                                     $eFillingDate=date('d-m-Y', strtotime($e_row['eFillingDate'])); 
                                                             ?>
-                                                            <!--<tr class="row-3 row_<?php //echo $k_mth_id.$k_row.$e_row['due_date_id']; ?>" style="background-color:#f6fbff;">-->
-                                                            <tr class="row-3 row_<?php echo $k_mth_id.$k_row.$e_row['due_date_id']; ?> <?php if($eFillingDate!="-"): ?>hasCompleted<?php endif; ?>" >
+                                                            <tr class="row-3 row_<?php echo $e_act["act_id"].$k_row.$e_row['due_date_id']; ?> <?php if($eFillingDate!="-"): ?>hasCompleted<?php endif; ?>" >
                                                                 <td class="column-7 text-center" style="width: 7% !important;" nowrap><?php echo date('d-m-Y', strtotime($e_row['extended_date'])); ?></td>
                                                                 <td class="column-1 text-left pl-25" style="width: 32% !important;">
                                                                     <?php 
@@ -174,11 +172,6 @@
                                                                     ?>
                                                                     <span data-toggle="tooltip" data-original-title="<?= $ddfValue; ?>" style="cursor: pointer;">
                                                                         <?= $ddfVal;  ?>
-                                                                    </span>
-                                                                </td>
-                                                                <td class="column-3 text-center" style="width: 8% !important;" nowrap>
-                                                                    <span data-toggle="tooltip" data-original-title="<?= $e_row['act_name']; ?>" style="cursor: pointer;">
-                                                                        <?php echo $e_row['act_short_name']; ?>
                                                                     </span>
                                                                 </td>
                                                                 <td class="column-3 text-center" style="width: 10% !important;" nowrap>
@@ -249,7 +242,7 @@
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <tr>
-                                                                <td colspan="9"><center>No Records</center></td>
+                                                                <td colspan="7"><center>No Records</center></td>
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
