@@ -261,6 +261,7 @@ $routes->post('/delete_client_event_due_date', 'Remote/Admin::delete_client_even
 $routes->post('/set_cust_due_date', 'Remote/Admin::set_cust_due_date');
 $routes->post('/edit_cust_due_date', 'Remote/Admin::edit_cust_due_date');
 
+$routes->get('/masters-menu', 'Masters::index');
 $routes->get('/clients', 'Client::index');
 $routes->get('/create-client', 'Client::create_client');
 $routes->post('/getClients', 'Remote/Admin::getClients');

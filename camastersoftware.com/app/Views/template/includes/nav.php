@@ -185,22 +185,22 @@
                             <p class="nav_bar"><a href="<?php echo base_url('home'); ?>" class="text-white">&nbsp;Dashboard</a></p>
                         </div>
                     </div>
-                    <div class="app-menu <?php if ($uri1 == "clients" || $uri1 == "users" || $uri1 == "groups") : ?>active<?php endif; ?>">
+                    <!--
+                    <div class="app-menu <?php //if ($uri1 == "clients" || $uri1 == "users" || $uri1 == "groups") : ?>active<?php //endif; ?>">
                         <div class="search-bx mx-5">
                             <div class="btn-group">
                                 <a href="javascript:void(0);" class="dropdown-toggle nav_bar" data-toggle="dropdown">
                                     Create&nbsp;Masters
                                 </a>
                                 <div class="dropdown-menu drop_fileds">
-                                    <a class="dropdown-item" href="<?php echo base_url('clients'); ?>">Create/Edit Client</a>
-                                    <a class="dropdown-item" href="<?php echo base_url('groups'); ?>">Create/Edit Group</a>
-                                    <a class="dropdown-item" href="<?php echo base_url('users'); ?>">Create/Edit User (Employee)</a>
-                                    <!-- <a class="dropdown-item" href="<?php //echo base_url('non-regular-due-date-for-list'); ?>">Create Non-Regular Due Date For</a> -->
-                                    <!-- <a class="dropdown-item" href="<?php //echo base_url('non-regular-due-dates'); ?>">Create Non-Regular Due Dates</a> -->
+                                    <a class="dropdown-item" href="<?php //echo base_url('clients'); ?>">Create/Edit Client</a>
+                                    <a class="dropdown-item" href="<?php //echo base_url('groups'); ?>">Create/Edit Group</a>
+                                    <a class="dropdown-item" href="<?php //echo base_url('users'); ?>">Create/Edit User (Employee)</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    -->
                     <div class="app-menu <?php if ($uri1 == "my_works") : ?>active<?php endif; ?>">
                         <div class="search-bx mx-5">
                             <p class="nav_bar verticalLine">

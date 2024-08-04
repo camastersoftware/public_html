@@ -120,7 +120,7 @@
                         <?php echo $pageTitle; ?>
                     </h4>
                     <div class="text-right flex-grow">
-                        <a href="<?php echo base_url('master_data'); ?>">
+                        <a href="<?php echo base_url('client-administration'); ?>">
                             <button type="button" class="btn btn-sm btn-dark" >Back</button>
                         </a>
                     </div>

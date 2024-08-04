@@ -26,7 +26,7 @@
         }
         
         .table > tbody > tr > td, .table > tbody > tr > th {
-            padding: 8px 14px !important;
+            padding: 0px 14px !important;
         }
         
         .btnPrimClr {

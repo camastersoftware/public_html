@@ -64,7 +64,7 @@
                                 </a>
                             </div>
                             <!-- <div class="col-md-3 col-12">
-                                <a href="<?php echo base_url('getMasterOldStaffData'); ?>">
+                                <a href="<?php //echo base_url('getMasterOldStaffData'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
                                             <p class="font-weight-500">Staff Left</p>
