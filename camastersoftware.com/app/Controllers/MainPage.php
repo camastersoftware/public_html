@@ -2180,7 +2180,7 @@ class MainPage extends BaseController
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr']=$jsArr;
         
-        $pageTitle="Work Position";
+        $pageTitle="Work Position (Month-wise)";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();
@@ -2204,12 +2204,10 @@ class MainPage extends BaseController
         if(!empty($clientData))
             $clientBussOrganisationType=$clientData['clientBussOrganisationType'];
             
-        if($clientData['clientBussOrganisationType']==8)
-            $clientNameVar=$clientData['clientName']." (".$clientData['clientBussOrganisation'].")";
-        elseif($clientData['clientBussOrganisationType']==9)
+        if(in_array($clientBussOrganisationType, INDIVIDUAL_ARRAY))
             $clientNameVar=$clientData['clientName'];
         else
-            $clientNameVar=$clientData['clientBussOrganisation']; 
+            $clientNameVar=$clientData['clientBussOrganisation'];
             
         $this->data['clientNameVar']=$clientNameVar;
             
@@ -2281,5 +2279,104 @@ class MainPage extends BaseController
         $this->data['workListArr']=$workListArr;
 
         return view('firm_panel/mainpage/getClientMonthWiseReport', $this->data);
+	}
+	
+	public function getClientActWiseReport()
+	{
+	    ini_set('memory_limit', '-1');
+	    
+	    $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+        $this->data['clientId']=$clientId=$uri->getSegment(2);
+
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Work Position (Act-wise)";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+        
+        $clientCondtnArr['client_tbl.clientId']=$clientId;
+        $clientCondtnArr['client_tbl.status']="1";
+
+        $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        
+        $query=$this->Mquery->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.*, client_tbl.clientPanNumber, client_group_tbl.client_group", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=TRUE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $clientData=$query['userData'];
+        
+        $clientBussOrganisationType="";
+        
+        if(!empty($clientData))
+            $clientBussOrganisationType=$clientData['clientBussOrganisationType'];
+            
+        if(in_array($clientBussOrganisationType, INDIVIDUAL_ARRAY))
+            $clientNameVar=$clientData['clientName'];
+        else
+            $clientNameVar=$clientData['clientBussOrganisation'];
+            
+        $this->data['clientNameVar']=$clientNameVar;
+
+        $actArr = $this->Mact->where('status', 1)
+                    ->orderBy('act_name', 'asc')
+                    ->findAll();
+
+        $this->data['actArr']=$actArr;
+            
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+        
+        $finStartYr=$fin_year_arr[0];
+        $finEndYr="20".$fin_year_arr[1];
+
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['work_tbl.fkClientId']=$clientId;
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        $workCondtnArr['tax_payer_due_date_map_tbl.fk_org_type_id']=$clientBussOrganisationType;
+        
+        $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
+        $workOrderByArr['ext_due_date_master_tbl.ext_due_date_master_id']="ASC";
+
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS tax_payer_tbl', "condtn"=>"tax_payer_tbl.act_option_map_id=due_date_master_tbl.tax_payer", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->tax_payer_due_date_map_tbl, "condtn"=>"tax_payer_due_date_map_tbl.fk_due_date_id=due_date_master_tbl.due_date_id AND tax_payer_due_date_map_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=tax_payer_due_date_map_tbl.fk_org_type_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS under_section_tbl', "condtn"=>"under_section_tbl.act_option_map_id=due_date_master_tbl.under_section", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS audit_tbl', "condtn"=>"audit_tbl.act_option_map_id=due_date_master_tbl.audit", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS applicable_form_tbl', "condtn"=>"applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.workCode, work_tbl.fk_due_date_id, work_tbl.eFillingDate, due_date_master_tbl.*, DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month, act_tbl.act_id, act_tbl.act_name, act_tbl.act_short_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_name AS act_option_name2, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, due_date_master_tbl.due_act, ext_due_date_master_tbl.extended_date, organisation_type_tbl.organisation_type_name AS tax_payer_val", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+
+        $this->data['workDataArr']=$workDataArr;
+
+        $workListArr=array();
+
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_work)
+            {
+                $workListArr[$e_work['act_id']][]=$e_work;
+            }
+        }
+
+        $this->data['workListArr']=$workListArr;
+
+        return view('firm_panel/mainpage/getClientActWiseReport', $this->data);
 	}
 }
