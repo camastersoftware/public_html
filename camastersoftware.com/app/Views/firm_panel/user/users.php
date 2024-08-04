@@ -68,7 +68,9 @@
                                 Create New User (Employee)
                             </button>
                         </a>
-                        <!--<button type="button" class="waves-effect waves-light btn btn-dark back_page">Back</button>-->
+                        <a href="<?php echo base_url('masters-menu'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark" style="">Back</button>
+                        </a>
                     </div>
                 </div>
                 <div class="box-body">

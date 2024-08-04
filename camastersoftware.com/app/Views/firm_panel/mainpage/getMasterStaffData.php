@@ -54,11 +54,11 @@
                         ?>
                     </h4>
                     <div class="text-right flex-grow">
-                        <a href="<?php echo base_url('master_data'); ?>">
-                            <button type="button" class="btn btn-sm btn-dark">Back</button>
-                        </a>
                         <a href="<?php echo base_url('getMasterOldStaffData'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit float-right ml-1 mr-1" style="">Staff Left</button>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit" style="">Staff Left</button>
+                        </a>
+                        <a href="<?php echo base_url('staff-administration'); ?>">
+                            <button type="button" class="btn btn-sm btn-dark">Back</button>
                         </a>
                     </div>
                 </div>

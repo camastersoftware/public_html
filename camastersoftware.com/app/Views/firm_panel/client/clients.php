@@ -124,6 +124,9 @@
                         <a href="<?= base_url('create-client'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Create New Client</button>
                         </a>
+                        <a href="<?php echo base_url('masters-menu'); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark" style="">Back</button>
+                        </a>
                     </div>
                 </div>
                 <div class="box-body">
