@@ -6,6 +6,5 @@ composer.lock
 
 .htaccess
 /camastersoftware.com/.env
-/assets/
 /uploads/
 

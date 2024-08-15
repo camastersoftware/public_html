@@ -467,6 +467,7 @@ class Income_tax3 extends BaseController
         $this->data['getClientList']=$getClientList;
         
         $userCondtnArr['user_tbl.status']="1";
+        $userCondtnArr['user_tbl.isOldUser']=2;
         $userOrderByArr['user_tbl.userFullName']="ASC";
         $userOrderByArr['user_tbl.userSeq']="ASC";
         
