@@ -1221,13 +1221,18 @@
                                                                                                     <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
                                                                                                     <div class="dropdown-menu" style="will-change: transform;">
                                                                                                         <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#updateJuniorStaff<?= $uniqueRowId; ?>">
-                                                                                                            <i class="fa-solid fa-user-check"></i>&nbsp;Junior Allotment
+                                                                                                            <i class="fa-solid fa-users"></i>&nbsp;Allot Juniors
                                                                                                         </a>
+                                                                                                        <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#updateSeniorStaff<?= $uniqueRowId; ?>">
+                                                                                                            <i class="fa-solid fa-user-check"></i>&nbsp;Allot Senior
+                                                                                                        </a>
+                                                                                                        <?php if(!empty($e_row['due_notes'])): ?>
                                                                                                         <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?= $k_act_id.$k_row; ?>">
                                                                                                             <i class="fa fa-file"></i>&nbsp;View Note
                                                                                                         </a>
+                                                                                                        <?php endif; ?>
                                                                                                         <a class="dropdown-item delete_due_date" href="javascript:void(0);" data-id="<?= $k_act_id.$k_row.$e_row['due_date_id']; ?>" data-due="<?php echo $e_row['due_date_id']; ?>" data-client="<?php echo $clientId; ?>" data-act="<?= $k_act_id; ?>" data-orgtype="<?= $clientBussOrganisationType; ?>">
-                                                                                                            <i class="fa fa-trash"></i>&nbsp;Delete
+                                                                                                            <i class="fa fa-trash text-danger"></i>&nbsp;Delete
                                                                                                         </a>
                                                                                                     </div>
                                                                                                 </div>
@@ -2032,6 +2037,50 @@
                                     <div class="modal-footer text-right" style="width: 100%;">
                                         <input type="hidden" name="workId" id="workId" value="<?= $workId; ?>">
                                         <input type="hidden" name="juniors" id="juniors_<?= $uniqueRowId ?>" value="<?= $e_row['juniors']; ?>">
+                                        <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                                        <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+                    <!-- Modal -->
+                    <div id="updateSeniorStaff<?= $uniqueRowId ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                                <form action="<?php echo base_url('update-inc-work-senior'); ?>" method="POST" >
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel">Change Senior Staff Allotment</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Currently Alloted To : </label>
+                                                    <span><?= (!empty($e_row['userFullName'])) ? $e_row['userFullName']:"-"; ?></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12">
+                                                <div class="form-group">
+                                                    <select class="form-control select2" name="seniorId" data-placeholder="Select Senior" style="width:100%;">
+                                                        <option value="">Select Senior</option>
+                                                        <?php if(!empty($getUserList)): ?>
+                                                            <?php foreach($getUserList AS $e_usr_val): ?>
+                                                                <option value="<?= $e_usr_val['userId']; ?>" <?= ($e_usr_val['userId']==$e_row['seniorId']) ? "selected":""; ?>><?= $e_usr_val['userFullName']; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer text-right" style="width: 100%;">
+                                        <input type="hidden" name="workId" id="workId" value="<?= $workId; ?>">
                                         <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                                         <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                                     </div>
