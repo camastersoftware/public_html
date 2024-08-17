@@ -530,31 +530,31 @@
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
                                                                     <label for="turnOver">Turnover :</label>
-                                                                    <input type="text" class="form-control" name="turnOver" id="turnOver" placeholder="Enter Turnover" value="<?php echo $workArr['turnOver']; ?>" onkeypress="validateNum(event)">
+                                                                    <input type="text" class="form-control currencyInput" name="turnOver" id="turnOver" placeholder="Enter Turnover" value="<?php echo $workArr['turnOver']; ?>" onkeypress="validateNum(event)">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
                                                                     <label for="grossTotalIncome">Gross Total Income :</label>
-                                                                    <input type="text" class="form-control" name="grossTotalIncome" id="grossTotalIncome" placeholder="Enter Gross Total Income" value="<?php echo $workArr['grossTotalIncome']; ?>" onkeypress="validateNum(event)">
+                                                                    <input type="text" class="form-control currencyInput" name="grossTotalIncome" id="grossTotalIncome" placeholder="Enter Gross Total Income" value="<?php echo $workArr['grossTotalIncome']; ?>" onkeypress="validateNum(event)">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
                                                                     <label for="totalIncome">Total Income :</label>
-                                                                    <input type="text" class="form-control" name="totalIncome" id="totalIncome" placeholder="Enter Total Income" value="<?php echo $workArr['totalIncome']; ?>" onkeypress="validateNum(event)">
+                                                                    <input type="text" class="form-control currencyInput" name="totalIncome" id="totalIncome" placeholder="Enter Total Income" value="<?php echo $workArr['totalIncome']; ?>" onkeypress="validateNum(event)">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
                                                                     <label for="selfAssessmentTax">Self Asst. Tax :</label>
-                                                                    <input type="text" class="form-control" name="selfAssessmentTax" id="selfAssessmentTax" placeholder="Enter Self Assessment Tax" value="<?php echo $workArr['selfAssessmentTax']; ?>" onkeypress="validateNum(event)">
+                                                                    <input type="text" class="form-control currencyInput" name="selfAssessmentTax" id="selfAssessmentTax" placeholder="Enter Self Assessment Tax" value="<?php echo $workArr['selfAssessmentTax']; ?>" onkeypress="validateNum(event)">
                                                                 </div>
                                                             </div>	
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
                                                                     <label for="refundDue">Refund Claimed :</label>
-                                                                    <input type="text" class="form-control" name="refundDue" id="refundDue" placeholder="Enter Refund Claimed" value="<?php echo $workArr['refundDue']; ?>" onkeypress="validateNum(event)">
+                                                                    <input type="text" class="form-control currencyInput" name="refundDue" id="refundDue" placeholder="Enter Refund Claimed" value="<?php echo $workArr['refundDue']; ?>" onkeypress="validateNum(event)">
                                                                 </div>
                                                             </div>	
                                                         </div> 
