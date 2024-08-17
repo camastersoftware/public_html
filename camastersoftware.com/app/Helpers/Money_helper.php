@@ -1,4 +1,5 @@
 <?php
+/*
 if(!function_exists('amount_format')) {
    function amount_format($amt){
        if(is_numeric($amt)){
@@ -19,6 +20,39 @@ if(!function_exists('amount_format')) {
        }
    }
 }
+*/
+
+if (!function_exists('amount_format')) {
+    function amount_format($amt) {
+        if (is_numeric($amt)) {
+            // Round the amount to the nearest integer
+            $amt = round((float)$amt);
+            
+            // Create a NumberFormatter instance for the Indian locale
+            $locale = 'en_IN'; // Locale for India
+            $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+            
+            // Set the minimum and maximum fraction digits for the rounded amount
+            $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 0);
+            $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 0);
+            
+            // Format the rounded amount
+            $formattedAmount = $fmt->format($amt);
+            
+            // Handle negative amounts by adding parentheses
+            if ($amt < 0) {
+                $formattedAmount = '(' . $formattedAmount . ')';
+            }
+            
+            return $formattedAmount;
+        } else {
+            return '0'; // Return '0' if the input is not numeric
+        }
+    }
+}
+
+
+
 
 if(!function_exists('moneyInWords')) {
    function moneyInWordsOld($number){
