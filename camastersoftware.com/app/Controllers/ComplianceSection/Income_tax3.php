@@ -1251,9 +1251,6 @@ class Income_tax3 extends BaseController
         $juniorsIds=$this->request->getPost('juniorsIds');
         $juniors=$this->request->getPost('juniors');
 
-        // print_r($this->request->getPost());
-        // die();
-
         $wkUpdateArr = [
             'juniors'=>$juniors,
             'updatedBy' => $this->adminId,
@@ -1312,6 +1309,47 @@ class Income_tax3 extends BaseController
             $this->Mquery->insertLog($insertLogArr);
 
             $this->session->setFlashdata('successMsg', "Juniors Allotment has been updated successfully :)");
+        }
+        
+        return redirect()->back();
+    }
+
+    public function update_inc_work_senior()
+    {
+        $this->db->transBegin();
+
+        $workId=$this->request->getPost('workId');
+        $seniorId=$this->request->getPost('seniorId');
+
+        $wkUpdateArr = [
+            'seniorId'=>$seniorId,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['work_tbl.workId']=$workId;
+
+        $query=$this->Mcommon->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+        if($this->db->transStatus() === FALSE)
+        {
+            $this->db->transRollback();
+
+            $this->session->setFlashdata('errorMsg', "Something went wrong!!, Senior Allotment has not updated :(");
+        }
+        else
+        {
+            $this->db->transCommit();
+
+            $insertLogArr['section']=$this->section;
+            $insertLogArr['message']="Senior Allotment updated";
+            $insertLogArr['ip']=$this->IPAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mquery->insertLog($insertLogArr);
+
+            $this->session->setFlashdata('successMsg', "Senior Allotment has been updated successfully :)");
         }
         
         return redirect()->back();

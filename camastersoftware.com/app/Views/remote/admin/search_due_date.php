@@ -12,7 +12,7 @@
                     <th class="column-5">Periodicity</th>
                     <th class="column-6">Period</th>
                     <th class="column-7">Due Date</th>
-                    <th class="column-8">Note</th>
+                    <th class="column-8">Junior</th>
                     <th class="column-9">Action</th>
                 </tr>
             </thead>
@@ -20,6 +20,7 @@
     <?php endif; ?>
                 <?php if(!empty($dueDatesArr)): ?>
                     <?php foreach($dueDatesArr AS $k_row=>$e_row): ?>
+                        <?php $uniqueRowId=$actId.$k_row.$e_row['due_date_id']; ?>
                         <tr class="row-3 row_<?php echo $actId.$k_row.$e_row['due_date_id']; ?>" style="background-color:#f6fbff;">
                             <td class="column-1 text-left pl-25" style="width: 26% !important;">
                                 <?php 
@@ -133,11 +134,23 @@
                                     <input type="hidden" name="actTMth[]" value="">
                                     <input type="hidden" name="actTYr[]" value="">
                                 <?php endif; ?>
-                                
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit mb-5" data-toggle="modal" data-target="#modal_view<?php echo $actId.$k_row; ?>">
-                                    Note
-                                </button>
-    
+                                <span> - </span>
+                            </td>
+                            <td class="column-9 text-center" style="width: 5% !important;" nowrap>
+
+                                <div class="btn-group">
+                                    <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                    <div class="dropdown-menu" style="will-change: transform;">
+                                        <?php if(!empty($e_row['due_notes'])): ?>
+                                        <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?= $actId.$k_row; ?>">
+                                            <i class="fa fa-file"></i>&nbsp;View Note
+                                        </a>
+                                        <?php endif; ?>
+                                        <a class="dropdown-item delete_due_date" href="javascript:void(0);" data-id="<?= $uniqueRowId; ?>" data-due="" data-client="">
+                                            <i class="fa fa-trash text-danger"></i>&nbsp;Delete
+                                        </a>
+                                    </div>
+                                </div>
                                 <!-- Modal -->
                                 <div class="modal center-modal fade" id="modal_view<?php echo $actId.$k_row; ?>" tabindex="-1">
                                     <div class="modal-dialog">
@@ -158,11 +171,6 @@
                                     </div>
                                 </div>
                                 <!-- /.modal -->
-                            </td>
-                            <td class="column-9 text-center" style="width: 5% !important;" nowrap>
-                                <a href="javascript:void(0);" class="delete_due_date" data-id="<?php echo $actId.$k_row.$e_row['due_date_id']; ?>" data-due="" data-client="">
-                                    <i class="fa fa-trash fa-1x text-danger" style="font-size: 20px !important;"></i>
-                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
