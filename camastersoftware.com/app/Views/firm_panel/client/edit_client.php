@@ -2067,7 +2067,7 @@
                                             </div>
                                             <div class="col-md-12 col-lg-12">
                                                 <div class="form-group">
-                                                    <select class="form-control select2" name="seniorId" data-placeholder="Select Senior" style="width:100%;">
+                                                    <select class="form-control select2" name="seniorId" id="seniorId_<?= $uniqueRowId; ?>" data-placeholder="Select Senior" style="width:100%;">
                                                         <option value="">Select Senior</option>
                                                         <?php if(!empty($getUserList)): ?>
                                                             <?php foreach($getUserList AS $e_usr_val): ?>
