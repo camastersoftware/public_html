@@ -45,6 +45,7 @@ class Client extends BaseController
         $this->ext_due_date_master_tbl=$tableArr['ext_due_date_master_tbl'];
         $this->tax_payer_due_date_map_tbl=$tableArr['tax_payer_due_date_map_tbl'];
         $this->non_regular_due_date_tbl=$tableArr['non_regular_due_date_tbl'];
+        $this->work_junior_map_tbl=$tableArr['work_junior_map_tbl'];
 
         $this->sessCaFirmId=$this->session->get('caFirmId');
 
@@ -382,7 +383,7 @@ class Client extends BaseController
         $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
         
-        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.workCode, work_tbl.fk_due_date_id, due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_name AS act_option_name2, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, due_date_master_tbl.due_act, ext_due_date_master_tbl.extended_date, organisation_type_tbl.organisation_type_name AS tax_payer_val", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames="work_tbl.workId, work_tbl.workCode, work_tbl.fk_due_date_id, work_tbl.juniors, due_date_master_tbl.*, DATE_FORMAT(due_date_master_tbl.due_date, '%c') AS act_due_month, act_tbl.act_name, due_date_for_tbl.act_option_name AS act_option_name1, tax_payer_tbl.act_option_name AS act_option_name2, under_section_tbl.act_option_name AS act_option_name3, audit_tbl.act_option_name AS act_option_name4, applicable_form_tbl.act_option_name AS act_option_name5, due_date_master_tbl.due_act, ext_due_date_master_tbl.extended_date, organisation_type_tbl.organisation_type_name AS tax_payer_val", $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $workDataArr=$query['userData'];
 
@@ -526,6 +527,34 @@ class Client extends BaseController
             $evtDDActArr=array_unique(array_column($eventDueDatesArr, 'non_rglr_due_act'));
 
         $this->data['evtDDActArr']=$evtDDActArr;
+
+        $userCondtnArr['user_tbl.status']="1";
+        $userCondtnArr['user_tbl.isOldUser']=2;
+        $userOrderByArr['user_tbl.userFullName']="ASC";
+        $userOrderByArr['user_tbl.userSeq']="ASC";
+        
+        $query=$this->Mquery->getRecords($tableName=$this->user_tbl, $colNames="user_tbl.userId, user_tbl.userTitle, user_tbl.userFullName, user_tbl.userShortName, user_tbl.userDesgn, user_tbl.userMobile1, user_tbl.userEmail1, user_tbl.isCostCenter", $userCondtnArr, $likeCondtnArr=array(), $userJoinArr=array(), $singleRow=FALSE, $userOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getUserList=$query['userData'];
+    
+        $this->data['getUserList']=$getUserList;
+
+        $jnrCondtnArr['work_junior_map_tbl.status']="1";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_junior_map_tbl, $colNames="work_junior_map_tbl.fkWorkId, work_junior_map_tbl.fkUserId", $jnrCondtnArr, $likeCondtnArr=array(), $joinArr=array(), $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $jnrList=$query['userData'];
+
+        $jnrIdsWorkArr = array();
+        if(!empty($jnrList))
+        {
+            foreach($jnrList AS $e_wk_jnr)
+            {
+                $jnrIdsWorkArr[$e_wk_jnr["fkWorkId"]][$e_wk_jnr["fkUserId"]]=$e_wk_jnr["fkUserId"];
+            }
+        }
+
+        $this->data['jnrIdsWorkArr']=$jnrIdsWorkArr;
 
         return view('firm_panel/client/edit_client', $this->data);
     }

@@ -20,7 +20,7 @@ $(function () {
           type: 'bar',
           height: 260
         },
-		colors:['#5949d6', '#fb3d4e'],
+		colors:['#005495', '#fb3d4e'],
         plotOptions: {
           bar: {
             horizontal: false,
@@ -100,7 +100,7 @@ $(function () {
 		  text: {
 			autoStyleContainer: false
 		  },
-		  from: { color: '#5949d6', width: 1 },
+		  from: { color: '#005495', width: 1 },
 		  to: { color: '#fb3d4e', width: 5 },
 		  // Set default step function for all animate calls
 		  step: function(state, circle) {
@@ -135,7 +135,7 @@ $(function () {
 		  text: {
 			autoStyleContainer: false
 		  },
-		  from: { color: '#5949d6', width: 1 },
+		  from: { color: '#005495', width: 1 },
 		  to: { color: '#ea9715', width: 5 },
 		  // Set default step function for all animate calls
 		  step: function(state, circle) {

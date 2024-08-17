@@ -685,7 +685,7 @@ hr {
   border: 1px solid #d5dfea !important; }
 
 .border-primary {
-  border-color: #5949d6 !important; }
+  border-color: #005495 !important; }
 
 .border-secondary {
   border-color: #9fb3ca !important; }
@@ -13935,7 +13935,7 @@ body .main-header .navbar .nav > li.search-box > a:hover, body .main-header .nav
   color: #ffffff;
   font-size: 16px;
   line-height: 40px;
-  background: #5949d6;
+  background: #005495;
   border-radius: 10px;
   padding: 10px 20px; }
 
@@ -13949,12 +13949,12 @@ body .main-header .navbar .nav > li.search-box > a:hover, body .main-header .nav
     bottom: -15px;
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
-    border-top: 16px solid #5949d6; }
+    border-top: 16px solid #005495; }
   .gmaps-overlay_arrow .below {
     top: -15px;
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
-    border-bottom: 16px solid #5949d6; }
+    border-bottom: 16px solid #005495; }
 
 /*wizard*/
 .wizard-content .wizard {
@@ -15110,9 +15110,9 @@ ul.panel-actions > li {
   top: 0px; }
 
 .alert-custom {
-  background: #5949d6;
+  background: #005495;
   color: #ffffff;
-  border-color: #5949d6; }
+  border-color: #005495; }
 
 .alert-inverse {
   background: #475F7B;
@@ -15619,7 +15619,7 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
       box-shadow: none; }
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
       color: #ffffff;
-      background-color: #5949d6; }
+      background-color: #005495; }
     .dataTables_wrapper .dataTables_paginate .paginate_button:active {
       outline: 0;
       background-color: #737373; }
@@ -17908,7 +17908,7 @@ textarea.form-control {
   color: #475F7B;
   white-space: nowrap; }
   .bootstrap-select .dropdown-menu li a:hover, .bootstrap-select .dropdown-menu li a:focus {
-    color: #5949d6;
+    color: #005495;
     background: #d5dfea; }
 .bootstrap-select .show > .dropdown-menu {
   display: block; }
@@ -19428,7 +19428,7 @@ ul.flexbox {
   padding-left: 0; }
 
 .media-list-hover > .media:not(.media-list-header):not(.media-list-footer):hover, .media-list-hover .media-list-body > .media:hover {
-  background-color: #5949d6;
+  background-color: #005495;
   color: #ffffff; }
   .media-list-hover > .media:not(.media-list-header):not(.media-list-footer):hover a:not(.btn):not(.avatar), .media-list-hover .media-list-body > .media:hover a:not(.btn):not(.avatar) {
     color: #ffffff; }
@@ -21204,7 +21204,7 @@ td .label {
     position: absolute;
     content: " ";
     width: 2px;
-    background-color: #5949d6;
+    background-color: #005495;
     left: 50%;
     margin-left: -1.5px; }
   #timeline .clearFix {
@@ -21223,7 +21223,7 @@ td .label {
     background-color: #ffffff;
     z-index: 6;
     border-radius: 50%;
-    border: 2px solid #5949d6; }
+    border: 2px solid #005495; }
     #timeline .timeline-badge span.timeline-balloon-date-day {
       font-size: 1.4em; }
     #timeline .timeline-badge span.timeline-balloon-date-month {
@@ -21238,7 +21238,7 @@ td .label {
       width: 35px;
       top: 40px; }
       #timeline .timeline-badge .timeline-filter-movement a span {
-        color: #5949d6;
+        color: #005495;
         font-size: 1.3em;
         top: -1px; }
     #timeline .timeline-badge .timeline-future-movement {
@@ -21248,14 +21248,14 @@ td .label {
       font-size: 1.7em;
       top: -16px;
       margin-left: -60px;
-      border: 2px solid #5949d6; }
+      border: 2px solid #005495; }
       #timeline .timeline-badge .timeline-future-movement a span {
-        color: #5949d6;
+        color: #005495;
         font-size: .9em;
         top: 0;
         left: 1px; }
       #timeline .timeline-badge .timeline-future-movement p {
-        color: #5949d6;
+        color: #005495;
         position: absolute;
         top: 40px;
         left: 32px; }
@@ -22823,17 +22823,17 @@ button.btn.dropdown-toggle:after {
         border-radius: 50%;
         border: 2px solid #007eff; }
     .c-progress-steps li.current {
-      color: #5949d6;
+      color: #005495;
       font-weight: 500; }
       .c-progress-steps li.current:before {
-        color: #5949d6;
+        color: #005495;
         content: "\f192";
         width: 30px;
         height: 30px;
         display: inline-block;
         text-align: center;
         border-radius: 50%;
-        border: 2px solid #5949d6; }
+        border: 2px solid #005495; }
     .c-progress-steps li:before {
       position: absolute;
       left: 0;
@@ -22874,13 +22874,13 @@ button.btn.dropdown-toggle:after {
         .c-progress-steps li.done {
           border-bottom-color: #007eff; }
         .c-progress-steps li.current {
-          color: #5949d6;
-          border-bottom-color: #5949d6; }
+          color: #005495;
+          border-bottom-color: #005495; }
           .c-progress-steps li.current span {
             background-color: rgba(89, 73, 214, 0.15);
-            box-shadow: 0px 0px 0px 0.25px #5949d6; }
+            box-shadow: 0px 0px 0px 0.25px #005495; }
           .c-progress-steps li.current:before {
-            color: #5949d6;
+            color: #005495;
             content: "\f192"; }
         .c-progress-steps li:before {
           bottom: -15px;

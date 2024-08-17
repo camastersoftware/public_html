@@ -500,7 +500,7 @@
                                                                                             <div class="col-md-12 col-lg-12">
                                                                                                 <div class="form-group">
                                                                                                     <label>Currently Alloted To : </label>
-                                                                                                    <span><?= $e_inc_row['juniors']; ?></span>
+                                                                                                    <span><?= (!empty($e_inc_row['juniors'])) ? $e_inc_row['juniors']:"-"; ?></span>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-md-12 col-lg-12">
