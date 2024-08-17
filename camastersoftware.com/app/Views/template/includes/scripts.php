@@ -1,6 +1,7 @@
 <!-- Vendor JS -->
 
 <script src="<?php echo base_url('assets/icons/feather-icons/feather.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/cleave.js-1.6.0/dist/cleave.min.js'); ?>"></script>
 
 <?php if(in_array('bootstrap-select', $jsArr)): ?>
     <script src="<?php echo base_url('assets/vendor_components/bootstrap-select/dist/js/bootstrap-select.js'); ?>"></script>
@@ -154,6 +155,33 @@
     </script>
 
 <?php endif; ?>
+
+<script>
+    $(document).ready(function() {
+        if($('.currencyInput').length!="")
+        {
+            $('.currencyInput').each(function() {
+                new Cleave(this, {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'lakh', // Indian grouping style
+                    numeralDecimalMark: '.', // Decimal mark
+                    delimiter: ',', // Thousands separator
+                    prefix: '', // No currency symbol
+                    noImmediatePrefix: true,
+                });
+            });
+
+            // Handle form submission to ensure only numeric values are sent
+            $('form').on('submit', function() {
+                $('.currencyInput').each(function() {
+                    let input = $(this);
+                    let value = input.val().replace(/,/g, '');
+                    input.val(value);
+                });
+            });
+        }
+    });
+  </script>
 
 <script src="<?php echo base_url('assets/js/pages/component-animations-css3.js'); ?>"></script>
 
