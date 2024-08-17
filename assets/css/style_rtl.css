@@ -2623,7 +2623,7 @@ Margin property
   left: inherit; }
 .rtl .timeline__post {
   border-left: none;
-  border-right: 3px solid #5949d6; }
+  border-right: 3px solid #005495; }
 
 @media screen and (max-width: 640px) {
   .rtl .timeline5:before {

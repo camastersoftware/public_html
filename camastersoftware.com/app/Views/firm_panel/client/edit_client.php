@@ -1067,7 +1067,7 @@
                                                                                         <th class="column-5">Periodicity</th>
                                                                                         <th class="column-6">Period</th>
                                                                                         <th class="column-7">Due Date</th>
-                                                                                        <th class="column-8">Note</th>
+                                                                                        <th class="column-8">Junior</th>
                                                                                         <th class="column-9">Action</th>
                                                                                     </tr>
                                                                                 </thead>
@@ -1080,6 +1080,9 @@
                                                                                 ?>
                                                                                 <?php if(!empty($actsListArr)): ?>
                                                                                     <?php foreach($actsListArr AS $k_row=>$e_row): ?>
+                                                                                        <?php $uniqueRowId=$k_act_id.$k_row.$e_row['due_date_id']; ?>
+                                                                                        <?php $workId=$e_row['workId']; ?>
+
                                                                                         <tr class="row-3 row_<?php echo $k_act_id.$k_row.$e_row['due_date_id']; ?>" style="background-color:#f6fbff;">
                                                                                             <td class="column-1 text-left pl-25" style="width: 26% !important;">
                                                                                                 <?php 
@@ -1193,35 +1196,41 @@
                                                                                                     <input type="hidden" name="actTYr[]" value="">
                                                                                                 <?php endif; ?>
                                                                                                 
-                                                                                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit mb-5" data-toggle="modal" data-target="#modal_view<?php echo $k_act_id.$k_row; ?>">
-                                                                                                    Note
-                                                                                                </button>
-                                
-                                                                                                <!-- Modal -->
-                                                                                                <div class="modal center-modal fade" id="modal_view<?php echo $k_act_id.$k_row; ?>" tabindex="-1">
-                                                                                                    <div class="modal-dialog">
-                                                                                                        <div class="modal-content">
-                                                                                                            <div class="modal-header">
-                                                                                                                <h5 class="modal-title">Note</h5>
-                                                                                                                <button type="button" class="close" data-dismiss="modal">
-                                                                                                                    <span aria-hidden="true">&times;</span>
-                                                                                                                </button>
-                                                                                                            </div>
-                                                                                                            <div class="modal-body">
-                                                                                                                <p><?php echo $e_row['due_notes']; ?></p>
-                                                                                                            </div>
-                                                                                                            <div class="modal-footer modal-footer-uniform text-right">
-                                                                                                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
-                                                                                                            </div>
-                                                                                                        </div>
+                                                                                                <div class="text-center" data-toggle="tooltip" data-original-title="<?= $e_row['juniors']; ?>">
+                                                                                                    <span>
+                                                                                                        <?php if($e_row['juniors']!=""): ?>
+                                                                                                            <?php
+                                                                                                                $juniorArray = explode(", ", $e_row['juniors']);
+                                                                                                                if(count($juniorArray)>1)
+                                                                                                                {
+                                                                                                                    echo $juniorArray[0]."+"; 
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    echo $e_row['juniors'];
+                                                                                                                }
+                                                                                                            ?>
+                                                                                                        <?php else: ?>
+                                                                                                            -
+                                                                                                        <?php endif; ?>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td class="column-9" style="width: 5% !important;" nowrap>
+                                                                                                <div class="btn-group">
+                                                                                                    <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                                                    <div class="dropdown-menu" style="will-change: transform;">
+                                                                                                        <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#updateJuniorStaff<?= $uniqueRowId; ?>">
+                                                                                                            <i class="fa-solid fa-user-check"></i>&nbsp;Junior Allotment
+                                                                                                        </a>
+                                                                                                        <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#modal_view<?= $k_act_id.$k_row; ?>">
+                                                                                                            <i class="fa fa-file"></i>&nbsp;View Note
+                                                                                                        </a>
+                                                                                                        <a class="dropdown-item delete_due_date" href="javascript:void(0);" data-id="<?= $k_act_id.$k_row.$e_row['due_date_id']; ?>" data-due="<?php echo $e_row['due_date_id']; ?>" data-client="<?php echo $clientId; ?>" data-act="<?= $k_act_id; ?>" data-orgtype="<?= $clientBussOrganisationType; ?>">
+                                                                                                            <i class="fa fa-trash"></i>&nbsp;Delete
+                                                                                                        </a>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                <!-- /.modal -->
-                                                                                            </td>
-                                                                                            <td class="column-9 text-center" style="width: 5% !important;" nowrap>
-                                                                                                <a href="javascript:void(0);" class="delete_due_date" data-id="<?php echo $k_act_id.$k_row.$e_row['due_date_id']; ?>" data-due="<?php echo $e_row['due_date_id']; ?>" data-client="<?php echo $clientId; ?>" data-act="<?= $k_act_id; ?>" data-orgtype="<?= $clientBussOrganisationType; ?>">
-                                                                                                    <i class="fa fa-trash fa-1x text-danger" style="font-size: 20px !important;"></i>
-                                                                                                </a>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <?php endforeach; ?>
@@ -1939,6 +1948,102 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
 
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if(!empty($workActs)): ?>
+        <?php foreach($workActs AS $k_act_id=>$e_act_name): ?>
+            <?php
+                if(isset($workActListArr[$k_act_id]))
+                    $actsListArray=$workActListArr[$k_act_id];
+                else
+                    $actsListArray=array();
+            ?>
+            <?php if(!empty($actsListArray)): ?>
+                <?php foreach($actsListArray AS $k_row=>$e_row): ?>
+                    <?php $uniqueRowId=$k_act_id.$k_row.$e_row['due_date_id']; ?>
+                    <?php $workId=$e_row['workId']; ?>
+                    <?php
+                        $juniorIdsWorkArr = array();
+                        
+                        if(!empty($jnrIdsWorkArr[$workId]))
+                        {
+                            $juniorIdsWorkArr=$jnrIdsWorkArr[$workId];
+                        }
+                    ?>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal_view<?php echo $k_act_id.$k_row; ?>" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Note</h5>
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><?php echo $e_row['due_notes']; ?></p>
+                                </div>
+                                <div class="modal-footer modal-footer-uniform text-right">
+                                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal -->
+
+                    <!-- Modal -->
+                    <div id="updateJuniorStaff<?= $uniqueRowId ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                                <form action="<?php echo base_url('update-inc-work-juniors'); ?>" method="POST" >
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel">Change Junior Staff Allotment</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Currently Alloted To : </label>
+                                                    <span><?= (!empty($e_row['juniors'])) ? $e_row['juniors']:"-"; ?></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12">
+                                                <div class="form-group">
+                                                    <select class="form-control select2 selectWorkJuniors" name="juniorsIds[]" id="juniorIds_<?= $uniqueRowId; ?>" data-unique_id="<?= $uniqueRowId; ?>" multiple="multiple" data-placeholder="Select Juniors" style="width:100%;">
+                                                        <option value="">Select Juniors</option>
+                                                        <?php if(!empty($getUserList)): ?>
+                                                            <?php foreach($getUserList AS $e_usr_val): ?>
+                                                                <?php if(!empty($juniorIdsWorkArr)): ?>
+                                                                    <option value="<?= $e_usr_val['userId']; ?>" data-short="<?= $e_usr_val['userShortName']; ?>" <?= (in_array($e_usr_val['userId'], $juniorIdsWorkArr)) ? "selected":""; ?>><?= $e_usr_val['userFullName']; ?></option>
+                                                                <?php else: ?>
+                                                                    <option value="<?= $e_usr_val['userId']; ?>" data-short="<?= $e_usr_val['userShortName']; ?>"><?= $e_usr_val['userFullName']; ?></option>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer text-right" style="width: 100%;">
+                                        <input type="hidden" name="workId" id="workId" value="<?= $workId; ?>">
+                                        <input type="hidden" name="juniors" id="juniors_<?= $uniqueRowId ?>" value="<?= $e_row['juniors']; ?>">
+                                        <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                                        <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+                <?php endforeach; ?>
             <?php endif; ?>
         <?php endforeach; ?>
     <?php endif; ?>
@@ -3422,6 +3527,27 @@
                 }
                 
                 $("#"+clientDocInputId+"Label").val(clientDocNo);
+            });
+
+            $(".selectWorkJuniors").on("change", function(){
+
+                var unqiueId = $(this).data("unique_id");
+
+                var juniorDropdwon = "#juniorIds_"+unqiueId;
+                var juniorNamesInput = "#juniors_"+unqiueId;
+
+                $(juniorNamesInput).val("");
+
+                var selectedJuniors = $(juniorDropdwon).find('option:selected').map(function() {
+                    return $(this).data('short');
+                }).get();
+
+                // Format as comma-separated string
+                var selectedJuniorNames = selectedJuniors.join(', ');
+
+                // Display the formatted string
+                $(juniorNamesInput).val(selectedJuniorNames);
+
             });
             
             showClientName();
