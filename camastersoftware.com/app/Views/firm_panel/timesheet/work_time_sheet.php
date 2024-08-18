@@ -149,6 +149,45 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="row form-group mb-2">
+                                <div class="col-md-12 col-lg-12 text-center">
+                                    <h3 class="font-weight-bold m-0" >
+                                        <?= $workClientName; ?>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row form-group mb-2">
+                                <div class="col-md-12 col-lg-12 text-center">
+                                    <h4 class="font-weight-bold m-0" >
+                                        <?= $DDFName; ?>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 text-left">
+                            <span class="font-weight-bold">Due Date :&nbsp;</span>
+                            <span class="font-weight-bold">
+                                <?= $DDdate; ?>
+                            </span>
+                        </div>
+                        <div class="col-md-4 col-lg-4 text-center">
+                            <span class="font-weight-bold">Periodicity :&nbsp;</span>
+                            <span class="font-weight-bold">
+                                <?= $DDPeriodcity; ?>
+                            </span>
+                        </div>
+                        <div class="col-md-4 col-lg-4 text-right">
+                            <span class="font-weight-bold">Period :&nbsp;</span>
+                            <span class="font-weight-bold">
+                                <?= $DDPeriod; ?> (AY : <?= $asmtYear; ?>)
+                            </span>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <hr>
+                        </div>
+                        <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="data_tbl table table-bordered table-striped" style="width:100%">
                                     <thead>

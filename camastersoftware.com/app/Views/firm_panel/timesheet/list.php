@@ -123,6 +123,9 @@
     
 </style>
 
+<?php $currentDate = date('Y-m-d'); ?>
+<?php $currentTime = date('h:i A'); ?>
+
 <section class="content client_list_tbl mt-35">
     <div class="row">
         <div class="col-12">
@@ -135,9 +138,7 @@
                             </h4>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#addTimeSheetModal">
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Add</button>
-                            </a>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark get_back" style="">Back</button>
                         </div>
                     </div>
                 </div>
@@ -207,7 +208,7 @@
                                                     </td>
                                                     <td class="text-center" width="5%" nowrap>
                                                         <?php 
-                                                            if(!empty($e_row['totalHours']))
+                                                            if(!empty($e_row['tsTotalHours']))
                                                                 $totalHoursVal = $e_row['tsTotalHours'];
                                                             else 
                                                                 $totalHoursVal = " "; 
@@ -249,7 +250,7 @@
                                                             <div class="dropdown-menu" style="will-change: transform;">
                                                                 <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#editTimeSheetModal<?php echo $k_row; ?>">Edit</a>
                                                                 <?php if(isset($e_row['timeSheetId'])): ?>
-                                                                    <a class="dropdown-item deleteEmpAttend" href="javascript:void(0);" data-id="<?= $e_row['timeSheetId']; ?>">Delete</a>
+                                                                    <a class="dropdown-item deleteTimeSheet" href="javascript:void(0);" data-id="<?= $e_row['timeSheetId']; ?>">Delete</a>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
@@ -270,4 +271,260 @@
     </div>
 </section>
 
+
+<?php if(!empty($timeSheetArr)): ?>
+    <?php foreach($timeSheetArr AS $k_row => $e_row): ?>
+    
+    <?php
+        $isEndTimeReqd = false;
+        
+        if($e_row['tsWorkingDate']<$currentDate)
+        {
+            $isEndTimeReqd = true;
+        }
+
+        $tsAddHrs = (!empty($e_row['tsAddHrs'])) ? $e_row['tsAddHrs'] : 1;
+
+        $isReqdHrs = "";
+        $isHrsDisabled = "";
+        $setHrsOrTimeTitle = "";
+        $isReqdStEdTime = "";
+
+        if($tsAddHrs==1)
+        {
+            $isReqdHrs="required";
+            $isHrsDisabled = "";
+            $setHrsOrTimeTitle = "Set Start & End Time";
+            $isReqdStEdTime = "";
+        }
+        else
+        {
+            $isReqdHrs="";
+            $isHrsDisabled = "disabled";
+            $setHrsOrTimeTitle = "Add Hours";
+            $isReqdStEdTime = "required";
+        }
+    ?>
+    
+    <!-- Modal -->
+    <div id="editTimeSheetModal<?php echo $k_row; ?>" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="<?php echo base_url('update-time-sheet-data'); ?>" method="POST" enctype="multipart/form-data" >
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Edit Time Sheet</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label>Date<small class="text-danger">*</small></label>
+                                    <input type="date" class="form-control" name="tsWorkingDate" value="<?= $e_row['tsWorkingDate']; ?>" >
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group mb-0">
+                                    <label>Hours<small class="text-danger">*</small></label>
+                                    <?php $tsTotalHours = (!empty($e_row['tsTotalHours'])) ? $e_row['tsTotalHours'] : ""; ?>
+                                    <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours<?= $k_row; ?>" value="<?= $tsTotalHours; ?>" <?= $isReqdHrs; ?> <?= $isHrsDisabled; ?>>
+                                    <label>
+                                        <span class="font-weight-light proj_primary_clr anchor setEditTSFormat" data-id="<?= $k_row; ?>"><?= $setHrsOrTimeTitle; ?><span>
+                                    </label>
+                                </div>
+                                <input type="hidden" name="tsAddHrs" id="tsAddHrs<?= $k_row; ?>" value="<?= $tsAddHrs; ?>" />
+                            </div>
+                            <div class="col-md-6 col-lg-6 editTimeInputDiv<?= $k_row; ?>" <?php if($tsAddHrs==1): ?>style="display: none;"<?php endif; ?>>
+                                <div class="form-group bootstrap-timepicker">
+                                    <div class="form-group mb-0">
+                                        <label>In Time<small class="text-danger">*</small></label>
+                                        <input type="checkbox" id="setEditInTime<?= $k_row; ?>" class="radio-col-success setEditInTime" data-id="<?= $k_row; ?>" <?= $isReqdStEdTime; ?>>
+                                        <label for="setEditInTime<?= $k_row; ?>">
+                                            <span class="font-weight-light">Set Current Time<span>
+                                        </label>
+                                    </div>
+                                    <div class="input-group">
+                						<div class="input-group-addon">
+                						  <i class="fa fa-clock-o"></i>
+                						</div>
+                                        <?php $inTime = (!empty($e_row['tsStartTime'])) ? date('h:i A', strtotime($e_row['tsStartTime'])) : ""; ?>
+                                        <input type="text" class="form-control editTimepicker editInTimeInput<?= $k_row; ?>" name="tsStartTime" id="tsStartTime" placeholder="Enter In Time" value="<?= $inTime; ?>"  <?= $isReqdStEdTime; ?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 editTimeInputDiv<?= $k_row; ?>" <?php if($tsAddHrs==1): ?>style="display: none;"<?php endif; ?>>
+                                <div class="form-group bootstrap-timepicker">
+                                    <div class="form-group mb-0">
+                                        <label>Out Time <?php if($isEndTimeReqd): ?><small class="text-danger">*</small><?php endif; ?></label>
+                                        <input type="checkbox" id="setEditOutTime<?= $k_row; ?>" class="radio-col-success setEditOutTime" data-id="<?= $k_row; ?>" <?= $isReqdStEdTime; ?>>
+                                        <label for="setEditOutTime<?= $k_row; ?>">
+                                            <span class="font-weight-light">Set Current Time<span>
+                                        </label>
+                                    </div>
+                                    <div class="input-group">
+                						<div class="input-group-addon">
+                						  <i class="fa fa-clock-o"></i>
+                						</div>
+                                        <?php $outTime = (!empty($e_row['tsEndTime'])) ? date('h:i A', strtotime($e_row['tsEndTime'])) : ""; ?>
+                                        <input type="text" class="form-control editTimepicker editOutTimeInput<?= $k_row; ?>" name="tsEndTime" id="tsEndTime" placeholder="Enter Out Time" value="<?= $outTime; ?>" <?= $isReqdStEdTime; ?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label>Work Place</label>
+                                    <input type="text" class="form-control workPlace" name="tsWorkPlace" value="<?= (isset($e_row['tsWorkPlace'])) ? $e_row['tsWorkPlace'] : ""; ?>" maxlength="18" >
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea class="form-control" name="tsRemarks" rows="2" ><?= (isset($e_row['tsRemarks'])) ? $e_row['tsRemarks'] : ""; ?></textarea>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-right" style="width: 100%;">
+                        <input type="hidden" name="workId" value="<?= $e_row["fkWorkId"]; ?>">
+                        <input type="hidden" name="userId" value="<?= $userId; ?>">
+                        <?php $timeSheetId = (!empty($e_row['timeSheetId'])) ? $e_row['timeSheetId'] : ""; ?>
+                        <input type="hidden" name="timeSheetId" id="timeSheetId" value="<?= $timeSheetId; ?>" />
+                        <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+                        <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    
+    <?php endforeach; ?>
+<?php endif; ?>
+
+
+<?= $this->endSection(); ?>
+
+<?= $this->section('javacript'); ?>
+<script>
+    $(document).ready(function(){
+        
+        $(".timeInputDiv").hide();
+
+        initializeTimepicker(minuteStep=1);
+
+        $('.setEditInTime').change(function() {
+            let dataId = $(this).data('id');
+            if ($(this).is(':checked')) {
+                setCurrentTime('.editInTimeInput'+dataId);
+            } else {
+                $('.editInTimeInput'+dataId).val("");
+            }
+        });
+
+        $('.setEditOutTime').change(function() {
+            let dataId = $(this).data('id');
+            if ($(this).is(':checked')) {
+                setCurrentTime('.editOutTimeInput'+dataId);
+            } else {
+                $('.editOutTimeInput'+dataId).val("");
+            }
+        });
+
+        $(".setEditTSFormat").on("click", function() {
+
+            var rowId = $(this).data('id');
+            console.log("rowId", rowId);
+            let tsAddHrs = parseInt($("#tsAddHrs"+rowId).val());
+            console.log("tsAddHrs", tsAddHrs);
+
+            if(tsAddHrs == 1) {
+                $("#tsAddHrs"+rowId).val(2);
+                $(this).html("Add Hours");
+                $(".editTimeInputDiv"+rowId).show();
+                $("#tsTotalHours"+rowId).val("");
+                $("#tsTotalHours"+rowId).prop("disabled", true);
+                $("#tsTotalHours"+rowId).prop("required", false);
+            } else if(tsAddHrs == 2) {
+                $("#tsAddHrs"+rowId).val(1);
+                $(this).html("Set Start & End Time");
+                $(".editTimeInputDiv"+rowId).hide();
+                $(".editTimeInputDiv"+rowId+" input").val("");
+                $("#tsTotalHours"+rowId).prop("disabled", false);
+                $("#tsTotalHours"+rowId).prop("required", true);
+            }
+
+        });
+
+        $('.deleteTimeSheet').on('click', function () {
+
+            var base_url = "<?php echo base_url(); ?>";
+            var timeSheetId = $(this).data('id');
+            let workId = $('#currentWorkId').val();
+
+            swal({
+                title: "Are you sure?",
+                text: "Do you really want to delete ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function(isConfirm){
+                if (isConfirm) {
+
+                    var postingUrl = base_url+'/delete-time-sheet-data';
+                    $.post(postingUrl, 
+                    {
+                        timeSheetId: timeSheetId
+                    },
+                    function(data, status){
+                        window.location.href=base_url+"/work-time-sheet-list/"+workId;
+                    });
+
+                } else {
+                    swal("Cancelled", "You cancelled :)", "error");
+                }
+            });
+
+        });
+    });
+
+    function initializeTimepicker(minuteStep) {
+        if (document.readyState === 'complete') {
+            $('.timepicker').timepicker('remove');
+        }
+        
+        $('.editTimepicker').timepicker({
+            'showInputs': false,
+            'minuteStep': minuteStep,
+            'defaultTime': false
+        });
+    }
+
+    function setCurrentTime(selector) {
+        var currentTime = new Date();
+        var hours = currentTime.getHours();
+        var minutes = currentTime.getMinutes();
+        var formattedTime = formatTime(hours, minutes);
+        $(selector).timepicker('setTime', formattedTime);
+    }
+
+    function formatTime(hours, minutes) {
+        var period = 'AM';
+        if (hours >= 12) {
+            period = 'PM';
+            if (hours > 12) {
+                hours -= 12;
+            }
+        } else if (hours === 0) {
+            hours = 12;
+        }
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return hours + ':' + minutes + ' ' + period;
+    }
+</script>
 <?= $this->endSection(); ?>
