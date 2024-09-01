@@ -124,6 +124,7 @@ class TableLib
         $tableArr['calender_year_config_tbl']=$adminDB.".calender_year_config_tbl";
         $tableArr['reminder_user_map_tbl']=$adminDB.".reminder_user_map_tbl";
         $tableArr['time_sheet_tbl']=$adminDB.".time_sheet_tbl";
+        $tableArr['staff_cost_tbl']=$adminDB.".staff_cost_tbl";
         
         return $tableArr;
 	}

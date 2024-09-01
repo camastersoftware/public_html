@@ -156,7 +156,7 @@ if (!function_exists('getHoursAndMinutesFormat')) {
         $decimal_part = (float)number_format($total_hours - $whole_hours, 2, '.', '');
 
         $parts = explode('.', (string)$decimal_part);
-        $minutes = isset($parts[1]) ? $parts[1] : 0;
+        $minutes = isset($parts[1]) ? (float)$parts[1] : 0;
 
         // Convert excess minutes to hours if more than 60
         if ($minutes >= 60) {
@@ -170,5 +170,21 @@ if (!function_exists('getHoursAndMinutesFormat')) {
         );
 
         return $responseArray;
+    }
+}
+
+if (!function_exists('getHoursInMinutes')) {
+    function getHoursInMinutes($hours)
+    {
+        $whole_hours = floor($hours);
+
+        $decimal_part = (float)number_format($hours - $whole_hours, 2, '.', '');
+
+        $parts = explode('.', (string)$decimal_part);
+        $minutes = isset($parts[1]) ? (float)$parts[1] : 0;
+
+        $total_minutes = (float)(($whole_hours * 60) + $minutes);
+
+        return $total_minutes;
     }
 }

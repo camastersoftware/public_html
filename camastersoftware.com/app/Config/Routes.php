@@ -873,6 +873,8 @@ $routes->get('/edit-bill/(:any)', 'Bill::edit/$1');
 $routes->post('/update-bill', 'Bill::update');
 $routes->get('/view-bill/(:any)', 'Bill::view/$1');
 $routes->post('/delete-bill', 'Bill::delete');
+$routes->get('/get-staff-rate', 'Accounts/Staff::getStaffRate');
+$routes->post('/edit-staff-rate', 'Accounts/Staff::updateStaffRate');
 
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');

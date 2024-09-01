@@ -4,11 +4,11 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MtimeSheet extends Model
+class MStaffCost extends Model
 {
     protected $DBGroup = 'adminDB';
-    protected $table = 'time_sheet_tbl';
-    protected $primaryKey = 'timeSheetId';
+    protected $table = 'staff_cost_tbl';
+    protected $primaryKey = 'staffCostId';
 
     protected $useAutoIncrement = true;
 
@@ -16,21 +16,13 @@ class MtimeSheet extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-                                'fkWorkId',
                                 'fkUserId',
-                                'tsWorkingDate',
-                                'tsAddHrs',
-                                'tsStartTime',
-                                'tsEndTime',
-                                'tsTotalHours',
-                                'tsCostPerHour',
-                                'tsTotalCost',
-                                'tsWorkPlace',
-                                'tsRemarks',
+                                'staffCostPerHour',
+                                'changedDate',
                                 'status',
-                                'createdBy', 
-                                'createdDatetime', 
-                                'updatedBy', 
+                                'createdBy',
+                                'createdDatetime',
+                                'updatedBy',
                                 'updatedDatetime'
                             ];
 

@@ -15,6 +15,7 @@ class TimeSheet extends BaseController
         $this->Mconfig = new \App\Models\Mconfig();
         $this->MtimeSheet = new \App\Models\MtimeSheet();
         $this->Muser = new \App\Models\Muser();
+        $this->MStaffCost = new \App\Models\MStaffCost();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -350,6 +351,29 @@ class TimeSheet extends BaseController
             }
         }
 
+        $staffCondtn = array(
+            "fkUserId"  => $userId,
+            'status'    => 1
+        );
+
+        $staffCostData=$this->MStaffCost->where($staffCondtn)
+                                        ->get()
+                                        ->getRowArray();
+
+        $tsCostPerHour = 0;
+        $tsTotalCost = 0;
+
+        if(!empty($staffCostData)){
+
+            if(!empty($totalHours))
+            {
+                $tsCostPerHour = (float)$staffCostData["staffCostPerHour"];
+                $tsCostPerMin = (float)number_format($tsCostPerHour/60, 2, '.', '');
+                $totalHrsInMinutes = getHoursInMinutes((float)$totalHours); 
+                $tsTotalCost = $totalHrsInMinutes * $tsCostPerMin;
+            } 
+        }
+
         $tsInsertArr = array(
             'fkWorkId'          => $workId,
             'fkUserId'          => $userId,
@@ -358,6 +382,8 @@ class TimeSheet extends BaseController
             'tsStartTime'       => $startTime,
             'tsEndTime'         => $endTime,
             'tsTotalHours'      => $totalHours,
+            'tsCostPerHour'     => $tsCostPerHour,
+            'tsTotalCost'       => $tsTotalCost,
             'tsWorkPlace'       => $tsWorkPlace,
             'tsRemarks'         => $tsRemarks,
             'status'            => 1,
@@ -440,6 +466,29 @@ class TimeSheet extends BaseController
             }
         }
 
+        $staffCondtn = array(
+            "fkUserId"  => $userId,
+            'status'    => 1
+        );
+
+        $staffCostData=$this->MStaffCost->where($staffCondtn)
+                                        ->get()
+                                        ->getRowArray();
+
+        $tsCostPerHour = 0;
+        $tsTotalCost = 0;
+
+        if(!empty($staffCostData)){
+
+            if(!empty($totalHours))
+            {
+                $tsCostPerHour = (float)$staffCostData["staffCostPerHour"];
+                $tsCostPerMin = (float)number_format($tsCostPerHour/60, 2, '.', '');
+                $totalHrsInMinutes = getHoursInMinutes((float)$totalHours); 
+                $tsTotalCost = $totalHrsInMinutes * $tsCostPerMin;
+            } 
+        }
+
         $tsUpdateArr = array(
             'timeSheetId'       => $timeSheetId,
             'fkWorkId'          => $workId,
@@ -449,6 +498,8 @@ class TimeSheet extends BaseController
             'tsStartTime'       => $startTime,
             'tsEndTime'         => $endTime,
             'tsTotalHours'      => $totalHours,
+            'tsCostPerHour'     => $tsCostPerHour,
+            'tsTotalCost'       => $tsTotalCost,
             'tsWorkPlace'       => $tsWorkPlace,
             'tsRemarks'         => $tsRemarks,
             'updatedBy'         => $this->adminId,

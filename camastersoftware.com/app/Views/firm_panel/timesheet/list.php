@@ -448,7 +448,7 @@
                                 <div class="form-group mb-0">
                                     <label>Hours<small class="text-danger">*</small></label>
                                     <?php $tsTotalHours = (!empty($e_row['tsTotalHours'])) ? $e_row['tsTotalHours'] : ""; ?>
-                                    <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours<?= $k_row; ?>" value="<?= $tsTotalHours; ?>" <?= $isReqdHrs; ?> <?= $isHrsDisabled; ?>>
+                                    <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours<?= $k_row; ?>" value="<?= $tsTotalHours; ?>" step="0.01" min="0" <?= $isReqdHrs; ?> <?= $isHrsDisabled; ?>>
                                     <label>
                                         <span class="font-weight-light proj_primary_clr anchor setEditTSFormat" data-id="<?= $k_row; ?>"><?= $setHrsOrTimeTitle; ?><span>
                                     </label>
