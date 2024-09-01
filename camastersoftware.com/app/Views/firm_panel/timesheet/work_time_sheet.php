@@ -200,6 +200,7 @@
                                             <th width="5%">Start&nbsp;Time</th>
                                             <th width="5%">End&nbsp;Time</th>
                                             <th width="5%">Hours</th>
+                                            <th width="5%">Cost</th>
                                             <th width="5%">Place</th>
                                             <th width="5%">Remarks</th>
                                             <th width="5%">Action</th>
@@ -259,6 +260,14 @@
                                                                 $totalHoursVal = " "; 
                                                         ?>
                                                         <?= $totalHoursVal; ?>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <?php 
+                                                            if(!empty($e_row['tsTotalCost']))
+                                                                echo amount_format($e_row['tsTotalCost']);
+                                                            else 
+                                                                echo " "; 
+                                                        ?>
                                                     </td>
                                                     <td class="text-center" width="5%" nowrap>
                                                         <?php 
@@ -372,7 +381,7 @@
                                 <div class="form-group mb-0">
                                     <label>Hours<small class="text-danger">*</small></label>
                                     <?php $tsTotalHours = (!empty($e_row['tsTotalHours'])) ? $e_row['tsTotalHours'] : ""; ?>
-                                    <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours<?= $k_row; ?>" value="<?= $tsTotalHours; ?>" <?= $isReqdHrs; ?> <?= $isHrsDisabled; ?>>
+                                    <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours<?= $k_row; ?>" value="<?= $tsTotalHours; ?>" step="0.01" min="0" <?= $isReqdHrs; ?> <?= $isHrsDisabled; ?>>
                                     <label>
                                         <span class="font-weight-light proj_primary_clr anchor setEditTSFormat" data-id="<?= $k_row; ?>"><?= $setHrsOrTimeTitle; ?><span>
                                     </label>
@@ -469,7 +478,7 @@
                         <div class="col-md-6 col-lg-6">
                             <div class="form-group mb-0">
                                 <label>Hours<small class="text-danger">*</small></label>
-                                <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours" required>
+                                <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours" step="0.01" min="0" required>
                                 <label>
                                     <span class="font-weight-light proj_primary_clr anchor setTSFormat">Set Start & End Time<span>
                                 </label>
