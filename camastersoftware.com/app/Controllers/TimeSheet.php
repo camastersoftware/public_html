@@ -14,6 +14,7 @@ class TimeSheet extends BaseController
         $this->Mquery = new \App\Models\Mquery();
         $this->Mconfig = new \App\Models\Mconfig();
         $this->MtimeSheet = new \App\Models\MtimeSheet();
+        $this->Muser = new \App\Models\Muser();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -26,6 +27,7 @@ class TimeSheet extends BaseController
         $this->user_tbl=$tableArr['user_tbl'];
         $this->work_tbl=$tableArr['work_tbl'];
         $this->time_sheet_tbl=$tableArr['time_sheet_tbl'];
+        $this->act_tbl=$tableArr['act_tbl'];
 
         $this->section = "Time Sheet";
         
@@ -45,6 +47,13 @@ class TimeSheet extends BaseController
         $uri = service('uri');
         $this->data['uri1'] = $uri1 = $uri->getSegment(1);
 
+        $mth = $this->request->getGet("mth");
+
+        if (empty($mth))
+            $mth = date('n');
+
+        $this->data['mth'] = $mth;
+
         $jsArr = array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full', 'timepicker');
         $this->data['jsArr'] = $jsArr;
 
@@ -58,19 +67,59 @@ class TimeSheet extends BaseController
 
         $this->data['navArr'] = $navArr;
 
+        $selMth = sprintf("%02d", $mth);
+
+        $fin_year_arr = explode("-", $this->sessDueDateYear);
+
+        $fromYr = $fin_year_arr[0];
+        $toYr = "20" . $fin_year_arr[1];
+
+        $this->data['fromYr'] = $fromYr;
+        $this->data['toYr'] = $toYr;
+
+        if ($mth <= 3)
+            $selYr = $toYr;
+        else
+            $selYr = $fromYr;
+
+        $this->data['selYr'] = $selYr;
+
+        $fromDate = date("Y-m-d", strtotime($selYr . "-" . $selMth . "-01"));
+        $toDate = date("Y-m-d", strtotime($selYr . "-" . $selMth . "-31"));
+
         $userId = $this->sessUserId;
 
         $this->data['userId'] = $userId;
 
+        $userCondtion = array(
+            "user_tbl.isOldUser" => 2,
+            "user_tbl.status" => 1,
+            "user_tbl.userId" => $userId
+        );
+
+        $staffData = $this->Muser->select("user_tbl.userId, user_tbl.userFullName")
+                    ->where($userCondtion)
+                    ->get()
+                    ->getRowArray();
+
+        $this->data['staffData'] = $staffData;
+
+        $workCondtnArr['time_sheet_tbl.tsWorkingDate >=']=$fromDate;
+        $workCondtnArr['time_sheet_tbl.tsWorkingDate <=']=$toDate;
         $workCondtnArr['time_sheet_tbl.fkUserId']=$userId;
         $workCondtnArr['work_tbl.status']="1";
         $workCondtnArr['client_tbl.status']="1";
 
+        $workOrderByArr["time_sheet_tbl.tsWorkingDate"]="ASC";
+        $workOrderByArr["time_sheet_tbl.timeSheetId"]="ASC";
+
         $workJoinArr[]=array("tbl"=>$this->work_tbl, "condtn"=>"work_tbl.workId=time_sheet_tbl.fkWorkId AND work_tbl.status=1", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId AND client_tbl.status=1", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id AND due_date_master_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->periodicity_tbl, "condtn"=>"periodicity_tbl.periodicity_id=due_date_master_tbl.periodicity AND periodicity_tbl.status=1", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS applicable_form_tbl', "condtn"=>"applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form AND due_date_for_tbl.option_type=5", "type"=>"left");
         $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
 
         $columnNames = "
@@ -97,11 +146,14 @@ class TimeSheet extends BaseController
                     due_date_master_tbl.t_period_month,
                     due_date_master_tbl.t_period_year,
                     ext_due_date_master_tbl.extended_date, 
-                    due_date_for_tbl.act_option_name AS due_date_for_name,
+                    due_date_for_tbl.shortName AS due_date_for_name,
+                    applicable_form_tbl.shortName AS applicable_form_name,
+                    act_tbl.act_id,
+                    act_tbl.act_short_name,
                     periodicity_tbl.periodicity_name
                 ";
         
-        $query=$this->Mcommon->getRecords($tableName=$this->time_sheet_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        $query=$this->Mcommon->getRecords($tableName=$this->time_sheet_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
         
         $timeSheetArr=$query['userData'];
 

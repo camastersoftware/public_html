@@ -138,6 +138,27 @@
                             </h4>
                         </div>
                         <div class="col-6 text-right">
+                            <select class="custom-select form-control col-md-3" id="selMthAttend">
+                                <option value="">Select Month</option>
+                                <?php for($m_no=1;$m_no<13;$m_no++): ?>
+                                    <?php
+                                        if($m_no<=9)
+                                        {
+                                            $m=$m_no+3;
+                                            $yr=$fromYr;
+                                        }
+                                        else
+                                        {
+                                            $m=$m_no-9;
+                                            $yr=$toYr;
+                                        }
+                                    ?>
+                                    <option value="<?php echo $m; ?>" <?php if($m==$mth): ?>selected<?php endif; ?> >
+                                        <?php echo date('F', strtotime("2021-".$m."-1"))."-".$yr; ?>
+                                    </option>
+                                <?php endfor; ?>
+                            </select>
+                            &nbsp;&nbsp;
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark get_back" style="">Back</button>
                         </div>
                     </div>
@@ -145,18 +166,47 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="row form-group mb-2">
+                                <div class="col-md-12 col-lg-12 text-center">
+                                    <h3 class="font-weight-bold m-0" >
+                                        <?php 
+                                            if(!empty($staffData['userFullName']))
+                                                echo $staffData['userFullName'];
+                                            else 
+                                                echo "-"; 
+                                        ?>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row form-group mb-2">
+                                <div class="col-md-12 col-lg-12 text-center">
+                                    <h4 class="font-weight-bold m-0" >
+                                        <?= date('F', strtotime("2021-".$mth."-1"))."-".$selYr; ?>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <hr>
+                        </div>
+                        <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="data_tbl table table-bordered table-striped" style="width:100%">
                                     <thead>
                                         <tr class="text-center">
                                             <th width="5%">SN</th>
                                             <th width="5%">Date</th>
-                                            <th width="5%">Day</th>
-                                            <th width="5%">In&nbsp;Time</th>
-                                            <th width="5%">Out&nbsp;Time</th>
-                                            <th width="5%">Hours</th>
-                                            <th width="5%">Place</th>
-                                            <th width="5%">Remarks</th>
+                                            <th width="5%">Client&nbsp;Name</th>
+                                            <th width="5%">Due&nbsp;Date</th>
+                                            <th width="5%">Due&nbsp;Date&nbsp;For</th>
+                                            <th width="5%">Act</th>
+                                            <th width="5%">Form</th>
+                                            <th width="5%">Period</th>
+                                            <th width="5%">Start&nbsp;Time</th>
+                                            <th width="5%">End&nbsp;Time</th>
+                                            <th width="5%">Hrs</th>
                                             <th width="5%">Action</th>
                                         </tr>
                                     </thead>
@@ -172,6 +222,40 @@
                                                         
                                                     $dayNo=date('N', strtotime($tsWorkingDate)); 
                                                 ?>
+                                                <?php
+                                                    $clientBussOrgType=$e_row['clientBussOrganisationType'];
+
+                                                    if(in_array($clientBussOrgType, INDIVIDUAL_ARRAY))
+                                                        $workClientName=(!empty($e_row['clientName'])) ? $e_row['clientName']:"";
+                                                    else
+                                                        $workClientName=(!empty($e_row['clientBussOrganisation'])) ? $e_row['clientBussOrganisation']:"";
+
+                                                    if(check_valid_date($e_row['extended_date']))
+                                                        $dueDate=date('d-m-Y', strtotime($e_row['extended_date']));
+                                                    else 
+                                                        $dueDate="";
+
+                                                    $periodicity_name=$e_row['periodicity_name'];
+                                                    $periodicity=$e_row['periodicity'];
+
+                                                    $DDPeriod = "";
+
+                                                    if(!empty($periodicity))
+                                                    {
+                                                        if($periodicity==1)
+                                                        {
+                                                            $DDPeriod = date("d-M-Y", strtotime($e_row["daily_date"]));
+                                                        }
+                                                        elseif($periodicity==2)
+                                                        {
+                                                            $DDPeriod = date("M", strtotime("2021-".$e_row["period_month"]."-01"))."-".$e_row["period_year"];
+                                                        }
+                                                        elseif($periodicity>=3)
+                                                        {
+                                                            $DDPeriod = date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
+                                                        }
+                                                    }
+                                                ?>
                                                 <tr>
                                                     <td class="text-center" width="5%"><?php echo $i; ?></td>
                                                     <td class="text-center" width="5%" nowrap>
@@ -182,10 +266,76 @@
                                                                 echo "-";
                                                         ?>
                                                     </td>
+                                                    <td width="5%" nowrap>
+                                                        <span <?php if(!empty($workClientName) && strlen($workClientName)>15): ?> data-toggle="tooltip" data-original-title="<?= $workClientName; ?>" style="cursor: pointer;" <?php endif; ?>>
+                                                            <?php 
+                                                                if(!empty($workClientName))
+                                                                {
+                                                                    if(strlen($workClientName)>15)
+                                                                    {
+                                                                        echo substr($workClientName, 0, 15)."...";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo $workClientName;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo "-";
+                                                                }
+                                                            ?>
+                                                        </span>
+                                                    </td>
                                                     <td class="text-center" width="5%" nowrap>
                                                         <?php 
-                                                            if(!empty($tsWorkingDate))
-                                                                echo date('D', strtotime($tsWorkingDate));
+                                                            if(!empty($dueDate))
+                                                                echo $dueDate;
+                                                            else 
+                                                                echo "-";
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <span <?php if(!empty($e_row['due_date_for_name']) && strlen($e_row['due_date_for_name'])>45): ?> data-toggle="tooltip" data-original-title="<?= $e_row['due_date_for_name']; ?>" style="cursor: pointer;" <?php endif; ?>>
+                                                            <?php 
+                                                                if(!empty($e_row['due_date_for_name']))
+                                                                {
+                                                                    if(strlen($e_row['due_date_for_name'])>45)
+                                                                    {
+                                                                        echo substr($e_row['due_date_for_name'], 0, 45)."...";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo $e_row['due_date_for_name'];
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo "-";
+                                                                }
+                                                            ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <?php 
+                                                            if(!empty($e_row['act_short_name']))
+                                                                echo $e_row['act_short_name'];
+                                                            else 
+                                                                echo "-"; 
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <?php 
+                                                            if(!empty($e_row['applicable_form_name']))
+                                                                echo $e_row['applicable_form_name'];
+                                                            else 
+                                                                echo "-"; 
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <?php 
+                                                            if(!empty($DDPeriod))
+                                                                echo $DDPeriod;
                                                             else 
                                                                 echo "-"; 
                                                         ?>
@@ -209,40 +359,11 @@
                                                     <td class="text-center" width="5%" nowrap>
                                                         <?php 
                                                             if(!empty($e_row['tsTotalHours']))
-                                                                $totalHoursVal = $e_row['tsTotalHours'];
+                                                                $totalHoursVal = number_format($e_row['tsTotalHours'], 2, '.', '');
                                                             else 
                                                                 $totalHoursVal = " "; 
                                                         ?>
                                                         <?= $totalHoursVal; ?>
-                                                    </td>
-                                                    <td class="text-center" width="5%" nowrap>
-                                                        <?php 
-                                                            if(!empty($e_row['tsWorkPlace']))
-                                                                echo $e_row['tsWorkPlace'];
-                                                            else 
-                                                                echo " "; 
-                                                        ?>
-                                                    </td>
-                                                    <td class="text-center" width="5%" nowrap>
-                                                        <span <?php if(!empty($e_row['tsRemarks']) && strlen($e_row['tsRemarks'])>45): ?> data-toggle="tooltip" data-original-title="<?= $e_row['tsRemarks']; ?>" style="cursor: pointer;" <?php endif; ?>>
-                                                            <?php 
-                                                                if(!empty($e_row['tsRemarks']))
-                                                                {
-                                                                    if(strlen($e_row['tsRemarks'])>45)
-                                                                    {
-                                                                        echo substr($e_row['tsRemarks'], 0, 45)."...";
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        echo $e_row['tsRemarks'];
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    echo "-";
-                                                                }
-                                                            ?>
-                                                        </span>
                                                     </td>
                                                     <td width="5%" class="text-center">
                                                         <div class="btn-group">
@@ -490,6 +611,14 @@
                 }
             });
 
+        });
+
+        $('#selMthAttend').on('change', function () {
+            
+            var base_url = "<?php echo base_url(); ?>";
+            var mth = $(this).val();
+
+            window.location.href=base_url+"/time-sheet-list?mth="+mth;
         });
     });
 
