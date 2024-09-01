@@ -210,10 +210,10 @@
                             </p>
                         </div>
                     </div>
-                    <div class="app-menu <?php if ($uri1 == "") : ?>active<?php endif; ?>">
+                    <div class="app-menu <?php if ($uri1 == "time-sheet-list") : ?>active<?php endif; ?>">
                         <div class="search-bx mx-5">
                             <p class="nav_bar verticalLine">
-                                <a href="javascript:void(0);" class="text-white not_in_use">
+                                <a href="<?= base_url('time-sheet-list'); ?>" class="text-white not_in_use">
                                     &nbsp;Time&nbsp;Sheet
                                 </a>
                             </p>

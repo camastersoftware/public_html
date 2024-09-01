@@ -24,6 +24,7 @@ class StaffAdministration extends BaseController
         $this->Mfirm = new \App\Models\Mfirm();
         $this->Mconfig = new \App\Models\Mconfig();
         $this->MArticleshipLeaveCal = new \App\Models\MArticleshipLeaveCal();
+        $this->Muser = new \App\Models\Muser();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr = $this->TableLib->get_tables();
@@ -37,6 +38,14 @@ class StaffAdministration extends BaseController
         $this->chartered_accuntant_tbl = $tableArr['chartered_accuntant_tbl'];
         $this->expense_voucher_tbl = $tableArr['expense_voucher_tbl'];
         $this->articleship_leave_tbl = $tableArr['articleship_leave_tbl'];
+        $this->time_sheet_tbl=$tableArr['time_sheet_tbl'];
+        $this->work_tbl=$tableArr['work_tbl'];
+        $this->client_tbl=$tableArr['client_tbl'];
+        $this->due_date_master_tbl=$tableArr['due_date_master_tbl'];
+        $this->periodicity_tbl=$tableArr['periodicity_tbl'];
+        $this->act_option_map_tbl=$tableArr['act_option_map_tbl'];
+        $this->ext_due_date_master_tbl=$tableArr['ext_due_date_master_tbl'];
+        $this->act_tbl=$tableArr['act_tbl'];
 
         $this->section = "Staff Administration";
 
@@ -1376,6 +1385,115 @@ class StaffAdministration extends BaseController
         return view('firm_panel/staff_administration/my_attendance', $this->data);
     }
 
+    public function my_attendance_timesheet()
+	{
+        $uri = service('uri');
+        $this->data['uri1'] = $uri1 = $uri->getSegment(1);
+
+        $this->data['timeSheetDate'] = $timeSheetDate = $uri->getSegment(2);
+
+        $jsArr = array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full', 'timepicker');
+        $this->data['jsArr'] = $jsArr;
+
+        $pageTitle = "Time Sheet";
+        $this->data['pageTitle'] = $pageTitle;
+
+        $navArr = array();
+
+        $navArr[0]['active'] = true;
+        $navArr[0]['title'] = $pageTitle;
+
+        $this->data['navArr'] = $navArr;
+
+        $userId = $this->sessUserId;
+
+        $this->data['userId'] = $userId;
+
+        $userCondtion = array(
+            "user_tbl.isOldUser" => 2,
+            "user_tbl.status" => 1,
+            "user_tbl.userId" => $userId
+        );
+
+        $staffData = $this->Muser->select("user_tbl.userId, user_tbl.userFullName")
+                    ->where($userCondtion)
+                    ->get()
+                    ->getRowArray();
+
+        $this->data['staffData'] = $staffData;
+
+        $workCondtnArr['time_sheet_tbl.tsWorkingDate']=$timeSheetDate;
+        $workCondtnArr['time_sheet_tbl.fkUserId']=$userId;
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+
+        $workOrderByArr["time_sheet_tbl.timeSheetId"]="ASC";
+
+        $workJoinArr[]=array("tbl"=>$this->work_tbl, "condtn"=>"work_tbl.workId=time_sheet_tbl.fkWorkId AND work_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId AND client_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id AND due_date_master_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->periodicity_tbl, "condtn"=>"periodicity_tbl.periodicity_id=due_date_master_tbl.periodicity AND periodicity_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS applicable_form_tbl', "condtn"=>"applicable_form_tbl.act_option_map_id=due_date_master_tbl.applicable_form AND due_date_for_tbl.option_type=5", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+
+        $columnNames = "
+                    work_tbl.workId,
+                    time_sheet_tbl.timeSheetId,
+                    time_sheet_tbl.fkWorkId,
+                    time_sheet_tbl.tsWorkingDate,
+                    time_sheet_tbl.tsAddHrs,
+                    time_sheet_tbl.tsStartTime,
+                    time_sheet_tbl.tsEndTime,
+                    time_sheet_tbl.tsTotalHours,
+                    time_sheet_tbl.tsWorkPlace,
+                    time_sheet_tbl.tsRemarks,
+                    client_tbl.clientName,
+                    client_tbl.clientBussOrganisation,
+                    client_tbl.clientBussOrganisationType,
+                    due_date_master_tbl.finYear,
+                    due_date_master_tbl.periodicity,
+                    due_date_master_tbl.daily_date,
+                    due_date_master_tbl.period_month,
+                    due_date_master_tbl.period_year,
+                    due_date_master_tbl.f_period_month,
+                    due_date_master_tbl.f_period_year,
+                    due_date_master_tbl.t_period_month,
+                    due_date_master_tbl.t_period_year,
+                    ext_due_date_master_tbl.extended_date, 
+                    due_date_for_tbl.shortName AS due_date_for_name,
+                    applicable_form_tbl.shortName AS applicable_form_name,
+                    act_tbl.act_id,
+                    act_tbl.act_short_name,
+                    periodicity_tbl.periodicity_name
+                ";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->time_sheet_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $timeSheetArr=$query['userData'];
+
+        $this->data['timeSheetArr'] = $timeSheetArr;
+
+        $totalHrsColSum = 0;
+
+        if(!empty($timeSheetArr)){
+            $totalHrsColSum = (float)array_sum(array_column($timeSheetArr, "tsTotalHours"));
+        }
+
+        $totalHoursWorked=0.00;
+
+        if(!empty($totalHrsColSum)){
+            $totalHoursResponse=getHoursAndMinutesFormat($totalHrsColSum);
+
+            $totalHoursWorked = $totalHoursResponse["hours"].".".$totalHoursResponse["minutes"];
+        }
+
+        $this->data['totalHoursWorked'] = $totalHoursWorked;
+
+        return view('firm_panel/staff_administration/my_attendance_timesheet', $this->data);
+	}
+
     public function articleship_leave_cal($userId)
     {
         $uri = service('uri');
@@ -1800,7 +1918,6 @@ class StaffAdministration extends BaseController
 
         return view('firm_panel/staff_administration/add_articleship_staff', $this->data);
     }
-
 
     public function expense_list()
     {

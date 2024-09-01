@@ -329,7 +329,7 @@
                                                                                         Due Date : <?php echo $dueDate; ?>
                                                                                     </div>
                                                                                     <div class="col-md-4 text-center second_header">
-                                                                                        Periodicity : Yearly
+                                                                                        Periodicity : <?= (!empty($e_due_date["periodicity_name"])) ? $e_due_date["periodicity_name"] : "N/A"; ?>
                                                                                     </div>
                                                                                     <div class="col-md-4 text-center second_header">
                                                                                         Period : 

@@ -136,14 +136,11 @@
                             <h4 class="box-title font-weight-bold">
                                 <?= $pageTitle; ?>
                                 <span> : </span>
-                                <?= $workClientName; ?>
+                                <?= date("d-M-Y", strtotime($timeSheetDate)); ?>
+                                (<?= date("l", strtotime($timeSheetDate)); ?>)
                             </h4>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#addTimeSheetModal">
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Add</button>
-                            </a>
-                            &nbsp;
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark get_back" style="">Back</button>
                         </div>
                     </div>
@@ -154,7 +151,12 @@
                             <div class="row form-group mb-2">
                                 <div class="col-md-12 col-lg-12 text-center">
                                     <h3 class="font-weight-bold m-0" >
-                                        <?= $workClientName; ?>
+                                        <?php 
+                                            if(!empty($staffData['userFullName']))
+                                                echo $staffData['userFullName'];
+                                            else 
+                                                echo "-"; 
+                                        ?>
                                     </h3>
                                 </div>
                             </div>
@@ -163,27 +165,16 @@
                             <div class="row form-group mb-2">
                                 <div class="col-md-12 col-lg-12 text-center">
                                     <h4 class="font-weight-bold m-0" >
-                                        <?= $DDFName; ?>
+                                        <?= date("d-M-Y", strtotime($timeSheetDate)); ?>
+                                        (<?= date("l", strtotime($timeSheetDate)); ?>)
                                     </h4>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-lg-4 text-left">
-                            <span class="font-weight-bold">Due Date :&nbsp;</span>
+                        <div class="col-md-6 col-lg-6"></div>
+                        <div class="col-md-6 col-lg-6 text-right">
                             <span class="font-weight-bold">
-                                <?= $DDdate; ?>
-                            </span>
-                        </div>
-                        <div class="col-md-4 col-lg-4 text-center">
-                            <span class="font-weight-bold">Periodicity :&nbsp;</span>
-                            <span class="font-weight-bold">
-                                <?= $DDPeriodcity; ?>
-                            </span>
-                        </div>
-                        <div class="col-md-4 col-lg-4 text-right">
-                            <span class="font-weight-bold">Period :&nbsp;</span>
-                            <span class="font-weight-bold">
-                                <?= $DDPeriod; ?> (AY : <?= $asmtYear; ?>)
+                                Total hours worked : <span class="text-danger"><?= $totalHoursWorked; ?></span>
                             </span>
                         </div>
                         <div class="col-md-12 col-lg-12">
@@ -194,14 +185,16 @@
                                 <table class="data_tbl table table-bordered table-striped" style="width:100%">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="5%">SN</th>
-                                            <th width="5%">Date</th>
-                                            <th width="5%">Day</th>
+                                            <th width="1%">SN</th>
+                                            <th width="5%">Client&nbsp;Name</th>
+                                            <th width="5%">Due&nbsp;Date</th>
+                                            <th width="5%">Due&nbsp;Date&nbsp;For</th>
+                                            <th width="5%">Act</th>
+                                            <th width="5%">Form</th>
+                                            <th width="5%">Period</th>
                                             <th width="5%">Start&nbsp;Time</th>
                                             <th width="5%">End&nbsp;Time</th>
-                                            <th width="5%">Hours</th>
-                                            <th width="5%">Place</th>
-                                            <th width="5%">Remarks</th>
+                                            <th width="5%">Hrs</th>
                                             <th width="5%">Action</th>
                                         </tr>
                                     </thead>
@@ -209,28 +202,112 @@
                                         <?php $i=1; ?>
                                         <?php if(!empty($timeSheetArr)): ?>
                                             <?php foreach($timeSheetArr AS $k_row => $e_row): ?>
-                                                <?php 
-                                                    if(check_valid_date($e_row['tsWorkingDate']))
-                                                        $tsWorkingDate=date('d-m-Y', strtotime($e_row['tsWorkingDate']));
+                                                <?php
+                                                    $clientBussOrgType=$e_row['clientBussOrganisationType'];
+
+                                                    if(in_array($clientBussOrgType, INDIVIDUAL_ARRAY))
+                                                        $workClientName=(!empty($e_row['clientName'])) ? $e_row['clientName']:"";
+                                                    else
+                                                        $workClientName=(!empty($e_row['clientBussOrganisation'])) ? $e_row['clientBussOrganisation']:"";
+
+                                                    if(check_valid_date($e_row['extended_date']))
+                                                        $dueDate=date('d-m-Y', strtotime($e_row['extended_date']));
                                                     else 
-                                                        $tsWorkingDate="";
-                                                        
-                                                    $dayNo=date('N', strtotime($tsWorkingDate)); 
+                                                        $dueDate="";
+
+                                                    $periodicity_name=$e_row['periodicity_name'];
+                                                    $periodicity=$e_row['periodicity'];
+
+                                                    $DDPeriod = "";
+
+                                                    if(!empty($periodicity))
+                                                    {
+                                                        if($periodicity==1)
+                                                        {
+                                                            $DDPeriod = date("d-M-Y", strtotime($e_row["daily_date"]));
+                                                        }
+                                                        elseif($periodicity==2)
+                                                        {
+                                                            $DDPeriod = date("M", strtotime("2021-".$e_row["period_month"]."-01"))."-".$e_row["period_year"];
+                                                        }
+                                                        elseif($periodicity>=3)
+                                                        {
+                                                            $DDPeriod = date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
+                                                        }
+                                                    }
                                                 ?>
                                                 <tr>
-                                                    <td class="text-center" width="5%"><?php echo $i; ?></td>
+                                                    <td class="text-center" width="1%"><?php echo $i; ?></td>
+                                                    <td width="5%" nowrap>
+                                                        <span <?php if(!empty($workClientName) && strlen($workClientName)>15): ?> data-toggle="tooltip" data-original-title="<?= $workClientName; ?>" style="cursor: pointer;" <?php endif; ?>>
+                                                            <?php 
+                                                                if(!empty($workClientName))
+                                                                {
+                                                                    if(strlen($workClientName)>15)
+                                                                    {
+                                                                        echo substr($workClientName, 0, 15)."...";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo $workClientName;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo "-";
+                                                                }
+                                                            ?>
+                                                        </span>
+                                                    </td>
                                                     <td class="text-center" width="5%" nowrap>
                                                         <?php 
-                                                            if(!empty($tsWorkingDate))
-                                                                echo $tsWorkingDate;
+                                                            if(!empty($dueDate))
+                                                                echo $dueDate;
                                                             else 
                                                                 echo "-";
                                                         ?>
                                                     </td>
                                                     <td class="text-center" width="5%" nowrap>
+                                                        <span <?php if(!empty($e_row['due_date_for_name']) && strlen($e_row['due_date_for_name'])>45): ?> data-toggle="tooltip" data-original-title="<?= $e_row['due_date_for_name']; ?>" style="cursor: pointer;" <?php endif; ?>>
+                                                            <?php 
+                                                                if(!empty($e_row['due_date_for_name']))
+                                                                {
+                                                                    if(strlen($e_row['due_date_for_name'])>45)
+                                                                    {
+                                                                        echo substr($e_row['due_date_for_name'], 0, 45)."...";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo $e_row['due_date_for_name'];
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo "-";
+                                                                }
+                                                            ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
                                                         <?php 
-                                                            if(!empty($tsWorkingDate))
-                                                                echo date('D', strtotime($tsWorkingDate));
+                                                            if(!empty($e_row['act_short_name']))
+                                                                echo $e_row['act_short_name'];
+                                                            else 
+                                                                echo "-"; 
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <?php 
+                                                            if(!empty($e_row['applicable_form_name']))
+                                                                echo $e_row['applicable_form_name'];
+                                                            else 
+                                                                echo "-"; 
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center" width="5%" nowrap>
+                                                        <?php 
+                                                            if(!empty($DDPeriod))
+                                                                echo $DDPeriod;
                                                             else 
                                                                 echo "-"; 
                                                         ?>
@@ -259,35 +336,6 @@
                                                                 $totalHoursVal = " "; 
                                                         ?>
                                                         <?= $totalHoursVal; ?>
-                                                    </td>
-                                                    <td class="text-center" width="5%" nowrap>
-                                                        <?php 
-                                                            if(!empty($e_row['tsWorkPlace']))
-                                                                echo $e_row['tsWorkPlace'];
-                                                            else 
-                                                                echo " "; 
-                                                        ?>
-                                                    </td>
-                                                    <td class="text-center" width="5%" nowrap>
-                                                        <span <?php if(!empty($e_row['tsRemarks']) && strlen($e_row['tsRemarks'])>45): ?> data-toggle="tooltip" data-original-title="<?= $e_row['tsRemarks']; ?>" style="cursor: pointer;" <?php endif; ?>>
-                                                            <?php 
-                                                                if(!empty($e_row['tsRemarks']))
-                                                                {
-                                                                    if(strlen($e_row['tsRemarks'])>45)
-                                                                    {
-                                                                        echo substr($e_row['tsRemarks'], 0, 45)."...";
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        echo $e_row['tsRemarks'];
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    echo "-";
-                                                                }
-                                                            ?>
-                                                        </span>
                                                     </td>
                                                     <td width="5%" class="text-center">
                                                         <div class="btn-group">
@@ -430,7 +478,7 @@
                         </div>
                     </div>
                     <div class="modal-footer text-right" style="width: 100%;">
-                        <input type="hidden" name="workId" value="<?= $workId; ?>">
+                        <input type="hidden" name="workId" value="<?= $e_row["fkWorkId"]; ?>">
                         <input type="hidden" name="userId" value="<?= $userId; ?>">
                         <?php $timeSheetId = (!empty($e_row['timeSheetId'])) ? $e_row['timeSheetId'] : ""; ?>
                         <input type="hidden" name="timeSheetId" id="timeSheetId" value="<?= $timeSheetId; ?>" />
@@ -449,95 +497,6 @@
 <?php endif; ?>
 
 
-<!-- Modal -->
-<div id="addTimeSheetModal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form action="<?php echo base_url('insert-time-sheet-data'); ?>" method="POST" enctype="multipart/form-data" >
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Add Time Sheet</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-lg-6">
-                            <div class="form-group">
-                                <label>Date<small class="text-danger">*</small></label>
-                                <input type="date" class="form-control" name="tsWorkingDate" value="<?= date('Y-m-d'); ?>" >
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6">
-                            <div class="form-group mb-0">
-                                <label>Hours<small class="text-danger">*</small></label>
-                                <input type="number" class="form-control" name="tsTotalHours" id="tsTotalHours" required>
-                                <label>
-                                    <span class="font-weight-light proj_primary_clr anchor setTSFormat">Set Start & End Time<span>
-                                </label>
-                            </div>
-                            <input type="hidden" name="tsAddHrs" id="tsAddHrs" value="1" />
-                        </div>
-                        <div class="col-md-6 col-lg-6 timeInputDiv">
-                            <div class="form-group bootstrap-timepicker">
-                                <div class="form-group mb-0">
-                                    <label>Start Time<small class="text-danger">*</small></label>
-                                    <input type="checkbox" id="setAddInTime" class="radio-col-success">
-                                    <label for="setAddInTime">
-                                        <span class="font-weight-light">Set Current Time<span>
-                                    </label>
-                                </div>
-                                <div class="input-group">
-            						<div class="input-group-addon">
-            						  <i class="fa fa-clock-o"></i>
-            						</div>
-                                    <input type="text" class="form-control timepicker addInTime addInTimeInput" name="tsStartTime" id="tsStartTime" placeholder="Enter Start Time" value="<?= $currentTime; ?>" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 timeInputDiv">
-                            <div class="form-group bootstrap-timepicker">
-                                <div class="form-group mb-0">
-                                    <label>End Time</label>
-                                    <input type="checkbox" id="setAddOutTime" class="radio-col-success">
-                                    <label for="setAddOutTime">
-                                        <span class="font-weight-light">Set Current Time<span>
-                                    </label>
-                                </div>
-                                <div class="input-group">
-            						<div class="input-group-addon">
-            						  <i class="fa fa-clock-o"></i>
-            						</div>
-                                    <input type="text" class="form-control timepicker addOutTime addOutTimeInput" name="tsEndTime" id="tsEndTime" placeholder="Enter End Time" value="" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-12">
-                            <div class="form-group">
-                                <label>Work Place</label>
-                                <input type="text" class="form-control workPlace" name="tsWorkPlace" value="Office" maxlength="18" >
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-12">
-                            <div class="form-group">
-                                <label>Remarks</label>
-                                <textarea class="form-control" name="tsRemarks" rows="2" ></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer text-right" style="width: 100%;">
-                    <input type="hidden" name="workId" id="currentWorkId" value="<?= $workId; ?>">
-                    <input type="hidden" name="userId" id="userId" value="<?= $userId; ?>">
-                    <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
-                    <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
-                </div>
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-
 <?= $this->endSection(); ?>
 
 <?= $this->section('javacript'); ?>
@@ -547,22 +506,6 @@
         $(".timeInputDiv").hide();
 
         initializeTimepicker(minuteStep=1);
-        
-        $('#setAddInTime').change(function() {
-            if ($(this).is(':checked')) {
-                setCurrentTime('.addInTimeInput');
-            } else {
-                $('.addInTimeInput').val("");
-            }
-        });
-
-        $('#setAddOutTime').change(function() {
-            if ($(this).is(':checked')) {
-                setCurrentTime('.addOutTimeInput');
-            } else {
-                $('.addOutTimeInput').val("");
-            }
-        });
 
         $('.setEditInTime').change(function() {
             let dataId = $(this).data('id');
@@ -580,28 +523,6 @@
             } else {
                 $('.editOutTimeInput'+dataId).val("");
             }
-        });
-
-        $(".setTSFormat").on("click", function() {
-
-            let tsAddHrs = $("#tsAddHrs").val();
-
-            if(tsAddHrs == 1) {
-                $("#tsAddHrs").val(2);
-                $(this).html("Add Hours");
-                $(".timeInputDiv").show();
-                $("#tsTotalHours").val("");
-                $("#tsTotalHours").prop("disabled", true);
-                $("#tsTotalHours").prop("required", false);
-            } else if(tsAddHrs == 2) {
-                $("#tsAddHrs").val(1);
-                $(this).html("Set Start & End Time");
-                $(".timeInputDiv").hide();
-                $(".timeInputDiv input").val("");
-                $("#tsTotalHours").prop("disabled", false);
-                $("#tsTotalHours").prop("required", true);
-            }
-
         });
 
         $(".setEditTSFormat").on("click", function() {
@@ -663,19 +584,12 @@
             });
 
         });
-
-        $('#setAddInTime').trigger("click");
     });
 
     function initializeTimepicker(minuteStep) {
         if (document.readyState === 'complete') {
             $('.timepicker').timepicker('remove');
         }
-        $('.timepicker').timepicker({
-            'showInputs': false,
-            'minuteStep': minuteStep,
-            'defaultTime': 'value'
-        });
         
         $('.editTimepicker').timepicker({
             'showInputs': false,
