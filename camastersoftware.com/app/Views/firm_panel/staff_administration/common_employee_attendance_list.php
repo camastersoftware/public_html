@@ -31,9 +31,15 @@
                         <?php foreach($empAttendArray AS $k_row => $e_row): ?>
                             <?php 
                                 if(check_valid_date($e_row['attendanceDate']))
+                                {
                                     $attendanceDate=date('d-m-Y', strtotime($e_row['attendanceDate']));
-                                else 
+                                    $timeSheetDate=date('Y-m-d', strtotime($e_row['attendanceDate']));
+                                }
+                                else
+                                {
                                     $attendanceDate="";
+                                    $timeSheetDate="";
+                                }
                                     
                                 $dayNo=date('N', strtotime($attendanceDate)); 
                             ?>
@@ -121,6 +127,7 @@
                                         <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
                                         <div class="dropdown-menu" style="will-change: transform;">
                                             <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#editEmpAttendModal<?php echo $k_row; ?>">Edit</a>
+                                            <a class="dropdown-item" href="<?= base_url("all-attendance-timesheet/".$timeSheetDate); ?>">Time Sheet</a>
                                             <?php if(isset($e_row['employeeAttendanceId'])): ?>
                                                 <a class="dropdown-item deleteEmpAttend" href="javascript:void(0);" data-id="<?= $e_row['employeeAttendanceId']; ?>">Delete</a>
                                             <?php endif; ?>

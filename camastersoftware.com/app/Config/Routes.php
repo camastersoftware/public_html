@@ -857,6 +857,7 @@ $routes->get('/employee-yearly-attendance/(:any)', 'StaffAdministration::employe
 $routes->get('/employee-yearly-attendance-hours/(:any)', 'StaffAdministration::employee_yearly_attendance_hours/$1');
 $routes->get('/all-employees-attendance/(:any)', 'StaffAdministration::all_employees_attendance/$1');
 $routes->get('/all-employees-attendance-hours/(:any)', 'StaffAdministration::all_employees_attendance_hours/$1');
+$routes->get('/all-attendance-timesheet/(:any)', 'StaffAdministration::my_attendance_timesheet/$1');
 
 // Accounts
 $routes->get('/cashbook', 'Cashbook::index');

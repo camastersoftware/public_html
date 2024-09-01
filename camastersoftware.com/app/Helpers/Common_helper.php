@@ -144,3 +144,31 @@ if (!function_exists('getTodaysReminders')) {
         return $isReminderPresent;
     }
 }
+
+if (!function_exists('getHoursAndMinutesFormat')) {
+    function getHoursAndMinutesFormat($hours)
+    {   
+        $total_hours = (float)number_format((float)$hours, 2, '.', '');
+
+        // Separate the integer (hours) and fractional (minutes) parts
+        $whole_hours = floor($total_hours);
+
+        $decimal_part = (float)number_format($total_hours - $whole_hours, 2, '.', '');
+
+        $parts = explode('.', (string)$decimal_part);
+        $minutes = isset($parts[1]) ? $parts[1] : 0;
+
+        // Convert excess minutes to hours if more than 60
+        if ($minutes >= 60) {
+            $whole_hours += floor($minutes / 60);
+            $minutes = $minutes % 60;
+        }
+
+        $responseArray = array(
+            "hours" => $whole_hours,
+            "minutes" => $minutes
+        );
+
+        return $responseArray;
+    }
+}
