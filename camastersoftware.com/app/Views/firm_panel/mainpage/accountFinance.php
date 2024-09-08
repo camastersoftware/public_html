@@ -25,7 +25,7 @@
                     <div class="box-body">
                         <div class="row"> 
                             <div class="col-md-3 col-12 text-justify-center">
-                                <a href="javascript:void(0);">
+                                <a href="<?php echo base_url('cost-sheet'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
                                             <p class="not_in_use">Cost Sheet</p>
