@@ -158,11 +158,17 @@ if (!function_exists('getHoursAndMinutesFormat')) {
         $parts = explode('.', (string)$decimal_part);
         $minutes = isset($parts[1]) ? (float)$parts[1] : 0;
 
+        if($minutes < 10){
+            $minutes = $minutes*10;
+        }
+
         // Convert excess minutes to hours if more than 60
         if ($minutes >= 60) {
             $whole_hours += floor($minutes / 60);
             $minutes = $minutes % 60;
         }
+
+        $minutes = (float)number_format((float)$minutes, 2, '.', '');
 
         $responseArray = array(
             "hours" => $whole_hours,

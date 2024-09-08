@@ -875,6 +875,13 @@ $routes->get('/view-bill/(:any)', 'Bill::view/$1');
 $routes->post('/delete-bill', 'Bill::delete');
 $routes->get('/get-staff-rate', 'Accounts/Staff::getStaffRate');
 $routes->post('/edit-staff-rate', 'Accounts/Staff::updateStaffRate');
+$routes->get('/cost-sheet', 'Accounts/CostSheet::index');
+$routes->get('/client-wise-cost-sheet', 'Accounts/CostSheet::client_wise_cost_sheet');
+$routes->get('/client-wise-month-cost-sheet/(:any)', 'Accounts\CostSheet::client_wise_month_cost_sheet/$1');
+$routes->get('/client-wise-act-cost-sheet/(:any)', 'Accounts\CostSheet::client_wise_act_cost_sheet/$1');
+$routes->get('/staff-wise-cost-sheet', 'Accounts/CostSheet::staff_wise_cost_sheet');
+$routes->get('/staff-wise-month-cost-sheet/(:any)', 'Accounts\CostSheet::staff_wise_month_cost_sheet/$1');
+$routes->get('/staff-wise-act-cost-sheet/(:any)', 'Accounts\CostSheet::staff_wise_act_cost_sheet/$1');
 
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
