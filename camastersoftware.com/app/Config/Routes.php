@@ -288,6 +288,8 @@ $routes->get('/master_data', 'MainPage::master_data');
 $routes->get('/get_client_report', 'MainPage::getClientReport');
 $routes->get('/getClientMonthWiseReport/(:any)', 'MainPage::getClientMonthWiseReport/$1');
 $routes->get('/getClientActWiseReport/(:any)', 'MainPage::getClientActWiseReport/$1');
+$routes->get('/mis-report-menu', 'MisReport::index');
+$routes->get('/mis-report-section-menu', 'MisReport::section_menu');
 $routes->get('/accountFinance', 'MainPage::accountFinance');
 $routes->get('/tax_calendar_menu', 'MainPage::tax_calendar_menu');
 // $routes->get('/act-wise-tax-calendar', 'MainPage::act_wise_tax_calendar');

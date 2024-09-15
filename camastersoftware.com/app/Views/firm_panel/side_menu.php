@@ -21,8 +21,20 @@
                 <a class="text-white" href="javascript:void(0);"><span>Master Lists</span></a>
             </div>
             -->
-            <div class="external-event1 margin-event pt-5 pb-5 p_clr rounded_10 my_work_menu mt-20 openLink mrgbtm-10 <?php if($uri1=="get_client_report"): ?>active<?php endif; ?>" data-class="bg-primary" data-href="<?php echo base_url('get_client_report'); ?>" >
-                <a class="text-white not_in_use" href="javascript:void(0);"><span>Work Position</span></a>
+            <?php
+                $misReportsArr = array(
+                    "mis-report-menu",
+                    "inc_tax_mis_menu",
+                    "tds-tcs-mis-report",
+                    "gst-mis-report",
+                    "pt-reg-mis-report",
+                    "llp-mis-menu",
+                    "combined-mis-report",
+                    "get_client_report"
+                );
+            ?>
+            <div class="external-event1 margin-event pt-5 pb-5 p_clr rounded_10 my_work_menu mt-20 openLink mrgbtm-10 <?php if(in_array($uri1, $misReportsArr)): ?>active<?php endif; ?>" data-class="bg-primary" data-href="<?php echo base_url('mis-report-menu'); ?>" >
+                <a class="text-white not_in_use" href="javascript:void(0);"><span>MIS Report</span></a>
             </div>
             
             <div class="external-event1 margin-event pt-5 pb-5 p_clr rounded_10 my_work_menu mt-20 openLink mrgbtm-10 <?php if($uri1=="office-administration"): ?>active<?php endif; ?>" data-class="bg-primary" data-href="<?php echo base_url('office-administration'); ?>" >
@@ -38,7 +50,7 @@
             </div>
             
             <div class="external-event1 margin-event pt-5 pb-5 p_clr rounded_10 my_work_menu mt-20 openLink mrgbtm-10 <?php if($uri1=="accountFinance"): ?>active<?php endif; ?>" data-class="bg-primary" data-href="<?php echo base_url('accountFinance'); ?>" >
-                <a class="text-white not_in_use" href="javascript:void(0);"><span>Accounts</span></a>
+                <a class="text-white not_in_use" href="javascript:void(0);"><span>Billing & Receipts</span></a>
             </div>
         </div>
     </div>
