@@ -108,32 +108,32 @@
                 <div class="box-header with-border flexbox">
                     <h4 class="box-title font-weight-bold text-center"><?php echo $pageTitle; ?></h4>
                     <div class="text-right flex-grow">
-                        <a href="<?php echo base_url('client-wise-month-cost-sheet/'.$clientId); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit" style="">Month-wise</button>
+                        <a href="<?php echo base_url('staff-wise-act-cost-sheet/'.$userId); ?>">
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit" style="">Act-wise</button>
                         </a>
-                        <a href="<?php echo base_url('client-wise-cost-sheet'); ?>">
+                        <a href="<?php echo base_url('staff-wise-cost-sheet'); ?>">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark">Back</button>
                         </a>
                     </div>
                 </div>
                 <div class="box-body box_body_bg wizard-content">
                     <section>
-                        <h4 class="text-center font-weight-bold"><?= $clientNameVar; ?></h4>
-                        <?php
-                            $actItr=0;
-                            $actCount = count($workActArr);
-                            $grandTotalWorkTotalCost = 0;
-                            $grandTotalBillAmt = 0;
-                            $grandTotalReceiptAmt = 0;
-                        ?>
+                        <h4 class="text-center font-weight-bold"><?= $userNameVar; ?></h4>
                         <div class="row sel_act_due_date">
-                            <?php if(!empty($actArr)): ?>
-                                <?php foreach($actArr AS $k_act_id=>$e_act): ?>
+                            <?php
+                                $mthItr=0;
+                                $mthCount = count($workMthsArr);
+                                $grandTotalWorkTotalCost = 0;
+                                $grandTotalBillAmt = 0;
+                                $grandTotalReceiptAmt = 0;
+                            ?>
+                            <?php if(!empty($workMthArr)): ?>
+                                <?php foreach($workMthArr AS $k_mth_id=>$e_mth): ?>
                                     <?php
-                                        if(isset($workListArr[$e_act["act_id"]]))
+                                        if(isset($workListArr[$k_mth_id]))
                                         {
-                                            $wkListArr=$workListArr[$e_act["act_id"]];
-                                            $actItr++;
+                                            $wkListArr=$workListArr[$k_mth_id];
+                                            $mthItr++;
                                         }
                                         else
                                         {
@@ -142,29 +142,29 @@
                                     ?>
                                     <?php if(!empty($wkListArr)): ?>
                                         <div class="col-lg-12 col-md-12">
-                                            <h4 class="income-tax-head text-center"><?php echo $e_act["act_name"]; ?></h4>
+                                            <h4 class="income-tax-head text-center"><?php echo $e_mth; ?></h4>
                                             <table id="tablepress-2" class="tablepress tablepress-id-2 custom-table dataTable no-footer allot_due_date">
                                                 <thead>
                                                     <tr class="row-1">
                                                         <th class="column-7" style="width: 7% !important;">Due Date</th>
                                                         <th class="column-1" style="width: 27% !important;">Due Date For</th>
+                                                        <th class="column-1" style="width: 8% !important;">Act</th>
                                                         <th class="column-4" style="width: 11% !important;">Form</th>
                                                         <th class="column-6" style="width: 17% !important;">Period</th>
-                                                        <th class="column-8" style="width: 5% !important;">Completion&nbsp;Date</th>
                                                         <th class="column-5" style="width: 5% !important;">Cost</th>
                                                         <th class="column-5" style="width: 5% !important;">Billing</th>
                                                         <th class="column-5" style="width: 5% !important;">Receipts</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="row-hover">
-                                                <?php
-                                                    $totalWorkTotalCost = 0;
-                                                    $totalBillAmt = 0;
-                                                    $totalReceiptAmt = 0;
-                                                ?>
-                                                <?php if(!empty($wkListArr)): ?>
-                                                    <?php $lastKey = array_key_last($wkListArr); ?>
-                                                    <?php foreach($wkListArr AS $k_row=>$e_row): ?>
+                                                    <?php
+                                                        $totalWorkTotalCost = 0;
+                                                        $totalBillAmt = 0;
+                                                        $totalReceiptAmt = 0;
+                                                    ?>
+                                                    <?php if(!empty($wkListArr)): ?>
+                                                        <?php $lastKey = array_key_last($wkListArr); ?>
+                                                        <?php foreach($wkListArr AS $k_row=>$e_row): ?>
                                                         <?php 
                                                             if(!empty($e_row['workTotalCost']))
                                                                 $workTotalCost = $e_row['workTotalCost']; 
@@ -185,7 +185,7 @@
                                                             $totalBillAmt+=$billAmt;
                                                             $totalReceiptAmt+=$receiptAmt;
                                                         ?>
-                                                        <?php $uniQId=$e_act["act_id"].$k_row.$e_row['due_date_id']; ?>
+                                                        <?php $uniQId=$k_mth_id.$k_row.$e_row['due_date_id']; ?>
                                                         <?php 
                                                             $eFillingDate="-";
                                                             if(!empty($e_row['eFillingDate']) && $e_row['eFillingDate']!="0000-00-00" && $e_row['eFillingDate']!="1970-01-01")
@@ -219,7 +219,7 @@
                                                                     <div class="modal-dialog modal-lg">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h4 class="modal-title font-weight-bold" id="myModalLabel">Staff Members</h4>
+                                                                                <h4 class="modal-title font-weight-bold" id="myModalLabel">Clients</h4>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                                             </div>
                                                                             <div class="modal-body">
@@ -230,27 +230,27 @@
                                                                                                 <thead>
                                                                                                     <tr class="text-center">
                                                                                                         <th width="5%">SN</th>
-                                                                                                        <th width="55%">Staff&nbsp;Name</th>
+                                                                                                        <th width="55%">Client&nbsp;Name</th>
                                                                                                         <th width="20%">Hours&nbsp;Worked</th>
                                                                                                         <th width="20%">Cost</th>
                                                                                                     </tr>
                                                                                                 </thead>
                                                                                                 <tbody>
-                                                                                                    <?php if(isset($staffCostArr[$e_row['workId']])): ?>
-                                                                                                        <?php $staffCostArray=$staffCostArr[$e_row['workId']]; ?>
+                                                                                                    <?php if(isset($clientCostArr[$e_row['due_date_for_id']])): ?>
+                                                                                                        <?php $clientCostArray=$clientCostArr[$e_row['due_date_for_id']]; ?>
                                                                                                         <?php $tsTotalHoursTotal = 0; ?>
                                                                                                         <?php $tsTotalCostTotal = 0; ?>
-                                                                                                        <?php if(!empty($staffCostArray)): ?>
+                                                                                                        <?php if(!empty($clientCostArray)): ?>
                                                                                                             <?php $c=1; ?>
-                                                                                                            <?php foreach($staffCostArray AS $e_staff): ?>
-                                                                                                                <?php
-                                                                                                                    if(!empty($e_staff['tsTotalHours']))
-                                                                                                                        $tsTotalHours = $e_staff['tsTotalHours']; 
+                                                                                                            <?php foreach($clientCostArray AS $e_client): ?>
+                                                                                                                <?php 
+                                                                                                                    if(!empty($e_client['tsTotalHours']))
+                                                                                                                        $tsTotalHours = $e_client['tsTotalHours']; 
                                                                                                                     else
                                                                                                                         $tsTotalHours = 0;
 
-                                                                                                                    if(!empty($e_staff['tsTotalCost']))
-                                                                                                                        $tsTotalCost = $e_staff['tsTotalCost']; 
+                                                                                                                    if(!empty($e_client['tsTotalCost']))
+                                                                                                                        $tsTotalCost = $e_client['tsTotalCost']; 
                                                                                                                     else
                                                                                                                         $tsTotalCost = 0;
 
@@ -263,13 +263,30 @@
                                                                                                                 <tr>
                                                                                                                     <td width="5%" class="text-center"><?php echo $c; ?></td>
                                                                                                                     <td nowrap width="55%">
-                                                                                                                        <?php echo $e_staff['userFullName']; ?>
+                                                                                                                        <?php
+                                                                                                                            if(in_array($e_client['clientBussOrganisationType'], INDIVIDUAL_ARRAY))
+                                                                                                                                $clientNameVar=$e_client['clientName'];
+                                                                                                                            else
+                                                                                                                                $clientNameVar=$e_client['clientBussOrganisation']; 
+                                                                                                                        ?>
+                                                                                                                        <span data-toggle="tooltip" data-original-title="<?= $clientNameVar; ?>" style="cursor: pointer;">
+                                                                                                                            <?php 
+                                                                                                                                if(strlen($clientNameVar)>35)
+                                                                                                                                {
+                                                                                                                                    echo substr($clientNameVar, 0, 35)."..";
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    echo $clientNameVar;
+                                                                                                                                }
+                                                                                                                            ?>
+                                                                                                                        </span>
                                                                                                                     </td>
                                                                                                                     <td nowrap width="20%" class="text-right">
                                                                                                                         <?php echo number_format($tsWorkedHoursVal, 2, '.', ''); ?>
                                                                                                                     </td>
                                                                                                                     <td nowrap width="20%" class="text-right">
-                                                                                                                        <?php echo amount_format($e_staff['tsTotalCost']); ?>
+                                                                                                                        <?php echo amount_format($tsTotalCost); ?>
                                                                                                                     </td>
                                                                                                                 </tr>
                                                                                                             <?php $c++; ?>
@@ -316,6 +333,11 @@
                                                                 </div>
                                                                 <!-- /.modal -->
                                                             </td>
+                                                            <td class="column-3 text-center" style="width: 8% !important;" nowrap>
+                                                                <span data-toggle="tooltip" data-original-title="<?= $e_row['act_name']; ?>" style="cursor: pointer;">
+                                                                    <?php echo $e_row['act_short_name']; ?>
+                                                                </span>
+                                                            </td>
                                                             <td class="column-4 text-center" style="width: 11% !important;" nowrap>
                                                                 <?php 
                                                                     if(!empty($e_row['act_option_name5']))
@@ -344,18 +366,14 @@
                                                                     }
                                                                 ?>
                                                             </td>
-                                                            <td class="column-8 text-center actionCol" style="width: 5% !important;" nowrap>
-                                                                <input type="hidden" name="due_date_id[]" value="<?php echo $e_row['due_date_id']; ?>">
-                                                                <?= $eFillingDate; ?>
+                                                            <td class="column-4 text-right" style="width: 5% !important;" nowrap>
+                                                                <?= amount_format($workTotalCost); ?>
                                                             </td>
                                                             <td class="column-4 text-right" style="width: 5% !important;" nowrap>
-                                                                <?= amount_format($workTotalCost); ?></b>
+                                                                <?= amount_format($billAmt); ?>
                                                             </td>
                                                             <td class="column-4 text-right" style="width: 5% !important;" nowrap>
-                                                                <?= amount_format($billAmt); ?></b>
-                                                            </td>
-                                                            <td class="column-4 text-right" style="width: 5% !important;" nowrap>
-                                                                <?= amount_format($receiptAmt); ?></b>
+                                                                <?= amount_format($receiptAmt); ?>
                                                             </td>
                                                         </tr>
                                                         <?php if($k_row == $lastKey): ?>
@@ -386,20 +404,20 @@
                                                         $grandTotalBillAmt+=$totalBillAmt;
                                                         $grandTotalReceiptAmt+=$totalReceiptAmt;
                                                     ?>
-                                                    <?php if($actItr == $actCount): ?>
+                                                    <?php if($mthItr == $mthCount): ?>
                                                         <tr class="row-3">
                                                             <td colspan="4"></td>
                                                             <td class="column-8 text-center actionCol" style="width: 5% !important;" nowrap>
                                                                 <b>Grand Total</b>
                                                             </td>
                                                             <td class="column-4 text-right" style="width: 5% !important;" nowrap>
-                                                                <b><?= amount_format($grandTotalWorkTotalCost); ?>
+                                                                <b><?= amount_format($grandTotalWorkTotalCost); ?></b>
                                                             </td>
                                                             <td class="column-4 text-right" style="width: 5% !important;" nowrap>
-                                                                <b><?= amount_format($grandTotalBillAmt); ?>
+                                                                <b><?= amount_format($grandTotalBillAmt); ?></b>
                                                             </td>
                                                             <td class="column-4 text-right" style="width: 5% !important;" nowrap>
-                                                                <b><?= amount_format($grandTotalReceiptAmt); ?>
+                                                                <b><?= amount_format($grandTotalReceiptAmt); ?></b>
                                                             </td>
                                                         </tr>
                                                     <?php endif; ?>
