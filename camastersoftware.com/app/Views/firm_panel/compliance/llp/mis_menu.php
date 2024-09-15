@@ -19,9 +19,7 @@
                                 echo "N/A";
                         ?>
                     </h4>
-                    <a href="<?php echo base_url('llp-menus'); ?>">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right" style="">Back</button>
-                    </a>
+                    <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right get_back" style="">Back</button>
                 </div>
 				<div class="box-body">
                     <div class="row">
