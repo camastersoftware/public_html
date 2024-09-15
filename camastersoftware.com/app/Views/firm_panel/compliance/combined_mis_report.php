@@ -181,9 +181,7 @@
                             </h4>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="<?php echo base_url('emp-attendance'); ?>">
-                                <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right mt-1" style="">Back</button>
-                            </a>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right mt-1 get_back" style="">Back</button>
                         </div>
                     </div>
                 </div>

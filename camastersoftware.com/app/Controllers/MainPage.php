@@ -2119,7 +2119,7 @@ class MainPage extends BaseController
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr']=$jsArr;
         
-        $pageTitle="Accounts & Finance";
+        $pageTitle="Billing & Receipts";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();
