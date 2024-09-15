@@ -193,7 +193,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="data_tbl table table-bordered table-striped" style="width:100%">
+                                <table class="onlyTableIdNoSortBy table table-bordered table-striped" style="width:100%">
                                     <thead>
                                         <tr class="text-center">
                                             <th width="5%">SN</th>
@@ -212,6 +212,9 @@
                                     </thead>
                                     <tbody>
                                         <?php $i=1; ?>
+                                        <?php $currVal=""; ?>
+                                        <?php $nextVal=""; ?>
+                                        <?php $sumTotalHrs=0; ?>
                                         <?php if(!empty($timeSheetArr)): ?>
                                             <?php foreach($timeSheetArr AS $k_row => $e_row): ?>
                                                 <?php 
@@ -220,7 +223,14 @@
                                                     else 
                                                         $tsWorkingDate="";
                                                         
-                                                    $dayNo=date('N', strtotime($tsWorkingDate)); 
+                                                    $dayNo=date('N', strtotime($tsWorkingDate));
+                                                    $currVal=$tsWorkingDate;
+                                                    if(!empty($timeSheetArr[$k_row+1]['tsWorkingDate'])){
+                                                        $nextDateVal=$timeSheetArr[$k_row+1]['tsWorkingDate'];
+                                                        if(check_valid_date($nextDateVal)){
+                                                            $nextVal=date('d-m-Y', strtotime($nextDateVal));
+                                                        }
+                                                    }
                                                 ?>
                                                 <?php
                                                     $clientBussOrgType=$e_row['clientBussOrganisationType'];
@@ -255,9 +265,13 @@
                                                             $DDPeriod = date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
                                                         }
                                                     }
+                                                    $totalHrs = (!empty($e_row['tsTotalHours'])) ? (float)$e_row['tsTotalHours'] : 0;
+                                                    $sumTotalHrs+=$totalHrs;
                                                 ?>
                                                 <tr>
-                                                    <td class="text-center" width="5%"><?php echo $i; ?></td>
+                                                    <td class="text-center" width="5%">
+                                                        <?= $i; ?>
+                                                    </td>
                                                     <td class="text-center" width="5%" nowrap>
                                                         <?php 
                                                             if(!empty($tsWorkingDate))
@@ -356,7 +370,7 @@
                                                                 echo "-"; 
                                                         ?>
                                                     </td>
-                                                    <td class="text-center" width="5%" nowrap>
+                                                    <td class="text-right" width="5%" nowrap>
                                                         <?php 
                                                             if(!empty($e_row['tsTotalHours']))
                                                                 $totalHoursVal = number_format($e_row['tsTotalHours'], 2, '.', '');
@@ -377,7 +391,24 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                
+                                                <?php if($currVal!=$nextVal || $nextVal==""): ?>
+                                                    <tr>
+                                                        <td colspan=9></td>
+                                                        <td class="text-center" width="5%" nowrap>
+                                                            <b>Total</b>
+                                                        </td>
+                                                        <td class="text-right" width="5%" nowrap>
+                                                            <?php
+                                                                $sumHoursTotal = getHoursAndMinutesFormat($sumTotalHrs); 
+                                                                $sumHoursTotalVal=$sumHoursTotal["hours"].".". $sumHoursTotal["minutes"];
+                                                            ?>
+                                                            <b><?= number_format($sumHoursTotalVal, 2, '.', ''); ?></b>
+                                                        </td>
+                                                        <td width="5%" class="text-center">-</td>
+                                                    </tr>
+                                                    <?php $sumTotalHrs=0; ?>
+                                                    <?php $nextVal=""; ?>
+                                                <?php endif; ?>
                                                 <?php $i++; ?>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
