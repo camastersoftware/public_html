@@ -60,6 +60,13 @@ class MyAccount extends BaseController
 
 	public function submitFeedBack()
 	{
+        $ratingVal=$this->request->getPost('ratingVal');
+
+        if(empty($ratingVal)){
+            $this->session->setFlashdata('basicMsg', "Rate us please!");
+            return redirect()->back();
+        }
+
         $isUseful=$this->request->getPost('isUseful');
         $isReliable=$this->request->getPost('isReliable');
         $isUse=$this->request->getPost('isUse');
@@ -88,8 +95,6 @@ class MyAccount extends BaseController
             $otherContactNo="";
             $otherEmailAddress="";
         }
-        
-        $ratingVal=$this->request->getPost('ratingVal');
 
         $isUseful = (!empty($isUseful)) ? $isUseful : 0;
         $isReliable = (!empty($isReliable)) ? $isReliable : 0;
@@ -123,7 +128,7 @@ class MyAccount extends BaseController
 
         if($query['status']==FALSE)
         {
-            $this->session->setFlashdata('flashErrorMsg', "Feedback Report has not submitted :(");
+            $this->session->setFlashdata('errorMsg', "Feedback Report has not submitted :(");
 
             return redirect()->route('feedback_report');
         }

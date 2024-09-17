@@ -86,11 +86,13 @@ class BaseController extends Controller
         $this->data['cssArr'] = $cssArr;
         $this->data['jsArr'] = $jsArr;
 
+        $flashBasicMsg = $this->session->getFlashdata('basicMsg');
         $flashGreetingMsg = $this->session->getFlashdata('greetingMsg');
         $flashSuccessMsg = $this->session->getFlashdata('successMsg');
         $flashWarningMsg = $this->session->getFlashdata('warningMsg');
         $flashErrorMsg = $this->session->getFlashdata('errorMsg');
 
+        $this->data['flashBasicMsg'] = $flashBasicMsg;
         $this->data['flashGreetingMsg'] = $flashGreetingMsg;
         $this->data['flashSuccessMsg'] = $flashSuccessMsg;
         $this->data['flashWarningMsg'] = $flashWarningMsg;

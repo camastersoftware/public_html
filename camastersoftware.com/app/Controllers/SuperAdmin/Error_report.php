@@ -145,7 +145,7 @@ class Error_report extends BaseController
 
             if($query['status']==FALSE)
             {
-                $this->session->setFlashdata('flashErrorMsg', "Query has not added :(");
+                $this->session->setFlashdata('errorMsg', "Query has not added :(");
 
                 return redirect()->route('superadmin/add_error_report');
             }
@@ -268,7 +268,7 @@ class Error_report extends BaseController
 
             if($query['status']==FALSE)
             {
-                $this->session->setFlashdata('flashErrorMsg', "Query has not updated :(");
+                $this->session->setFlashdata('errorMsg', "Query has not updated :(");
 
                 return redirect()->to(base_url('superadmin/error_report/edit_error_report/'.$errId.'?errType='.$errType));
             }
@@ -346,7 +346,7 @@ class Error_report extends BaseController
 
             if($query['status']==FALSE)
             {
-                $this->session->setFlashdata('flashErrorMsg', "Query has not replied :(");
+                $this->session->setFlashdata('errorMsg', "Query has not replied :(");
 
                 return redirect()->to(base_url('superadmin/error_report/reply_error_report/'.$errId.'?errType='.$errType));
             }
@@ -424,7 +424,7 @@ class Error_report extends BaseController
 
         if($query['status']==FALSE)
         {
-            $this->session->setFlashdata('flashErrorMsg', "Query has not deleted :(");
+            $this->session->setFlashdata('errorMsg', "Query has not deleted :(");
         }
         else
         {
@@ -458,7 +458,7 @@ class Error_report extends BaseController
 
         if($query['status']==FALSE)
         {
-            $this->session->setFlashdata('flashErrorMsg', "Query not has been marked as satisfy :(");
+            $this->session->setFlashdata('errorMsg', "Query not has been marked as satisfy :(");
         }
         else
         {
@@ -526,7 +526,7 @@ class Error_report extends BaseController
         {
             $this->db->transRollback();
             
-            $this->session->setFlashdata('flashErrorMsg', "Image has not deleted :(");
+            $this->session->setFlashdata('errorMsg', "Image has not deleted :(");
             
             return false;
         }
