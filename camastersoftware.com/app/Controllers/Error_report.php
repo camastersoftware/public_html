@@ -160,7 +160,7 @@ class Error_report extends BaseController
 
             if($query['status']==FALSE)
             {
-                $this->session->setFlashdata('flashErrorMsg', "Query has not added :(");
+                $this->session->setFlashdata('errorMsg', "Query has not added :(");
 
                 return redirect()->route('add_error_report');
             }
@@ -296,7 +296,7 @@ class Error_report extends BaseController
 
             if($query['status']==FALSE)
             {
-                $this->session->setFlashdata('flashErrorMsg', "Query has not updated :(");
+                $this->session->setFlashdata('errorMsg', "Query has not updated :(");
 
                 return redirect()->route('error_report/edit_error_report/'.$errId);
             }
@@ -373,7 +373,7 @@ class Error_report extends BaseController
 
         if($query['status']==FALSE)
         {
-            $this->session->setFlashdata('flashErrorMsg', "Query has not deleted :(");
+            $this->session->setFlashdata('errorMsg', "Query has not deleted :(");
         }
         else
         {
@@ -407,7 +407,7 @@ class Error_report extends BaseController
 
         if($query['status']==FALSE)
         {
-            $this->session->setFlashdata('flashErrorMsg', "Query not has been marked as satisfy :(");
+            $this->session->setFlashdata('errorMsg', "Query not has been marked as satisfy :(");
         }
         else
         {
@@ -483,7 +483,7 @@ class Error_report extends BaseController
         {
             $this->db->transRollback();
             
-            $this->session->setFlashdata('flashErrorMsg', "Image has not deleted :(");
+            $this->session->setFlashdata('errorMsg', "Image has not deleted :(");
             
             return false;
         }

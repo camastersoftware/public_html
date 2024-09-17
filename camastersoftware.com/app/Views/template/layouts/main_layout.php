@@ -127,6 +127,10 @@
 
         $(document).ready(function(){
 
+            <?php if(!empty($flashBasicMsg)): ?>
+                swal("<?php echo $flashBasicMsg; ?>");
+            <?php endif; ?>
+
             <?php if(!empty($flashSuccessMsg)): ?>
                 swal("", "<?php echo $flashSuccessMsg; ?>", "success");
             <?php endif; ?>
