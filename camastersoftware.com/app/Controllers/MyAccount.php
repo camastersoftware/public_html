@@ -91,6 +91,13 @@ class MyAccount extends BaseController
         
         $ratingVal=$this->request->getPost('ratingVal');
 
+        $isUseful = (!empty($isUseful)) ? $isUseful : 0;
+        $isReliable = (!empty($isReliable)) ? $isReliable : 0;
+        $isUse = (!empty($isUse)) ? $isUse : 0;
+        $recmdToOther = (!empty($recmdToOther)) ? $recmdToOther : 0;
+        $isUse = (!empty($isUse)) ? $isUse : 0;
+        $ratingVal = (!empty($ratingVal)) ? $ratingVal : 0;
+
         $fdkInsertArr[] = [
             'feedbackDate'=>date('Y-m-d'),
             'staffName'=>$this->sessUserFullName,
