@@ -301,13 +301,13 @@
                                                 <div class="row">
                                                     <div class="col-md-4">   
                                                         <div class="form-group">
-                                                            <label for="text">Rate Us: </label>
+                                                            <label for="text">Rate Us: <span class="text-danger">*</span></label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="form-group">
                                                             <div id="rateYo"></div>
-                                                            <input type="hidden" name="ratingVal" id="ratingVal" value="0">
+                                                            <input type="hidden" name="ratingVal" id="ratingVal" value="0" required>
                                                         </div>
                                                     </div>
                                                 </div>
