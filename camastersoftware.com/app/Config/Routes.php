@@ -885,6 +885,9 @@ $routes->get('/staff-wise-cost-sheet', 'Accounts/CostSheet::staff_wise_cost_shee
 $routes->get('/staff-wise-month-cost-sheet/(:any)', 'Accounts\CostSheet::staff_wise_month_cost_sheet/$1');
 $routes->get('/staff-wise-act-cost-sheet/(:any)', 'Accounts\CostSheet::staff_wise_act_cost_sheet/$1');
 
+// Billing
+$routes->get('/billing', 'Accounts/Billing::index');
+
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
 $routes->post('/add-non-regular-due-date-for', 'NonRegularDueDateFor::add');
