@@ -194,3 +194,12 @@ if (!function_exists('getHoursInMinutes')) {
         return $total_minutes;
     }
 }
+
+if (!function_exists('checkEmpty')) {
+    function checkEmpty($data)
+    {
+        $response = (!empty($data)) ? $data : "-";
+
+        return $response;
+    }
+}
