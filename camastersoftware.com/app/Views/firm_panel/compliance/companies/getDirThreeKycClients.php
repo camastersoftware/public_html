@@ -163,6 +163,10 @@
     tr.isUpdatedDirKyc td:not(:last-child) {
         background: #f0f58b7d !important;
     }
+
+    .tablepress td, .tablepress th {
+        padding: 7px !important;
+    }
     
 </style>
 <?php $s_time = strtotime("2019-12-01"); ?>
