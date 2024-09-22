@@ -86,7 +86,7 @@ class CompaniesAct extends BaseController
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
         $this->data['jsArr']=$jsArr;
 
-        $pageTitle="DIR-3 KYC";
+        $pageTitle="DIR-3 KYC New";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();
@@ -157,12 +157,12 @@ class CompaniesAct extends BaseController
             client_tbl.clientName,
             client_tbl.clientBussOrganisation,
             client_tbl.clientBussOrganisationType AS orgType, 
-            client_tbl.dirKycEmail, 
-            client_tbl.dirKycMob, 
-            client_tbl.dirKycAllotedTo, 
-            client_tbl.dirKycUpdatedOn, 
-            client_tbl.dirKycSrnNo, 
-            client_tbl.dirKycApprovedOn,
+            work_tbl.clientDirKycEmail AS dirKycEmail, 
+            work_tbl.clientDirKycMob AS dirKycMob,
+            work_tbl.clientDirKycAllotedTo AS dirKycAllotedTo, 
+            work_tbl.clientDirKycUpdatedOn AS dirKycUpdatedOn, 
+            work_tbl.clientDirKycSrnNo AS dirKycSrnNo, 
+            work_tbl.clientDirKycApprovedOn AS dirKycApprovedOn,
             user_tbl.userShortName,
             organisation_type_tbl.shortName AS client_org_short_name,
             client_document_map_tbl.client_document_number
@@ -267,7 +267,7 @@ class CompaniesAct extends BaseController
     {
         $this->db->transBegin();
 	    
-	    $clientId=$this->request->getPost('clientId');
+	    $workId=$this->request->getPost('workId');
 	    $dirKycEmail=$this->request->getPost('dirKycEmail');
 	    $dirKycMob=$this->request->getPost('dirKycMob');
 	    $dirKycAllotedTo=$this->request->getPost('dirKycAllotedTo');
@@ -275,20 +275,20 @@ class CompaniesAct extends BaseController
 	    $dirKycSrnNo=$this->request->getPost('dirKycSrnNo');
 	    $dirKycApprovedOn=$this->request->getPost('dirKycApprovedOn');
 	    
-	    $clientUpdateArr = [
-            'dirKycEmail'       => $dirKycEmail,
-            'dirKycMob'         => $dirKycMob,
-            'dirKycAllotedTo'   => $dirKycAllotedTo,
-            'dirKycUpdatedOn'   => $dirKycUpdatedOn,
-            'dirKycSrnNo'       => $dirKycSrnNo,
-            'dirKycApprovedOn'  => $dirKycApprovedOn,
-            'updatedBy'         => $this->adminId,
-            'updatedDatetime'   => $this->currTimeStamp
+	    $wkUpdateArr = [
+            'clientDirKycEmail'         => $dirKycEmail,
+            'clientDirKycMob'           => $dirKycMob,
+            'clientDirKycAllotedTo'     => $dirKycAllotedTo,
+            'clientDirKycUpdatedOn'     => $dirKycUpdatedOn,
+            'clientDirKycSrnNo'         => $dirKycSrnNo,
+            'clientDirKycApprovedOn'    => $dirKycApprovedOn,
+            'updatedBy'                 => $this->adminId,
+            'updatedDatetime'           => $this->currTimeStamp
         ];
 
-        $clientCondtnArr['client_tbl.clientId']=$clientId;
+        $wkCondtnArr['work_tbl.workId']=$workId;
 
-        $query=$this->Mcommon->updateData($tableName=$this->client_tbl, $clientUpdateArr, $clientCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+        $query=$this->Mcommon->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
 	    
 	    if($this->db->transStatus() === FALSE)
 	    {
