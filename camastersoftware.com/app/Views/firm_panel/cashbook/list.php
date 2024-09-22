@@ -182,7 +182,7 @@
                                         			<td nowrap class="text-center"><?php echo date("01-m-Y", strtotime($yrVal."-".$mth."-1")); ?></td>
                                         			<td nowrap class="font-weight-bold">Opening Balance</td>
                                         			<td class="text-center">-</td>
-                                        			<td nowrap class="text-right"><?php echo money_format('%!i', $opBal); ?></td>
+                                        			<td nowrap class="text-right"><?php echo amount_format($opBal); ?></td>
                                         			<td class="text-center">
                                         			    <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
@@ -229,7 +229,7 @@
                                                                         ?>
                                                                     </a>
                                                     			</td>
-                                                    			<td nowrap class="text-right"><?php echo money_format('%!i', $e_row['cbAmt']); ?></td>
+                                                    			<td nowrap class="text-right"><?php echo amount_format($e_row['cbAmt']); ?></td>
                                                     			<td class="text-center">
                                                     			    
                                                     			    <div class="btn-group">
@@ -262,7 +262,7 @@
                                         			<td nowrap class="text-center"><?php echo date("t-m-Y", strtotime($yrVal."-".$mth."-1")); ?></td>
                                         			<td nowrap class="font-weight-bold">Total Receipts</td>
                                         			<td class="text-center">-</td>
-                                        			<td nowrap class="text-right font-weight-bold"><?php echo money_format('%!i', $totalRecvdAmount); ?></td>
+                                        			<td nowrap class="text-right font-weight-bold"><?php echo amount_format($totalRecvdAmount); ?></td>
                                         			<td class="text-center">
                                         			    <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
@@ -282,7 +282,7 @@
                                         			<td nowrap class="text-center"><?php echo date("t-m-Y", strtotime($yrVal."-".$mth."-1")); ?></td>
                                         			<td class="text-center">-</td>
                                         			<td nowrap class="font-weight-bold text-center">Total</td>
-                                        			<td nowrap class="font-weight-bold text-right"><?php echo money_format('%!i', $totalRecvd); ?></td>
+                                        			<td nowrap class="font-weight-bold text-right"><?php echo amount_format($totalRecvd); ?></td>
                                         			<td class="text-center">
                                         			    <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
@@ -352,7 +352,7 @@
                                                                         ?>
                                                                     </a>
                                                     			</td>
-                                                    			<td nowrap class="text-right"><?php echo money_format('%!i', $e_row['cbAmt']); ?></td>
+                                                    			<td nowrap class="text-right"><?php echo amount_format($e_row['cbAmt']); ?></td>
                                                     			<td class="text-center">
                                                     			    
                                                     			    <div class="btn-group">
@@ -385,7 +385,7 @@
                                         			<td nowrap class="text-center"><?php echo date("t-m-Y", strtotime($yrVal."-".$mth."-1")); ?></td>
                                         			<td nowrap class="font-weight-bold">Total Payments</td>
                                         			<td class="text-center">-</td>
-                                        			<td nowrap class="text-right font-weight-bold"><?php echo money_format('%!i', $totalPaidAmount); ?></td>
+                                        			<td nowrap class="text-right font-weight-bold"><?php echo amount_format($totalPaidAmount); ?></td>
                                         			<td class="text-center">
                                         			    <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
@@ -398,7 +398,7 @@
                                         			<td nowrap class="text-center"><?php echo date("t-m-Y", strtotime($yrVal."-".$mth."-1")); ?></td>
                                         			<td nowrap class="font-weight-bold">Closing Balance</td>
                                         			<td class="text-center">-</td>
-                                        			<td nowrap class="text-right"><?php echo money_format('%!i', $totalPaid); ?></td>
+                                        			<td nowrap class="text-right"><?php echo amount_format($totalPaid); ?></td>
                                         			<td class="text-center">
                                         			    <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
@@ -410,7 +410,7 @@
                                         			<td nowrap class="text-center"><?php echo date("t-m-Y", strtotime($yrVal."-".$mth."-1")); ?></td>
                                         			<td nowrap class="text-center">-</td>
                                         			<td class="font-weight-bold text-center">Total</td>
-                                        			<td nowrap class="font-weight-bold text-right"><?php echo money_format('%!i', ($totalPaidAmount+$totalPaid)); ?></td>
+                                        			<td nowrap class="font-weight-bold text-right"><?php echo amount_format(($totalPaidAmount+$totalPaid)); ?></td>
                                         			<td class="text-center">
                                         			    <div class="btn-group">
                                                             <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
