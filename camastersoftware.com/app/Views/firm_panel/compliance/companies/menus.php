@@ -91,6 +91,15 @@
                                 </div>
                             </a>
                         </div>
+                        <div class="col-md-3 col-12 text-justify-center">
+                            <a href="<?= base_url('get-dir-three-kyc-clients'); ?>">
+                                <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                    <div class="box-body box-p_new menu_box_new">
+                                        <p>DIR-3 KYC New</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
 				</div>
 			</div> 
