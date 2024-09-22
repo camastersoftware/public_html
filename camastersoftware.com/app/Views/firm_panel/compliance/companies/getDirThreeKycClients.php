@@ -280,9 +280,9 @@
                                                                     <th class="column-2" width="10%" nowrap>Group No</th>
                                                                     <th class="column-3" nowrap>Client Name</th>
                                                                     <th class="column-4" width="10%" nowrap>DIN</th>
+                                                                    <th class="column-5" width="5%" nowrap>Alloted To</th>
                                                                     <th class="column-4" width="10%" nowrap>Mobile</th>
                                                                     <th class="column-4" width="10%" nowrap>Email</th>
-                                                                    <th class="column-5" width="5%" nowrap>Alloted To</th>
                                                                     <th class="column-6" width="5%" nowrap>Updated On</th>
                                                                     <th class="column-7" width="5%" nowrap>SRN No</th>
                                                                     <th class="column-8" width="5%" nowrap>Approved On</th>
@@ -338,14 +338,14 @@
                                                                             <td class="column-5 text-center" width="10%">
                                                                                 <?= (!empty($e_row['client_document_number'])) ? $e_row['client_document_number'] : "-"; ?>
                                                                             </td>
+                                                                            <td class="column-7 text-center" width="10%">
+                                                                                <?= (!empty($e_row['userShortName'])) ? $e_row['userShortName'] : "-"; ?>
+                                                                            </td>
                                                                             <td class="column-5 text-center" width="10%">
                                                                                 <?= (!empty($e_row['dirKycMob'])) ? $e_row['dirKycMob'] : "-"; ?>
                                                                             </td>
                                                                             <td class="column-5 text-center" width="10%" nowrap>
                                                                                 <?= (!empty($e_row['dirKycEmail'])) ? $e_row['dirKycEmail'] : "-"; ?>
-                                                                            </td>
-                                                                            <td class="column-7 text-center" width="10%">
-                                                                                <?= (!empty($e_row['userShortName'])) ? $e_row['userShortName'] : "-"; ?>
                                                                             </td>
                                                                             <td class="column-10 text-center" width="10%">
                                                                                 <?= (check_valid_date($e_row['dirKycUpdatedOn'])) ? date("d-m-Y", strtotime($e_row['dirKycUpdatedOn'])) : "-"; ?>
