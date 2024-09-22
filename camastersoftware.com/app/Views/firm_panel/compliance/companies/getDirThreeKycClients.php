@@ -159,6 +159,10 @@
     tr.isApprovedDirKyc td:not(:last-child) {
         background: #24d724a6 !important;
     }
+
+    tr.isUpdatedDirKyc td:not(:last-child) {
+        background: #f0f58b7d !important;
+    }
     
 </style>
 <?php $s_time = strtotime("2019-12-01"); ?>
@@ -175,7 +179,7 @@
                             <h4 class="box-title font-weight-bold"><?= $pageTitle; ?></h4>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="<?= base_url('companies-act'); ?>">
+                            <a href="<?= base_url('company-menus'); ?>">
                                 <button type="button" class="waves-effect waves-light btn btn-sm btn-dark float-right" style="">Back</button>
                             </a>
                         </div>
@@ -291,8 +295,20 @@
                                                                 <?php if(!empty($clientDDArr)): ?>
                                                                     <?php foreach($clientDDArr AS $e_row): ?>
                                                                         <?php $hasData=true; ?>
+                                                                        <?php $dirKycUpdatedOn = (check_valid_date($e_row['dirKycUpdatedOn'])) ? date('d-m-Y', strtotime($e_row['dirKycUpdatedOn'])) : "-"; ?>
                                                                         <?php $dirKycApprovedOn = (check_valid_date($e_row['dirKycApprovedOn'])) ? date('d-m-Y', strtotime($e_row['dirKycApprovedOn'])) : "-"; ?>
-                                                                        <tr class="row-1 tbl_row_clr <?php if($dirKycApprovedOn!="-"): ?> isApprovedDirKyc <?php endif; ?>" >
+
+                                                                        <?php
+                                                                            $atStage = 0;
+                                                                            if($dirKycUpdatedOn!="-"){
+                                                                                $atStage = 1;
+                                                                                if($dirKycApprovedOn!="-"){
+                                                                                    $atStage = 2;
+                                                                                }
+                                                                            }
+                                                                        ?>
+
+                                                                        <tr class="row-1 tbl_row_clr <?php if($atStage==1): ?> isUpdatedDirKyc <?php endif; ?> <?php if($atStage==2): ?> isApprovedDirKyc <?php endif; ?>" >
                                                                             <td class="column-1 text-center" width="1%" nowrap>
                                                                                 <?= $sr; ?>
                                                                             </td>
@@ -416,6 +432,7 @@
                                                                                                 </div>
                                                                                                 <div class="modal-footer text-right" style="width: 100%;">
                                                                                                     <input type="hidden" name="clientId" id="clientId" value="<?= $e_row['clientId']; ?>">
+                                                                                                    <input type="hidden" name="workId" id="workId" value="<?= $e_row['workId']; ?>">
                                                                                                     <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
                                                                                                     <button type="submit" name="submit" class="btn btn-success text-left">Submit</button>
                                                                                                 </div>
