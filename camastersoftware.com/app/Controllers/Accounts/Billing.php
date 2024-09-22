@@ -943,4 +943,108 @@ class Billing extends BaseController
         
         return $response;
 	}
+
+	public function register()
+	{
+        ini_set('memory_limit', '-1');
+
+	    $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('tooltip');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
+
+        $this->data['cssArr']=$cssArr;
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Bill Register";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $mth = $this->request->getGet("mth");
+
+        if (empty($mth))
+            $mth = date('n');
+
+        $this->data['mth'] = $mth;
+        
+        $selMth = sprintf("%02d", $mth);
+
+        $fin_year_arr = explode("-", $this->sessDueDateYear);
+
+        $fromYr = $fin_year_arr[0];
+        $toYr = "20" . $fin_year_arr[1];
+
+        $this->data['fromYr'] = $fromYr;
+        $this->data['toYr'] = $toYr;
+
+        // if ($mth <= 3)
+        //     $selYr = $toYr;
+        // else
+        //     $selYr = $fromYr;
+
+        // $this->data['selYr'] = $selYr;
+
+        // $fromDate = date("Y-m-d", strtotime($selYr . "-" . $selMth . "-01"));
+        // $toDate = date("Y-m-d", strtotime($selYr . "-" . $selMth . "-31"));
+    
+        // $workCondtnArr['bill_tbl.billDate >=']=$fromDate;
+        // $workCondtnArr['bill_tbl.billDate <=']=$toDate;
+        
+        $billCondtnArr['bill_tbl.status']="1";
+        $billCondtnArr['bill_tbl.billDate != ']="";
+        $billCondtnArr['bill_tbl.billDate !=  ']="0000-00-00";
+        $billCondtnArr['bill_tbl.billDate !=']="1970-01-01";
+
+        $billOrderByArr['bill_tbl.billDate']="ASC";
+        $billOrderByArr['bill_tbl.billId']="ASC";
+        
+        $billGroupByArr=array('bill_tbl.billId');
+        
+        $billJoinArr[]=array("tbl"=>$this->bill_work_map_tbl, "condtn"=>"bill_work_map_tbl.fkBillId=bill_tbl.billId AND bill_work_map_tbl.status=1", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->work_tbl, "condtn"=>"work_tbl.workId=bill_work_map_tbl.fkWorkId AND work_tbl.status=1", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->periodicity_tbl, "condtn"=>"periodicity_tbl.periodicity_id=due_date_master_tbl.periodicity AND periodicity_tbl.status=1", "type"=>"left");
+        $billJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        
+        $columnNames="
+            bill_tbl.billId,
+            bill_tbl.billDate,
+            bill_tbl.billNo,
+            bill_tbl.totalAmt,
+            bill_tbl.cgstAmt,
+            bill_tbl.sgstAmt,
+            bill_tbl.igstAmt,
+            bill_tbl.totalBillAmt,
+            due_date_master_tbl.periodicity,
+            due_date_master_tbl.daily_date,
+            due_date_master_tbl.period_month,
+            due_date_master_tbl.period_year,
+            due_date_master_tbl.f_period_month,
+            due_date_master_tbl.f_period_year,
+            due_date_master_tbl.t_period_month,
+            due_date_master_tbl.t_period_year,
+            act_tbl.act_name,
+            client_tbl.clientName,
+            client_tbl.clientBussOrganisation,
+            client_tbl.clientBussOrganisationType AS orgType
+        ";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->bill_tbl, $colNames=$columnNames, $billCondtnArr, $likeCondtnArr=array(), $billJoinArr, $singleRow=FALSE, $billOrderByArr, $billGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $billDataArr=$query['userData'];
+    
+        $this->data['billDataArr']=$billDataArr;
+        
+	    return view('firm_panel/accounts/billing/register', $this->data);
+	}
 }

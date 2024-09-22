@@ -892,6 +892,7 @@ $routes->post('/generate-single-ddf-bill', 'Accounts\Billing::generate_single_dd
 $routes->get('/edit-single-ddf-billing/(:any)', 'Accounts\Billing::edit_single_ddf/$1');
 $routes->post('/update-single-ddf-bill', 'Accounts\Billing::update_single_ddf');
 $routes->get('/view-single-ddf-billing/(:any)', 'Accounts\Billing::view_single_ddf/$1');
+$routes->get('/bill-register', 'Accounts\Billing::register');
 
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
