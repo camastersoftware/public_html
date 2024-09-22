@@ -4,7 +4,7 @@ if(!function_exists('amount_format')) {
    function amount_format($amt){
        if(is_numeric($amt)){
            
-            // $amount=money_format('%!i', abs((float)$amt));
+            // $amount=amount_format(abs((float)$amt));
             $amount=number_format(abs((float)$amt), 2);
             $amountFormat = substr($amount, 0, strpos($amount, "."));
            

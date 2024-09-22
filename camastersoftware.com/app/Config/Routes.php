@@ -887,6 +887,11 @@ $routes->get('/staff-wise-act-cost-sheet/(:any)', 'Accounts\CostSheet::staff_wis
 
 // Billing
 $routes->get('/billing', 'Accounts/Billing::index');
+$routes->get('/create-single-ddf-billing/(:any)', 'Accounts\Billing::create_single_ddf/$1');
+$routes->post('/generate-single-ddf-bill', 'Accounts\Billing::generate_single_ddf');
+$routes->get('/edit-single-ddf-billing/(:any)', 'Accounts\Billing::edit_single_ddf/$1');
+$routes->post('/update-single-ddf-bill', 'Accounts\Billing::update_single_ddf');
+$routes->get('/view-single-ddf-billing/(:any)', 'Accounts\Billing::view_single_ddf/$1');
 
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');

@@ -162,6 +162,12 @@
     .hasReturn{
         background: #e4f1fc;
     }
+
+    .theme-primary .btnPrimClr {
+        margin-top: 0px !important;
+        height: 30px !important;
+        margin-bottom: 0px !important;
+    }
     
 </style>
 <!-- Main content -->
@@ -316,6 +322,9 @@
                                                                     <?php $hasData=true; ?>
                                                                     
                                                                     <?php 
+                                                                        $workId = $e_inc_row['workId'];
+                                                                        $billId = $e_inc_row['billId'];
+
                                                                         $eFillingDate="-";
                                                                         if(check_valid_date($e_inc_row['eFillingDate']))
                                                                             $eFillingDate=date('d-m-Y', strtotime($e_inc_row['eFillingDate'])); 
@@ -324,6 +333,10 @@
                                                                             $workTotalCost = $e_inc_row['workTotalCost']; 
                                                                         else
                                                                             $workTotalCost = 0;
+
+                                                                        $billDate="-";
+                                                                        if(check_valid_date($e_inc_row['billDate']))
+                                                                            $billDate=date('d-m-Y', strtotime($e_inc_row['billDate'])); 
 
                                                                         if(!empty($e_inc_row['totalBillAmt']))
                                                                             $totalBillAmt = $e_inc_row['totalBillAmt']; 
@@ -361,28 +374,39 @@
                                                                                 -
                                                                             <?php endif; ?>
                                                                         </td>
-                                                                        <td class="column-7 text-center" width="6%">
+                                                                        <td class="column-7 text-center" width="6%" nowrap>
                                                                             <?= $e_inc_row['seniorName']; ?>
                                                                         </td>
-                                                                        <td class="column-9 text-center" width="5%">
+                                                                        <td class="column-9 text-center" width="5%" nowrap>
                                                                             <?= $eFillingDate; ?>
                                                                         </td>
-                                                                        <td class="column-10 text-center" width="5%">
+                                                                        <td class="column-10 text-center" width="5%" nowrap>
                                                                             <?= amount_format($workTotalCost); ?>
                                                                         </td>
-                                                                        <td class="column-11 text-center" width="5%">
-                                                                            <?= checkEmpty($e_inc_row['billDate']); ?>
+                                                                        <td class="column-11 text-center" width="5%" nowrap>
+                                                                            <?= $billDate; ?>
                                                                         </td>
-                                                                        <td class="column-12 text-center" width="19%">
+                                                                        <td class="column-12 text-center" width="19%" nowrap>
                                                                             <?= checkEmpty($e_inc_row['billNo']); ?>
                                                                         </td>
-                                                                        <td class="column-13 text-center" width="5%">
+                                                                        <td class="column-13 text-center" width="5%" nowrap>
                                                                             <?= amount_format($totalBillAmt); ?>
                                                                         </td>
-                                                                        <td class="column-13 text-center" width="5%">
-                                                                            <a href="<?= base_url('create-bill'); ?>">
-                                                                                <button type="button" class="waves-effect waves-light btn btn-sm btn-submit">Create</button>
-                                                                            </a>
+                                                                        <td class="column-13 text-center" width="5%" nowrap>
+                                                                            <?php if(empty($billId)): ?>
+                                                                                <a href="<?= base_url('create-single-ddf-billing/'.$workId); ?>" target="_blank">
+                                                                                    <button type="button" class="waves-effect waves-light btn btn-sm btn-submit">Create</button>
+                                                                                </a>
+                                                                            <?php else: ?>
+                                                                                <div class="btn-group">
+                                                                                    <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                                    <div class="dropdown-menu" style="will-change: transform;">
+                                                                                        <a class="dropdown-item" href="<?= base_url('edit-single-ddf-billing/'.$billId); ?>" target="_blank">Edit</a>
+                                                                                        <a class="dropdown-item" href="<?= base_url('view-single-ddf-billing/'.$billId); ?>" target="_blank">View</a>
+                                                                                        <!-- <a class="dropdown-item deleteBill" href="javascript:void(0);" data-id="<?//= $e_row['billId']; ?>">Delete</a> -->
+                                                                                    </div>
+                                                                                </div>
+                                                                            <?php endif; ?>
                                                                         </td>
                                                                     </tr>
                                                                     <?php $sr++; ?>

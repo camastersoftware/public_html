@@ -135,8 +135,6 @@
                 $('.textarea_input').val(quill.root.innerHTML);
             });
 
-            console.log("$('.ckeditor_textarea_elem').length", $('.ckeditor_textarea_elem').length);
-
             // Initialize Quill editor for each textarea
             if ($('.ckeditor_textarea_elem').length > 0) {
                 $('.ckeditor_textarea_elem').each(function(index) {

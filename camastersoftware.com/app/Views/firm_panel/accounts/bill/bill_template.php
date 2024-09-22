@@ -237,7 +237,7 @@
                                 </p>
                             </td>
                             <td width="15%" align="right"></td>
-                            <td width="15%" align="right"><?= (!empty($e_desc['amount'])) ? money_format('%!i', $e_desc['amount']):""; ?></td>
+                            <td width="15%" align="right"><?= (!empty($e_desc['amount'])) ? amount_format($e_desc['amount']):""; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -252,7 +252,7 @@
                         <p class="no_mrgn">All the above charged in lump sum</p>
                     </td>
                     <td width="15%" align="right"></td>
-                    <td width="15%" align="right"><?= (!empty($lumpsumAmt)) ? money_format('%!i', $lumpsumAmt):"0.00"; ?></td>
+                    <td width="15%" align="right"><?= (!empty($lumpsumAmt)) ? amount_format($lumpsumAmt):"0.00"; ?></td>
                 </tr>
                 <?php elseif($isLumpsum==2): ?>
                 <tr>
@@ -260,7 +260,7 @@
                         <h4 class="no_mrgn">Total</h4>
                     </td>
                     <td width="15%" align="right"></td>
-                    <td width="15%" align="right" style="<?= $topBorderStyle ?>"><?= (!empty($totalAmt)) ? money_format('%!i', $totalAmt):"0.00"; ?></td>
+                    <td width="15%" align="right" style="<?= $topBorderStyle ?>"><?= (!empty($totalAmt)) ? amount_format($totalAmt):"0.00"; ?></td>
                 </tr>
                 <?php endif; ?>
                 <tr>
@@ -299,7 +299,7 @@
                     <td width="70%">
                         <p class="no_mrgn mrgnLeft30">CGST @ <?= (!empty($billDataArr['cgst'])) ? $billDataArr['cgst']:"0.00"; ?>%</p>
                     </td>
-                    <td width="15%" align="right"><?= (!empty($cgstAmt)) ? money_format('%!i', $cgstAmt):"0.00"; ?></td>
+                    <td width="15%" align="right"><?= (!empty($cgstAmt)) ? amount_format($cgstAmt):"0.00"; ?></td>
                     <td width="15%" align="right"></td>
                 </tr>
                 <tr>
@@ -307,9 +307,9 @@
                         <p class="no_mrgn mrgnLeft30">SGST @ <?= (!empty($billDataArr['sgst'])) ? $billDataArr['sgst']:"0.00"; ?>%</p>
                     </td>
                     <td width="15%" align="right" style="<?= $bottomBorderStyle ?>">
-                        <?= (!empty($sgstAmt)) ? money_format('%!i', $sgstAmt):"0.00"; ?>
+                        <?= (!empty($sgstAmt)) ? amount_format($sgstAmt):"0.00"; ?>
                     </td>
-                    <td width="15%" align="right"><?= (!empty($taxAmt)) ? money_format('%!i', $taxAmt):"0.00"; ?></td>
+                    <td width="15%" align="right"><?= (!empty($taxAmt)) ? amount_format($taxAmt):"0.00"; ?></td>
                 </tr>
                 <?php elseif($taxType==2): ?>
                 <tr>
@@ -317,9 +317,9 @@
                         <p class="no_mrgn mrgnLeft30">IGST @ <?= (!empty($billDataArr['igst'])) ? $billDataArr['igst']:"0.00"; ?>%</p>
                     </td>
                     <td width="15%" align="right" style="<?= $bottomBorderStyle ?>">
-                        <?= (!empty($igstAmt)) ? money_format('%!i', $igstAmt):"0.00"; ?>
+                        <?= (!empty($igstAmt)) ? amount_format($igstAmt):"0.00"; ?>
                     </td>
-                    <td width="15%" align="right"><?= (!empty($taxAmt)) ? money_format('%!i', $taxAmt):"0.00"; ?></td>
+                    <td width="15%" align="right"><?= (!empty($taxAmt)) ? amount_format($taxAmt):"0.00"; ?></td>
                 </tr>
                 <?php endif; ?>
                 <tr>
@@ -336,7 +336,7 @@
                     </td>
                     <td width="15%" align="right" style="<?= $totalRowStyle; ?>"></td>
                     <td width="15%" align="right" style="<?= $totalRowStyle; ?>">
-                        <h4 class="no_mrgn"><?= money_format('%!i', $totalBillAmt); ?></h4>
+                        <h4 class="no_mrgn"><?= amount_format($totalBillAmt); ?></h4>
                     </td>
                 </tr>
                 <!--
