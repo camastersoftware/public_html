@@ -414,11 +414,6 @@
                                                                                                                 <label>Updated On</label>
                                                                                                                 <input type="date" class="form-control" name="dirKycUpdatedOn" id="dirKycUpdatedOn" value="<?= (check_valid_date($e_row['dirKycUpdatedOn'])) ? date("Y-m-d", strtotime($e_row['dirKycUpdatedOn'])) : ""; ?>" >
                                                                                                             </div>
-                                                                                                        </div><div class="col-md-6 col-lg-6">
-                                                                                                            <div class="form-group text-left">
-                                                                                                                <label>Updated On</label>
-                                                                                                                <input type="date" class="form-control" name="dirKycUpdatedOn" id="dirKycUpdatedOn" value="<?= (check_valid_date($e_row['dirKycUpdatedOn'])) ? date("Y-m-d", strtotime($e_row['dirKycUpdatedOn'])) : ""; ?>" >
-                                                                                                            </div>
                                                                                                         </div>
                                                                                                         <div class="col-md-6 col-lg-6">
                                                                                                             <div class="form-group text-left">
