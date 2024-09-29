@@ -175,9 +175,6 @@
     
 </style>
 
-<?php
-    $billStatusArray = BILL_STATUSES;
-?>
 <!-- Main content -->
 <section class="content mt-35">
 	<div class="row">
@@ -204,7 +201,7 @@
 
                     <div class="row mb-10">
                         <div class="col-md-12">
-                            <form action="<?= base_url('billing'); ?>" method="POST" >
+                            <form action="<?= base_url('recurring-bills'); ?>" method="POST" >
                                 <div class="row">
                                     <div class="col-md-11">
                                         <div class="form-group row">
@@ -249,23 +246,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
-                                                <div class="form-group row mx-2">
-                                                    <label class="col-lg-12 col-md-12">Bill Status:</label>
-                                                    <div class="col-lg-12 col-md-12">
-                                                        <select class="form-control" name="ftr_bill_status" id="ftr_bill_status">
-                                                            <option value="">All</option>
-                                                            <?php if(!empty($billStatusArray)): ?>
-                                                                <?php foreach($billStatusArray AS $k_bStat=>$e_bStat): ?>
-                                                                    <option value=<?= $k_bStat; ?> <?php echo $ftr_bill_status==$k_bStat ? "selected":""; ?> ><?= $e_bStat; ?></option>
-                                                                <?php endforeach; ?>
-                                                            <?php endif; ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
                                                 <button type="submit" name="submit" class="btn btn-success text-left btn-sm mt-30">Apply</button>
-                                                <a href="<?= base_url('billing'); ?>">             
+                                                <a href="<?= base_url('recurring-bills'); ?>">             
                                                     <button type="button" name="reset" class="btn btn-secondary btn-sm text-left mt-30">Reset</button>
                                                 </a>
                                             </div>
@@ -358,7 +340,6 @@
                                                             <th class="column-5" colspan="2" width="20%">Alloted to</th>
                                                             <th class="column-6" width="5%">Completed</th>
                                                             <th class="column-7" width="5%">Cost</th>
-                                                            <th class="column-8" colspan="3" width="29%">Bill</th>
                                                             <th class="column-11" width="5%">Action</th>
                                                         </tr>
                                                         <tr class="row-1">
@@ -370,9 +351,6 @@
                                                             <th class="column-6" width="6%">Senior</th>
                                                             <th class="column-8" width="5%">On</th>
                                                             <th class="column-9" width="5%"></th>
-                                                            <th class="column-10" width="5%">Date</th>
-                                                            <th class="column-11" width="19%">No</th>
-                                                            <th class="column-11" width="5%">Status</th>
                                                             <th class="column-12" width="5%"></th>
                                                         </tr>
                                                     </thead>
@@ -401,33 +379,10 @@
                                                                         else
                                                                             $workTotalCost = 0;
 
-                                                                        $billDate="-";
-                                                                        if(check_valid_date($e_inc_row['billDate']))
-                                                                            $billDate=date('d-m-Y', strtotime($e_inc_row['billDate'])); 
-
-                                                                        if(!empty($e_inc_row['totalBillAmt']))
-                                                                            $totalBillAmt = $e_inc_row['totalBillAmt']; 
-                                                                        else
-                                                                            $totalBillAmt = 0;
-
                                                                         if(!empty($e_inc_row['billType']))
                                                                             $billType = $e_inc_row['billType']; 
                                                                         else
                                                                             $billType = 0;
-
-                                                                        $billTypeName = "";
-
-                                                                        if($billType==1)
-                                                                            $billTypeName = "Regular";
-                                                                        elseif($billType==2)
-                                                                            $billTypeName = "Recurring";
-                                                                        elseif($billType==3)
-                                                                            $billTypeName = "Free";
-
-                                                                        if(!empty($billId))
-                                                                            $billStatusName = "Billed";
-                                                                        else
-                                                                            $billStatusName = "Unbilled";
                                                                     ?>
                                                                 
                                                                     <tr class="row-1 tbl_row_clr <?php if(!empty($billType)): ?>billTypeUpdated<?php endif; ?>" >
@@ -469,42 +424,21 @@
                                                                         <td class="column-10 text-center" width="5%" nowrap>
                                                                             <?= amount_format($workTotalCost); ?>
                                                                         </td>
-                                                                        <td class="column-11 text-center" width="5%" nowrap>
-                                                                            <?= $billDate; ?>
-                                                                        </td>
-                                                                        <td class="column-12 text-center" width="19%" nowrap>
-                                                                            <?= checkEmpty($e_inc_row['billNo']); ?>
-                                                                        </td>
                                                                         <td class="column-13 text-center" width="5%" nowrap>
-                                                                            <?= $billStatusName; ?>
-                                                                            <?//= amount_format($totalBillAmt); ?>
-                                                                        </td>
-                                                                        <td class="column-13 text-center" width="5%" nowrap>
-                                                                            <?php if(empty($billId)): ?>
-                                                                                <div class="btn-group">
-                                                                                    <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
-                                                                                    <div class="dropdown-menu" style="will-change: transform;">
-                                                                                        <?php if($billType != 1): ?>
-                                                                                            <a class="dropdown-item" href="<?= base_url('create-single-ddf-billing/'.$workId); ?>" target="_blank">Create Bill</a>
-                                                                                        <?php endif; ?>
-                                                                                        <?php if($billType != 2): ?>
-                                                                                            <a class="dropdown-item markAsRecurring" href="javascript:void(0);" data-work="<?= $workId; ?>">Mark as Recurring</a>
-                                                                                        <?php endif; ?>
-                                                                                        <?php if($billType != 3): ?>
-                                                                                            <a class="dropdown-item markAsFree" href="javascript:void(0);" data-work="<?= $workId; ?>">Mark as Free</a>
-                                                                                        <?php endif; ?>
-                                                                                    </div>
+                                                                            <div class="btn-group">
+                                                                                <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                                <div class="dropdown-menu" style="will-change: transform;">
+                                                                                    <?php if($billType != 1): ?>
+                                                                                        <a class="dropdown-item" href="<?= base_url('create-single-ddf-billing/'.$workId); ?>" target="_blank">Create Bill</a>
+                                                                                    <?php endif; ?>
+                                                                                    <?php if($billType != 2): ?>
+                                                                                        <a class="dropdown-item markAsRecurring" href="javascript:void(0);" data-work="<?= $workId; ?>">Mark as Recurring</a>
+                                                                                    <?php endif; ?>
+                                                                                    <?php if($billType != 3): ?>
+                                                                                        <a class="dropdown-item markAsFree" href="javascript:void(0);" data-work="<?= $workId; ?>">Mark as Free</a>
+                                                                                    <?php endif; ?>
                                                                                 </div>
-                                                                            <?php else: ?>
-                                                                                <div class="btn-group">
-                                                                                    <button type="button" class="waves-effect waves-light btn btn-info btn-sm btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
-                                                                                    <div class="dropdown-menu" style="will-change: transform;">
-                                                                                        <a class="dropdown-item" href="<?= base_url('edit-single-ddf-billing/'.$billId); ?>" target="_blank">Edit</a>
-                                                                                        <a class="dropdown-item" href="<?= base_url('view-single-ddf-billing/'.$billId); ?>" target="_blank">View</a>
-                                                                                        <a class="dropdown-item deleteBill" href="javascript:void(0);" data-id="<?= $billId; ?>" data-work="<?= $workId; ?>">Delete</a>
-                                                                                    </div>
-                                                                                </div>
-                                                                            <?php endif; ?>
+                                                                            </div>
                                                                         </td>
                                                                     </tr>
                                                                     <?php $sr++; ?>
@@ -512,14 +446,14 @@
                                                                 <?php endforeach; ?>
                                                             <?php else: ?>
                                                                 <tr class="row-1 tbl_row_clr">
-                                                                    <td colspan="12" class="column-1">
+                                                                    <td colspan="9" class="column-1">
                                                                         No records found
                                                                     </td>
                                                                 </tr>
                                                             <?php endif; ?>
                                                         <?php else: ?>
                                                             <tr class="row-1 tbl_row_clr">
-                                                                <td colspan="12" class="column-1">
+                                                                <td colspan="9" class="column-1">
                                                                     No records found
                                                                 </td>
                                                             </tr>
@@ -570,7 +504,6 @@
                                                     <th class="column-5" colspan="2" width="20%">Alloted to</th>
                                                     <th class="column-6" width="5%">Completed</th>
                                                     <th class="column-7" width="5%">Cost</th>
-                                                    <th class="column-8" colspan="3" width="29%">Bill</th>
                                                     <th class="column-11" width="5%">Action</th>
                                                 </tr>
                                                 <tr class="row-1">
@@ -582,15 +515,12 @@
                                                     <th class="column-6" width="6%">Senior</th>
                                                     <th class="column-8" width="5%">On</th>
                                                     <th class="column-9" width="5%"></th>
-                                                    <th class="column-10" width="5%">Date</th>
-                                                    <th class="column-11" width="19%">No</th>
-                                                    <th class="column-11" width="5%">Status</th>
                                                     <th class="column-12" width="5%"></th>
                                                 </tr>
                                             </thead>
                                             <tbody class="row-hover">
                                                 <tr class="row-1 tbl_row_clr">
-                                                    <td colspan="12" class="column-1">
+                                                    <td colspan="9" class="column-1">
                                                         No records found
                                                     </td>
                                                 </tr>
@@ -679,44 +609,7 @@
         //     var due_act_sel = $(this).val();
             
         //     window.location.href=base_url+"/billing?actId="+due_act_sel;
-        // });
-
-        $('.deleteBill').on('click', function () {
-
-            var base_url = "<?php echo base_url(); ?>";
-            var billId = $(this).data('id');
-            var workId = $(this).data('work');
-
-            swal({
-                title: "Are you sure?",
-                text: "Do you really want to delete ?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel!",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            }, function(isConfirm){
-                if (isConfirm) {
-
-                    var postingUrl = base_url+'/delete-single-ddf-bill';
-                    $.post(postingUrl, 
-                    {
-                        billId: billId,
-                        workId: workId
-                    },
-                    function(data, status){
-                        // window.location.href=base_url+"/billing?actId="+actId;
-                        window.location.href=base_url+"/billing";
-                    });
-
-                } else {
-                    swal("Cancelled", "You cancelled :)", "error");
-                }
-            });
-
-        });   
+        // }); 
 
         $('.markAsFree').on('click', function () {
 
@@ -744,7 +637,7 @@
                         billType: billType,
                     },
                     function(data, status){
-                        window.location.href=base_url+"/billing";
+                        window.location.href=base_url+"/recurring-bills";
                     });
 
                 } else {
@@ -780,7 +673,7 @@
                         billType: billType,
                     },
                     function(data, status){
-                        window.location.href=base_url+"/billing";
+                        window.location.href=base_url+"/recurring-bills";
                     });
 
                 } else {

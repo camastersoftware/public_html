@@ -22,6 +22,7 @@ class Billing extends BaseController
         $this->MbillWorkMap = new \App\Models\MbillWorkMap();
         $this->MbillDescription = new \App\Models\MbillDescription();
         $this->Mconfig = new \App\Models\Mconfig();
+        $this->Mgroup = new \App\Models\Mgroup();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -40,6 +41,7 @@ class Billing extends BaseController
         $this->time_sheet_tbl=$tableArr['time_sheet_tbl'];
         $this->bill_work_map_tbl=$tableArr['bill_work_map_tbl'];
         $this->bill_tbl=$tableArr['bill_tbl'];
+        $this->bill_description_tbl=$tableArr['bill_description_tbl'];
         
         $currMth=date('n');
         $this->currentMth=date('n');
@@ -56,7 +58,7 @@ class Billing extends BaseController
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
         $cssArr=array('tooltip');
-        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
 
         $this->data['cssArr']=$cssArr;
         $this->data['jsArr']=$jsArr;
@@ -71,7 +73,51 @@ class Billing extends BaseController
 
         $this->data['navArr']=$navArr;
 
-        $actId = $this->request->getGet('actId');
+        $workCustomWhereArray = array();
+
+        $actId = $this->request->getPost('ftr_act');
+        $ftr_clientgrp=$this->request->getPost('ftr_clientgrp');
+        $ftr_client=$this->request->getPost('ftr_client');
+        $ftr_bill_type=$this->request->getPost('ftr_bill_type');
+        $ftr_bill_status=$this->request->getPost('ftr_bill_status');
+
+        $this->data['ftr_clientgrp']=$ftr_clientgrp;
+        $this->data['ftr_client']=$ftr_client;
+        $this->data['ftr_bill_type']=$ftr_bill_type;
+        $this->data['ftr_bill_status']=$ftr_bill_status;
+
+        if(!empty($actId))
+            $workCondtnArr['act_tbl.act_id']=$actId;
+
+        if(!empty($ftr_clientgrp))
+            $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
+            
+        if(!empty($ftr_client))
+            $workCondtnArr['client_tbl.clientId']=$ftr_client;
+
+        if(!empty($ftr_bill_type))
+            $workCondtnArr['work_tbl.billType']=$ftr_bill_type;
+
+        if($ftr_bill_status==1){ // Billed
+            $workCustomWhereArray[]=" (bill_tbl.billId IS NOT NULL OR bill_tbl.billId!='')";
+        }elseif($ftr_bill_status==2){ // Unbilled
+            $workCustomWhereArray[]=" (bill_tbl.billId IS NULL OR bill_tbl.billId='')";
+        }
+
+        $actArr = $this->Mact->where('status', 1)
+                    ->findAll();
+
+        $this->data['actArr']=$actArr;
+
+        /*
+        if(!empty($actArr)) {
+            $firstActId = $actArr[0]['act_id'];
+
+            if(empty($actId)){
+                $actId = $firstActId;
+            }
+        }
+        */
 
         $this->data['actId']=$actId;
         
@@ -81,6 +127,21 @@ class Billing extends BaseController
                     ->findAll();
     
         $this->data['ddfDataArr']=$ddfDataArr;
+
+        $groupList=$this->Mgroup->where('client_group_tbl.status', 1)
+                        ->findAll();
+
+        $this->data['groupList']=$groupList;
+        
+        $clientCondtnArr['client_tbl.status']="1";
+
+        $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        
+        $query=$this->Mquery->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_group_tbl.client_group", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getClientList=$query['userData'];
+
+        $this->data['getClientList']=$getClientList;
         
         $fin_year_arr=explode("-", $this->sessDueDateYear);
     
@@ -94,11 +155,12 @@ class Billing extends BaseController
         $workCondtnArr['client_tbl.status']="1";
         $workCondtnArr['due_date_master_tbl.status']=1;
         $workCondtnArr['due_date_for_tbl.status']=1;
-        $workCondtnArr['act_tbl.act_id']=$actId;
         $workCondtnArr['act_tbl.status']="1";
         $workCondtnArr['work_tbl.eFillingDate != ']="";
         $workCondtnArr['work_tbl.eFillingDate !=  ']="0000-00-00";
         $workCondtnArr['work_tbl.eFillingDate !=']="1970-01-01";
+
+        $workCustomWhereArray[]=" (work_tbl.billType IS NULL OR work_tbl.billType=0 OR work_tbl.billType=1)";
 
         $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
         $workOrderByArr['client_group_tbl.client_group_number']="ASC";
@@ -125,6 +187,186 @@ class Billing extends BaseController
             work_tbl.workCode,
             work_tbl.juniors,
             work_tbl.eFillingDate,
+            work_tbl.billType,
+            user_tbl.userShortName AS seniorName,
+            due_date_master_tbl.due_date_id,
+            due_date_master_tbl.due_date_for,
+            due_date_master_tbl.periodicity,
+            due_date_master_tbl.daily_date,
+            due_date_master_tbl.period_month,
+            due_date_master_tbl.period_year,
+            due_date_master_tbl.f_period_month,
+            due_date_master_tbl.f_period_year,
+            due_date_master_tbl.t_period_month,
+            due_date_master_tbl.t_period_year,
+            due_date_master_tbl.finYear,
+            ext_due_date_master_tbl.extended_date,
+            DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month,
+            due_date_for_tbl.act_option_name AS act_option_name1,
+            periodicity_tbl.periodicity_name,
+            client_group_tbl.client_group_number,
+            client_tbl.clientId,
+            client_tbl.clientTitle,
+            client_tbl.clientName,
+            client_tbl.clientBussOrganisation,
+            client_tbl.clientBussOrganisationType AS orgType,
+            organisation_type_tbl.shortName AS client_org_short_name,
+            SUM(time_sheet_tbl.tsTotalCost) AS workTotalCost,
+            bill_tbl.billId,
+            bill_tbl.billDate,
+            bill_tbl.billNo,
+            bill_tbl.totalBillAmt
+        ";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $workGroupByArr, $whereInArray=array(), $workCustomWhereArray, $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+    
+        $this->data['workDataArr']=$workDataArr;
+        
+        $DDFDueDateArr=array();
+        $DDFDueDateForClientArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_tx)
+            {
+                $DDFDueDateArr[$e_tx['due_date_id']]=$e_tx;
+                
+                $DDFDueDateForClientArr[$e_tx['due_date_id']][$e_tx['clientId']]=$e_tx;
+            }
+        }
+        
+        $this->data['DDFDueDateArr']=$DDFDueDateArr;
+        $this->data['DDFDueDateForClientArr']=$DDFDueDateForClientArr;
+        
+	    return view('firm_panel/accounts/billing/list', $this->data);
+	}
+
+    public function recurring()
+	{
+        ini_set('memory_limit', '-1');
+
+	    $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('tooltip');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+
+        $this->data['cssArr']=$cssArr;
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Recurring Bills";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $workCustomWhereArray = array();
+
+        $actId = $this->request->getPost('ftr_act');
+        $ftr_clientgrp=$this->request->getPost('ftr_clientgrp');
+        $ftr_client=$this->request->getPost('ftr_client');
+
+        $this->data['ftr_clientgrp']=$ftr_clientgrp;
+        $this->data['ftr_client']=$ftr_client;
+
+        if(!empty($actId))
+            $workCondtnArr['act_tbl.act_id']=$actId;
+
+        if(!empty($ftr_clientgrp))
+            $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
+            
+        if(!empty($ftr_client))
+            $workCondtnArr['client_tbl.clientId']=$ftr_client;
+
+        $actArr = $this->Mact->where('status', 1)
+                    ->findAll();
+
+        $this->data['actArr']=$actArr;
+
+        /*
+        if(!empty($actArr)) {
+            $firstActId = $actArr[0]['act_id'];
+
+            if(empty($actId)){
+                $actId = $firstActId;
+            }
+        }
+        */
+
+        $this->data['actId']=$actId;
+        
+        $ddfDataArr=$this->Mact_option->where('fk_act_id', $actId)
+                    ->where('status', 1)
+                    ->orderBy('sortBy', 'ASC')
+                    ->findAll();
+    
+        $this->data['ddfDataArr']=$ddfDataArr;
+
+        $groupList=$this->Mgroup->where('client_group_tbl.status', 1)
+                        ->findAll();
+
+        $this->data['groupList']=$groupList;
+        
+        $clientCondtnArr['client_tbl.status']="1";
+
+        $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        
+        $query=$this->Mquery->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_group_tbl.client_group", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getClientList=$query['userData'];
+
+        $this->data['getClientList']=$getClientList;
+        
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+    
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+    
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        $workCondtnArr['due_date_for_tbl.status']=1;
+        $workCondtnArr['act_tbl.status']="1";
+        $workCondtnArr['work_tbl.eFillingDate != ']="";
+        $workCondtnArr['work_tbl.eFillingDate !=  ']="0000-00-00";
+        $workCondtnArr['work_tbl.eFillingDate !=']="1970-01-01";
+        $workCondtnArr['work_tbl.billType']=2;
+
+        $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
+        $workOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $workOrderByArr['client_tbl.clientId']="ASC";
+        
+        $workGroupByArr=array('due_date_master_tbl.due_date_for', 'due_date_master_tbl.due_date_id', 'client_tbl.clientId', 'work_tbl.workId');
+        
+        $workJoinArr[]=array("tbl"=>$this->work_junior_map_tbl, "condtn"=>"work_junior_map_tbl.fkWorkId=work_tbl.workId AND work_junior_map_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->periodicity_tbl, "condtn"=>"periodicity_tbl.periodicity_id=due_date_master_tbl.periodicity AND periodicity_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->time_sheet_tbl, "condtn"=>"time_sheet_tbl.fkWorkId=work_tbl.workId AND time_sheet_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->bill_work_map_tbl, "condtn"=>"bill_work_map_tbl.fkWorkId=work_tbl.workId AND bill_work_map_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->bill_tbl, "condtn"=>"bill_tbl.billId=bill_work_map_tbl.fkBillId AND bill_tbl.status=1", "type"=>"left");
+        
+        $columnNames="
+            work_tbl.workId,
+            work_tbl.workCode,
+            work_tbl.juniors,
+            work_tbl.eFillingDate,
+            work_tbl.billType,
             user_tbl.userShortName AS seniorName,
             due_date_master_tbl.due_date_id,
             due_date_master_tbl.due_date_for,
@@ -176,13 +418,187 @@ class Billing extends BaseController
         
         $this->data['DDFDueDateArr']=$DDFDueDateArr;
         $this->data['DDFDueDateForClientArr']=$DDFDueDateForClientArr;
+        
+	    return view('firm_panel/accounts/billing/recurring', $this->data);
+	}
+
+    public function free()
+	{
+        ini_set('memory_limit', '-1');
+
+	    $uri = service('uri');
+        $this->data['uri1']=$uri1=$uri->getSegment(1);
+
+        $cssArr=array('tooltip');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'select2.full');
+
+        $this->data['cssArr']=$cssArr;
+        $this->data['jsArr']=$jsArr;
+        
+        $pageTitle="Free (Non-Billable)";
+        $this->data['pageTitle']=$pageTitle;
+
+        $navArr=array();
+
+        $navArr[0]['active']=true;
+        $navArr[0]['title']=$pageTitle;
+
+        $this->data['navArr']=$navArr;
+
+        $workCustomWhereArray = array();
+
+        $actId = $this->request->getPost('ftr_act');
+        $ftr_clientgrp=$this->request->getPost('ftr_clientgrp');
+        $ftr_client=$this->request->getPost('ftr_client');
+
+        $this->data['ftr_clientgrp']=$ftr_clientgrp;
+        $this->data['ftr_client']=$ftr_client;
+
+        if(!empty($actId))
+            $workCondtnArr['act_tbl.act_id']=$actId;
+
+        if(!empty($ftr_clientgrp))
+            $workCondtnArr['client_tbl.clientGroup']=$ftr_clientgrp;
+            
+        if(!empty($ftr_client))
+            $workCondtnArr['client_tbl.clientId']=$ftr_client;
 
         $actArr = $this->Mact->where('status', 1)
                     ->findAll();
 
         $this->data['actArr']=$actArr;
+
+        /*
+        if(!empty($actArr)) {
+            $firstActId = $actArr[0]['act_id'];
+
+            if(empty($actId)){
+                $actId = $firstActId;
+            }
+        }
+        */
+
+        $this->data['actId']=$actId;
         
-	    return view('firm_panel/accounts/billing/list', $this->data);
+        $ddfDataArr=$this->Mact_option->where('fk_act_id', $actId)
+                    ->where('status', 1)
+                    ->orderBy('sortBy', 'ASC')
+                    ->findAll();
+    
+        $this->data['ddfDataArr']=$ddfDataArr;
+
+        $groupList=$this->Mgroup->where('client_group_tbl.status', 1)
+                        ->findAll();
+
+        $this->data['groupList']=$groupList;
+        
+        $clientCondtnArr['client_tbl.status']="1";
+
+        $clientJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        
+        $query=$this->Mquery->getRecords($tableName=$this->client_tbl, $colNames="client_tbl.clientId, client_tbl.clientBussOrganisation, client_tbl.clientTitle, client_tbl.clientName, client_tbl.clientGroup, client_tbl.clientCostCenter, client_tbl.clientPanNumber, client_tbl.clientBussOrganisationType AS orgType, client_group_tbl.client_group", $clientCondtnArr, $likeCondtnArr=array(), $clientJoinArr, $singleRow=FALSE, $orderByArr=array(), $groupByArr=array(), $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $getClientList=$query['userData'];
+
+        $this->data['getClientList']=$getClientList;
+        
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+    
+        $fromDate=date("Y-m-d", strtotime($fin_year_arr[0]."-04-01"));
+        $toDate=date("Y-m-d", strtotime("20".$fin_year_arr[1]."-03-31"));
+    
+        $workCondtnArr['ext_due_date_master_tbl.extended_date >=']=$fromDate;
+        $workCondtnArr['ext_due_date_master_tbl.extended_date <=']=$toDate;
+        
+        $workCondtnArr['work_tbl.status']="1";
+        $workCondtnArr['client_tbl.status']="1";
+        $workCondtnArr['due_date_master_tbl.status']=1;
+        $workCondtnArr['due_date_for_tbl.status']=1;
+        $workCondtnArr['act_tbl.status']="1";
+        $workCondtnArr['work_tbl.eFillingDate != ']="";
+        $workCondtnArr['work_tbl.eFillingDate !=  ']="0000-00-00";
+        $workCondtnArr['work_tbl.eFillingDate !=']="1970-01-01";
+        $workCondtnArr['work_tbl.billType']=3;
+
+        $workOrderByArr['ext_due_date_master_tbl.extended_date']="ASC";
+        $workOrderByArr['client_group_tbl.client_group_number']="ASC";
+        $workOrderByArr['client_tbl.clientId']="ASC";
+        
+        $workGroupByArr=array('due_date_master_tbl.due_date_for', 'due_date_master_tbl.due_date_id', 'client_tbl.clientId', 'work_tbl.workId');
+        
+        $workJoinArr[]=array("tbl"=>$this->work_junior_map_tbl, "condtn"=>"work_junior_map_tbl.fkWorkId=work_tbl.workId AND work_junior_map_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_tbl, "condtn"=>"client_tbl.clientId=work_tbl.fkClientId", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->due_date_master_tbl, "condtn"=>"due_date_master_tbl.due_date_id=work_tbl.fk_due_date_id", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_option_map_tbl.' AS due_date_for_tbl', "condtn"=>"due_date_for_tbl.act_option_map_id=due_date_master_tbl.due_date_for AND due_date_for_tbl.option_type=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->organisation_type_tbl, "condtn"=>"organisation_type_tbl.organisation_type_id=client_tbl.clientBussOrganisationType", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->act_tbl, "condtn"=>"act_tbl.act_id=due_date_master_tbl.due_act", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->periodicity_tbl, "condtn"=>"periodicity_tbl.periodicity_id=due_date_master_tbl.periodicity AND periodicity_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->client_group_tbl, "condtn"=>"client_group_tbl.client_group_id=client_tbl.clientGroup", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->user_tbl, "condtn"=>"user_tbl.userId=work_tbl.seniorId AND user_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->ext_due_date_master_tbl, "condtn"=>"ext_due_date_master_tbl.fk_due_date_master_id=due_date_master_tbl.due_date_id AND ext_due_date_master_tbl.status=1 AND ext_due_date_master_tbl.is_extended=2", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->time_sheet_tbl, "condtn"=>"time_sheet_tbl.fkWorkId=work_tbl.workId AND time_sheet_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->bill_work_map_tbl, "condtn"=>"bill_work_map_tbl.fkWorkId=work_tbl.workId AND bill_work_map_tbl.status=1", "type"=>"left");
+        $workJoinArr[]=array("tbl"=>$this->bill_tbl, "condtn"=>"bill_tbl.billId=bill_work_map_tbl.fkBillId AND bill_tbl.status=1", "type"=>"left");
+        
+        $columnNames="
+            work_tbl.workId,
+            work_tbl.workCode,
+            work_tbl.juniors,
+            work_tbl.eFillingDate,
+            work_tbl.billType,
+            user_tbl.userShortName AS seniorName,
+            due_date_master_tbl.due_date_id,
+            due_date_master_tbl.due_date_for,
+            due_date_master_tbl.periodicity,
+            due_date_master_tbl.daily_date,
+            due_date_master_tbl.period_month,
+            due_date_master_tbl.period_year,
+            due_date_master_tbl.f_period_month,
+            due_date_master_tbl.f_period_year,
+            due_date_master_tbl.t_period_month,
+            due_date_master_tbl.t_period_year,
+            due_date_master_tbl.finYear,
+            ext_due_date_master_tbl.extended_date,
+            DATE_FORMAT(ext_due_date_master_tbl.extended_date, '%c') AS act_due_month,
+            due_date_for_tbl.act_option_name AS act_option_name1,
+            periodicity_tbl.periodicity_name,
+            client_group_tbl.client_group_number,
+            client_tbl.clientId,
+            client_tbl.clientTitle,
+            client_tbl.clientName,
+            client_tbl.clientBussOrganisation,
+            client_tbl.clientBussOrganisationType AS orgType,
+            organisation_type_tbl.shortName AS client_org_short_name,
+            SUM(time_sheet_tbl.tsTotalCost) AS workTotalCost,
+            bill_tbl.billId,
+            bill_tbl.billDate,
+            bill_tbl.billNo,
+            bill_tbl.totalBillAmt
+        ";
+        
+        $query=$this->Mcommon->getRecords($tableName=$this->work_tbl, $colNames=$columnNames, $workCondtnArr, $likeCondtnArr=array(), $workJoinArr, $singleRow=FALSE, $workOrderByArr, $workGroupByArr, $whereInArray=array(), $customWhereArray=array(), $orWhereArray=array(), $orWhereDataArr=array());
+        
+        $workDataArr=$query['userData'];
+    
+        $this->data['workDataArr']=$workDataArr;
+        
+        $DDFDueDateArr=array();
+        $DDFDueDateForClientArr=array();
+        
+        if(!empty($workDataArr))
+        {
+            foreach($workDataArr AS $e_tx)
+            {
+                $DDFDueDateArr[$e_tx['due_date_id']]=$e_tx;
+                
+                $DDFDueDateForClientArr[$e_tx['due_date_id']][$e_tx['clientId']]=$e_tx;
+            }
+        }
+        
+        $this->data['DDFDueDateArr']=$DDFDueDateArr;
+        $this->data['DDFDueDateForClientArr']=$DDFDueDateForClientArr;
+        
+	    return view('firm_panel/accounts/billing/free', $this->data);
 	}
 
     public function create_single_ddf()
@@ -390,6 +806,16 @@ class Billing extends BaseController
         $actId = $this->request->getPost('actId');
         $clientId=$this->request->getPost('clientId');
 	    $workId = $this->request->getPost('workId');
+
+        $wkUpdateArr = [
+            'billType' => 1,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['work_tbl.workId']=$workId;
+
+        $this->Mquery->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
 	    
 	    $billInsertArr=[
             'fkClientId'        =>  $clientId,
@@ -408,6 +834,7 @@ class Billing extends BaseController
             'igstAmt'           =>  $igstAmt,
             'totalBillAmt'      =>  $totalBillAmt,
             'billNote'          =>  $billNote,
+            'billCreatedBy'     =>  $this->adminId,
             'status'            =>  1,
             'createdBy'         =>  $this->adminId,
             'createdDatetime'   =>  $this->currTimeStamp
@@ -709,6 +1136,16 @@ class Billing extends BaseController
         $actId = $this->request->getPost('actId');
         $clientId=$this->request->getPost('clientId');
 	    $workId = $this->request->getPost('workId');
+
+        $wkUpdateArr = [
+            'billType' => 1,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['work_tbl.workId']=$workId;
+
+        $this->Mcommon->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
 	    
 	    $billInsertArr=[
             'billId'            =>  $billId,
@@ -743,9 +1180,6 @@ class Billing extends BaseController
         ];
         
         $this->MbillWorkMap->save($billWorkMapInsertArr);
-
-        // print_r($billDescptionIdArr);
-        // die();
 
         if(!empty($billDescptionIdArr))
         {
@@ -835,6 +1269,76 @@ class Billing extends BaseController
         $backUrl = base_url("billing?actId=".$actId);
 	    
 	    return redirect()->to($backUrl);
+	}
+
+    public function delete_single_ddf()
+	{
+	    $this->db->transBegin();
+	    
+	    $billId=$this->request->getPost('billId');
+	    $workId=$this->request->getPost('workId');
+
+        $wkUpdateArr = [
+            'billType' => 0,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['work_tbl.workId']=$workId;
+
+        $this->Mcommon->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+        $billUpdateArr = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $billCondtnArr['bill_tbl.billId']=$billId;
+
+        $this->Mcommon->updateData($tableName=$this->bill_tbl, $billUpdateArr, $billCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+        $billWorkUpdateArr = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $billWorkCondtnArr['bill_work_map_tbl.fkBillId']=$billId;
+
+        $this->Mcommon->updateData($tableName=$this->bill_work_map_tbl, $billWorkUpdateArr, $billWorkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+
+        $billDescUpdateArr = [
+            'status' => 2,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $billDescCondtnArr['bill_description_tbl.fkBillId']=$billId;
+
+        $this->Mcommon->updateData($tableName=$this->bill_description_tbl, $billDescUpdateArr, $billDescCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+	    
+	    if($this->db->transStatus() === FALSE)
+	    {
+	        $this->db->transRollback();
+	        
+	        $this->session->setFlashdata('errorMsg', "Bill has not deleted :(");
+	    }
+	    else
+	    {
+	        $this->db->transCommit();
+	        
+	        $insertLogArr['section']=$this->section;
+            $insertLogArr['message']=$this->section." Deleted";
+            $insertLogArr['ip']=$this->IPAddress;
+            // $insertLogArr['macAddr']=$this->macAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mcommon->insertLog($insertLogArr);
+            
+	        $this->session->setFlashdata('successMsg', "Bill has been deleted successfully :)");
+	    }
 	}
 
     public function view_single_ddf($billId)
@@ -942,6 +1446,54 @@ class Billing extends BaseController
             ->setBody($output);
         
         return $response;
+	}
+
+    public function update_bill_type()
+	{
+	    $this->db->transBegin();
+	    
+	    $workId = $this->request->getPost('workId');
+	    $billType = $this->request->getPost('billType');
+
+        $billTypeName = "";
+
+        if($billType==2) {
+            $billTypeName = "Recurring";
+        } elseif($billType==3) {
+            $billTypeName = "Free";
+        }
+
+        $wkUpdateArr = [
+            'billType' => $billType,
+            'updatedBy' => $this->adminId,
+            'updatedDatetime' => $this->currTimeStamp
+        ];
+
+        $wkCondtnArr['work_tbl.workId']=$workId;
+
+        $this->Mcommon->updateData($tableName=$this->work_tbl, $wkUpdateArr, $wkCondtnArr, $likeCondtnArr=array(), $whereInArray=array());
+	    
+	    if($this->db->transStatus() === FALSE)
+	    {
+	        $this->db->transRollback();
+	        
+	        $this->session->setFlashdata('errorMsg', "Bill has not updated :(");
+	    }
+	    else
+	    {
+	        $this->db->transCommit();
+	        
+	        $insertLogArr['section']=$this->section;
+            $insertLogArr['message']=$this->section." Marked as ".$billTypeName;
+            $insertLogArr['ip']=$this->IPAddress;
+            // $insertLogArr['macAddr']=$this->macAddress;
+            $insertLogArr['createdBy']=$this->adminId;
+            $insertLogArr['createdDatetime']=$this->currTimeStamp;
+
+            $this->Mcommon->insertLog($insertLogArr);
+            
+	        $this->session->setFlashdata('successMsg', "Bill has been marked as ".$billTypeName." :)");
+	    }
 	}
 
 	public function register()

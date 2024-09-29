@@ -23,21 +23,48 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="row"> 
+                        <div class="row">
                             <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('cost-sheet'); ?>">
+                                <a href="<?php echo base_url('billing'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p class="not_in_use">Cost Sheet</p>
+                                            <p class="not_in_use">Create Bills</p>
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('cashbook'); ?>">
+                                <a href="<?php echo base_url('recurring-bills'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p class="not_in_use">Cash Book</p>
+                                            <p class="not_in_use">Recurring Bills</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('free-bills'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p class="not_in_use">Free (Non-Billable)</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('bills'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p class="not_in_use">Create Other Bills</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-12 text-justify-center">
+                                <a href="<?php echo base_url('bill-register'); ?>">
+                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
+                                        <div class="box-body box-p_new menu_box_new">
+                                            <p class="not_in_use">Bill Register</p>
                                         </div>
                                     </div>
                                 </a>
@@ -50,21 +77,12 @@
                                         </div>
                                     </div>
                                 </a>
-                            </div> 
-                            <div class="col-md-3 col-12 text-justify-center">
-                                <a href="javascript:void(0);">
-                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
-                                        <div class="box-body box-p_new menu_box_new">
-                                            <p class="not_in_use">Payable</p>
-                                        </div>
-                                    </div>
-                                </a>
                             </div>
                             <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('bills'); ?>">
+                                <a href="<?php echo base_url('cost-sheet'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p class="not_in_use">Bills</p>
+                                            <p class="not_in_use">Cost Sheet</p>
                                         </div>
                                     </div>
                                 </a>
@@ -79,19 +97,10 @@
                                 </a>
                             </div>
                             <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('billing'); ?>">
+                                <a href="<?php echo base_url('cashbook'); ?>">
                                     <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
                                         <div class="box-body box-p_new menu_box_new">
-                                            <p class="not_in_use">Create Bills</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-12 text-justify-center">
-                                <a href="<?php echo base_url('bill-register'); ?>">
-                                    <div class="box box-inverse box-primary box-card-home box-card-clr p_clr card_box_shape">
-                                        <div class="box-body box-p_new menu_box_new">
-                                            <p class="not_in_use">Bill Register</p>
+                                            <p class="not_in_use">Cash Book</p>
                                         </div>
                                     </div>
                                 </a>
