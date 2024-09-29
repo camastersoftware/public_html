@@ -15,7 +15,7 @@ class Mbill extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['fkClientId', 'billNo', 'billDate', 'billServiceAccCode', 'isLumpsum', 'lumpsumAmt', 'totalAmt', 'taxType', 'cgst', 'sgst', 'igst', 'cgstAmt', 'sgstAmt', 'igstAmt', 'totalBillAmt', 'billNote', 'billCreatedBy', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
+    protected $allowedFields = ['fkClientId', 'billNo', 'billDate', 'billServiceAccCode', 'isLumpsum', 'lumpsumAmt', 'totalAmt', 'taxType', 'cgst', 'sgst', 'igst', 'cgstAmt', 'sgstAmt', 'igstAmt', 'totalBillAmt', 'billNote', 'billCreatedBy', 'billUpdatedBy', 'status', 'createdBy', 'createdDatetime', 'updatedBy', 'updatedDatetime'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'createdDatetime';
