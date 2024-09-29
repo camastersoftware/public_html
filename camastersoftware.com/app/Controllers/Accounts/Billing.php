@@ -1165,6 +1165,7 @@ class Billing extends BaseController
             'igstAmt'           =>  $igstAmt,
             'totalBillAmt'      =>  $totalBillAmt,
             'billNote'          =>  $billNote,
+            'billUpdatedBy'     =>  $this->adminId,
             'updatedBy'         =>  $this->adminId,
             'updatedDatetime'   =>  $this->currTimeStamp
         ];
