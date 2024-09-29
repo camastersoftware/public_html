@@ -981,3 +981,7 @@ table tr td a {
     background : #24d724a6 !important;
 }
 
+.select2-container--default .select2-selection--single{
+    border: 1.5px solid #7a9abd !important;
+}
+

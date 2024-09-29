@@ -886,13 +886,17 @@ $routes->get('/staff-wise-month-cost-sheet/(:any)', 'Accounts\CostSheet::staff_w
 $routes->get('/staff-wise-act-cost-sheet/(:any)', 'Accounts\CostSheet::staff_wise_act_cost_sheet/$1');
 
 // Billing
-$routes->get('/billing', 'Accounts/Billing::index');
+$routes->match(['get', 'post'], '/billing', 'Accounts/Billing::index');
+$routes->match(['get', 'post'], '/recurring-bills', 'Accounts/Billing::recurring');
+$routes->match(['get', 'post'], '/free-bills', 'Accounts/Billing::free');
 $routes->get('/create-single-ddf-billing/(:any)', 'Accounts\Billing::create_single_ddf/$1');
 $routes->post('/generate-single-ddf-bill', 'Accounts\Billing::generate_single_ddf');
 $routes->get('/edit-single-ddf-billing/(:any)', 'Accounts\Billing::edit_single_ddf/$1');
 $routes->post('/update-single-ddf-bill', 'Accounts\Billing::update_single_ddf');
+$routes->post('/delete-single-ddf-bill', 'Accounts\Billing::delete_single_ddf');
 $routes->get('/view-single-ddf-billing/(:any)', 'Accounts\Billing::view_single_ddf/$1');
 $routes->get('/bill-register', 'Accounts\Billing::register');
+$routes->post('/update-bill-type', 'Accounts\Billing::update_bill_type');
 
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
