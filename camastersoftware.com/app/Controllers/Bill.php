@@ -58,7 +58,7 @@ class Bill extends BaseController
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr']=$jsArr;
         
-        $pageTitle="Bills";
+        $pageTitle="Create Other Bills";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();
@@ -155,10 +155,10 @@ class Bill extends BaseController
 	    $uri = service('uri');
         $this->data['uri1']=$uri1=$uri->getSegment(1);
 
-        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'wysihtml5');
+        $jsArr=array('data-table', 'datatables.min', 'sweetalert.min', 'wysihtml5', 'select2.full');
         $this->data['jsArr']=$jsArr;
         
-        $pageTitle="Create New Bill";
+        $pageTitle="Create Bill";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();

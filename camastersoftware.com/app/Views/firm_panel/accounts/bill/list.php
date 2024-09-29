@@ -129,7 +129,7 @@
                     </h4>
                     <div class="text-right flex-grow">
                         <a href="<?php echo base_url('create-bill'); ?>">
-                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Create New Bill</button>
+                            <button type="button" class="waves-effect waves-light btn btn-sm btn-submit add_client_top">Create Bill</button>
                         </a>
                         &nbsp;&nbsp;
                         <a href="<?php echo base_url('modify-bill-tax-notes'); ?>" data-toggle="tooltip" data-original-title="Modify Tax Rates & Notes">

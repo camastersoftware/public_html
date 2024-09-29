@@ -310,4 +310,28 @@ defined('EVERYDAYLABPATH')       ||  define('EVERYDAYLABPATH', "uploads/admin/ev
 // ----------------------------------------- Images Path - End ---------------------------------------// 
 
 
+// ----------------------------------------- Bill Types - Start --------------------------------------//
+
+$constBillTypeArr = array(
+    1 => "Regular",
+    2 => "Recurring",
+    3 => "Free",
+);
+
+defined('BILL_TYPES')       ||  define('BILL_TYPES', $constBillTypeArr);
+
+// ----------------------------------------- Bill Types - End ---------------------------------------// 
+
+// ----------------------------------------- Bill Status - Start --------------------------------------//
+
+$constBillStatusArr = array(
+    1 => "Billed",
+    2 => "Unbilled",
+);
+
+defined('BILL_STATUSES')       ||  define('BILL_STATUSES', $constBillStatusArr);
+
+// ----------------------------------------- Bill Status - End ---------------------------------------// 
+
+
 
