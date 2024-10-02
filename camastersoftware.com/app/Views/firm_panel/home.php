@@ -75,18 +75,20 @@
 					        <?php if(!empty($clientBirthdayStr)): ?>
 					            <b>Happy Birthday </b>(Client) <b>:</b> <?php echo $clientBirthdayStr; ?>
 					        <?php endif; ?>
-					        <?php if(!empty($birthdayArr) && !empty($holidayStr)): ?>
+					        <?php if(!empty($clientBirthdayStr) && !empty($holidayStr)): ?>
 					        <b>|</b>
 					        <?php endif; ?>
 					        <?php if(!empty($holidayStr)): ?>
 					            <b>Holiday : </b> Tommorow will be holiday on account of <?= $holidayStr; ?>
 					        <?php endif; ?>
-					        <?php if(!empty($birthdayArr) || !empty($holidayStr)): ?>
+					        <?php if(!empty($holidayStr) || !empty($ancStr)): ?>
 					        <b>|</b>
 					        <?php endif; ?>
 					        <?php if(!empty($ancStr)): ?>
 					           <b>Announcements : </b> <?php echo $ancStr; ?>
-					           <b>|</b>
+					        <?php endif; ?>
+                            <?php if(!empty($ancStr) || !empty($ancmntStr)): ?>
+					        <b>|</b>
 					        <?php endif; ?>
 					        <?php if(!empty($ancmntStr)): ?>
 					           <b>CAMaster : </b> <?php echo $ancmntStr; ?>
