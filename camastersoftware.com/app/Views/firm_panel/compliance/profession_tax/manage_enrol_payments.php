@@ -108,6 +108,12 @@
     }
 </style>
 
+<?php
+    $pt_enrol_paid_on = (check_valid_date($workArr['pt_enrol_paid_on'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_paid_on'])) : "";
+    $pt_enrol_prof_tax_pmt_from = (check_valid_date($workArr['pt_enrol_prof_tax_pmt_from'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_prof_tax_pmt_from'])) : $otptFromDate;
+    $pt_enrol_prof_tax_pmt_to = (check_valid_date($workArr['pt_enrol_prof_tax_pmt_to'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_prof_tax_pmt_to'])) : $otptToDate;
+?>
+
 <!-- Main content -->
 <section class="content mt-35">
     <div class="row">
@@ -231,6 +237,39 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
                                                             <div class="col-md-4">
+                                                                <label for="pt_enrol_prof_tax_pmt">Prof. Tax Payment :</label>
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="form-group mb-0">
+                                                                    <input name="pt_enrol_prof_tax_pmt" type="radio" id="pt_enrol_prof_tax_pmt_annual" class="radio-col-warning" value="1" <?php if($workArr['pt_enrol_prof_tax_pmt']==1): ?> checked <?php endif; ?>>
+                                                                    <label for="pt_enrol_prof_tax_pmt_annual">Annual</label>
+                                                                    <input name="pt_enrol_prof_tax_pmt" type="radio" id="pt_enrol_prof_tax_pmt_otpt" class="radio-col-warning" value="2" <?php if($workArr['pt_enrol_prof_tax_pmt']==2): ?> checked <?php endif; ?>>
+                                                                    <label for="pt_enrol_prof_tax_pmt_otpt">OTPT<small>(One Time Payment of Tax Scheme)</small></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="text-danger">(Whether you are opting for OTPT now or have done so in previous years, please ensure that you manually update your payment details annually.)</label>
+                                                    </div>
+                                                    <div class="col-md-12" id="pt_enrol_prof_tax_pmt_period_div">
+                                                        <div class="form-group row">
+                                                            <div class="col-md-2">
+                                                                <label for="pt_enrol_prof_tax_pmt_period">Period :</label>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label>From : </label>
+                                                                <input type="date" class="form-control" name="pt_enrol_prof_tax_pmt_from" id="pt_enrol_prof_tax_pmt_from" value="<?= $pt_enrol_prof_tax_pmt_from; ?>">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label>To : </label>
+                                                                <input type="date" class="form-control" name="pt_enrol_prof_tax_pmt_to" id="pt_enrol_prof_tax_pmt_to" value="<?= $pt_enrol_prof_tax_pmt_to; ?>">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row">
+                                                            <div class="col-md-4">
                                                                 <label for="pt_enrol_amt_paid">Amount Paid :</label>
                                                             </div>
                                                             <div class="col-md-8">
@@ -244,7 +283,7 @@
                                                                 <label for="pt_enrol_paid_on">Paid On :</label>
                                                             </div>
                                                             <div class="col-md-8">
-                                                                <input type="date" class="form-control" name="pt_enrol_paid_on" id="pt_enrol_paid_on" value="<?php echo $workArr['pt_enrol_paid_on']; ?>">
+                                                                <input type="date" class="form-control" name="pt_enrol_paid_on" id="pt_enrol_paid_on" value="<?= $pt_enrol_paid_on; ?>">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -409,6 +448,26 @@
             $('#juniors').val(selectedJnrText);
             $('#juniorIds').val(selectedJnrIdsText);
         });
+
+        $("input:radio[name='pt_enrol_prof_tax_pmt']").click(function(){
+
+            var pt_enrol_prof_tax_pmt = $(this).val();
+
+            $("#pt_enrol_prof_tax_pmt_period_div").hide();
+
+            if(pt_enrol_prof_tax_pmt == 2){
+                $("#pt_enrol_prof_tax_pmt_period_div").show();
+            }
+
+        });
+
+        $("input:radio[name='pt_enrol_prof_tax_pmt']:checked").trigger('click');
+
+        let sel_pt_enrol_prof_tax_pmt = $("input:radio[name='pt_enrol_prof_tax_pmt']:checked").val();
+
+        if(!sel_pt_enrol_prof_tax_pmt){
+            $("#pt_enrol_prof_tax_pmt_period_div").hide();
+        }
     });
 
 </script>
