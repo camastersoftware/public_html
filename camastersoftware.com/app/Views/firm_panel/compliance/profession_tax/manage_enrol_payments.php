@@ -110,8 +110,8 @@
 
 <?php
     $pt_enrol_paid_on = (check_valid_date($workArr['pt_enrol_paid_on'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_paid_on'])) : "";
-    $pt_enrol_prof_tax_pmt_from = (check_valid_date($workArr['pt_enrol_prof_tax_pmt_from'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_prof_tax_pmt_from'])) : $otptFromDate;
-    $pt_enrol_prof_tax_pmt_to = (check_valid_date($workArr['pt_enrol_prof_tax_pmt_to'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_prof_tax_pmt_to'])) : $otptToDate;
+    $pt_enrol_prof_tax_pmt_from = (check_valid_date($workArr['pt_enrol_prof_tax_pmt_from'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_prof_tax_pmt_from'])) : "";
+    $pt_enrol_prof_tax_pmt_to = (check_valid_date($workArr['pt_enrol_prof_tax_pmt_to'])) ? date('Y-m-d', strtotime($workArr['pt_enrol_prof_tax_pmt_to'])) : "";
 ?>
 
 <!-- Main content -->
