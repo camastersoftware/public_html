@@ -116,6 +116,7 @@ class ProfessionTax extends BaseController
             user_tbl.userShortName AS seniorName,
             work_tbl.pt_enrol_from,
             work_tbl.pt_enrol_to,
+            work_tbl.pt_enrol_prof_tax_pmt,
             work_tbl.pt_enrol_amt_paid,
             work_tbl.pt_enrol_paid_on,
             payment_mode_tbl.name AS pt_enrol_pmt_mode,
@@ -336,6 +337,17 @@ class ProfessionTax extends BaseController
         $navArr[0]['title']=$pageTitle;
 
         $this->data['navArr']=$navArr;
+
+        $fin_year_arr=explode("-", $this->sessDueDateYear);
+
+        $fromYr = (int)$fin_year_arr[0];
+        $toYr = $fromYr+5;
+
+        $otptFromDate=date("Y-m-d", strtotime($fromYr."-04-01"));
+        $otptToDate=date("Y-m-d", strtotime($toYr."-03-31"));
+
+        $this->data['otptFromDate']=$otptFromDate;
+        $this->data['otptToDate']=$otptToDate;
         
         $workCondtnArr['work_tbl.workId']=$workId;
         $workCondtnArr['work_tbl.status']="1";
@@ -348,6 +360,9 @@ class ProfessionTax extends BaseController
             work_tbl.workId,
             work_tbl.juniors,
             work_tbl.seniorId,
+            work_tbl.pt_enrol_prof_tax_pmt,
+            work_tbl.pt_enrol_prof_tax_pmt_from,
+            work_tbl.pt_enrol_prof_tax_pmt_to,
             work_tbl.pt_enrol_amt_paid,
             work_tbl.pt_enrol_paid_on,
             work_tbl.pt_enrol_pmt_mode,
@@ -413,6 +428,9 @@ class ProfessionTax extends BaseController
         $juniors=$this->request->getPost('juniors');
         $juniorIds=$this->request->getPost('juniorIds');
         $seniorId=$this->request->getPost('seniorId');
+        $pt_enrol_prof_tax_pmt=$this->request->getPost('pt_enrol_prof_tax_pmt');
+        $pt_enrol_prof_tax_pmt_from=$this->request->getPost('pt_enrol_prof_tax_pmt_from');
+        $pt_enrol_prof_tax_pmt_to=$this->request->getPost('pt_enrol_prof_tax_pmt_to');
         $pt_enrol_amt_paid=$this->request->getPost('pt_enrol_amt_paid');
         $pt_enrol_paid_on=$this->request->getPost('pt_enrol_paid_on');
         $pt_enrol_pmt_mode=$this->request->getPost('pt_enrol_pmt_mode');
@@ -421,6 +439,9 @@ class ProfessionTax extends BaseController
         $wkUpdateArr = [
             'juniors'=>$juniors,
             'seniorId'=>$seniorId,
+            'pt_enrol_prof_tax_pmt'=>$pt_enrol_prof_tax_pmt,
+            'pt_enrol_prof_tax_pmt_from'=>$pt_enrol_prof_tax_pmt_from,
+            'pt_enrol_prof_tax_pmt_to'=>$pt_enrol_prof_tax_pmt_to,
             'pt_enrol_amt_paid'=>$pt_enrol_amt_paid,
             'pt_enrol_paid_on'=>$pt_enrol_paid_on,
             'pt_enrol_pmt_mode'=>$pt_enrol_pmt_mode,

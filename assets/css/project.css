@@ -985,3 +985,6 @@ table tr td a {
     border: 1.5px solid #7a9abd !important;
 }
 
+.seperator_line_tbl {
+    background-color: #005495 !important;
+}
