@@ -163,6 +163,7 @@ class CompaniesAct extends BaseController
             work_tbl.clientDirKycUpdatedOn AS dirKycUpdatedOn, 
             work_tbl.clientDirKycSrnNo AS dirKycSrnNo, 
             work_tbl.clientDirKycApprovedOn AS dirKycApprovedOn,
+            work_tbl.clientDirKycRemark AS dirKycRemark,
             user_tbl.userShortName,
             organisation_type_tbl.shortName AS client_org_short_name,
             client_document_map_tbl.client_document_number
@@ -274,6 +275,7 @@ class CompaniesAct extends BaseController
 	    $dirKycUpdatedOn=$this->request->getPost('dirKycUpdatedOn');
 	    $dirKycSrnNo=$this->request->getPost('dirKycSrnNo');
 	    $dirKycApprovedOn=$this->request->getPost('dirKycApprovedOn');
+	    $dirKycRemark=$this->request->getPost('dirKycRemark');
 	    
 	    $wkUpdateArr = [
             'clientDirKycEmail'         => $dirKycEmail,
@@ -282,6 +284,7 @@ class CompaniesAct extends BaseController
             'clientDirKycUpdatedOn'     => $dirKycUpdatedOn,
             'clientDirKycSrnNo'         => $dirKycSrnNo,
             'clientDirKycApprovedOn'    => $dirKycApprovedOn,
+            'clientDirKycRemark'        => $dirKycRemark,
             'updatedBy'                 => $this->adminId,
             'updatedDatetime'           => $this->currTimeStamp
         ];
