@@ -427,6 +427,12 @@
                                                                                                                 <input type="date" class="form-control" name="dirKycApprovedOn" id="dirKycApprovedOn" value="<?= (check_valid_date($e_row['dirKycApprovedOn'])) ? date("Y-m-d", strtotime($e_row['dirKycApprovedOn'])) : ""; ?>">
                                                                                                             </div>
                                                                                                         </div>
+                                                                                                        <div class="col-md-12 col-lg-12">
+                                                                                                            <div class="form-group text-left">
+                                                                                                                <label>Remark : </label>
+                                                                                                                <textarea class="form-control" name="dirKycRemark" rows="2"><?= $e_row['dirKycRemark']; ?></textarea>
+                                                                                                            </div>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="modal-footer text-right" style="width: 100%;">
