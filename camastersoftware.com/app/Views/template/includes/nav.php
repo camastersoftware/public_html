@@ -240,7 +240,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="app-menu <?php if ($uri1 == "inc_tax_mis_menu" || $uri1 == "tds-tcs-mis-report" || $uri1 == "gst-mis-report" || $uri1 == "pt-reg-mis-report" || $uri1 == "llp-mis-menu" || $uri1 == "combined-mis-report") : ?>active<?php endif; ?>">
+                    <div class="app-menu <?php if ($uri1 == "inc_tax_mis_menu" || $uri1 == "tds-tcs-mis-report" || $uri1 == "gst-mis-report" || $uri1 == "pt-reg-mis-report" || $uri1 == "llp-mis-menu" || $uri1 == "combined-mis-report" || $uri1 == "get_client_report") : ?>active<?php endif; ?>">
                         <div class="search-bx mx-5">
                             <div class="btn-group">
                                 <a href="javascript:void(0);" class="dropdown-toggle nav_bar" data-toggle="dropdown">
@@ -253,6 +253,7 @@
                                     <a class="dropdown-item" href="<?php echo base_url('pt-reg-mis-report'); ?>">&nbsp;Profession&nbsp;Tax</a>
                                     <a class="dropdown-item" href="<?php echo base_url('llp-mis-menu'); ?>">&nbsp;LLP</a>
                                     <a class="dropdown-item" href="<?php echo base_url('combined-mis-report'); ?>">&nbsp;Combined&nbsp;Report</a>
+                                    <a class="dropdown-item" href="<?php echo base_url('get_client_report'); ?>">&nbsp;Work&nbsp;Position</a>
                                 </div>
                             </div>
                         </div>
