@@ -295,113 +295,223 @@
                                             
                                                     <?php if(!empty($workDataArr)): ?>
                                                         <?php foreach($workDataArr AS $e_row): ?>
+                                                            <?php if($e_row["pt_enrol_prof_tax_pmt"]!=2): ?>
+                                                                <?php $pt_enrol_paid_on = check_valid_date($e_row['pt_enrol_paid_on']); ?>
 
-                                                            <?php $pt_enrol_paid_on = check_valid_date($e_row['pt_enrol_paid_on']); ?>
+                                                                <?php $pt_enrol_paid_on_comp = $pt_enrol_paid_on && !empty($pt_enrol_paid_on); ?>
+                                                                
+                                                                <?php
+                                                                    $rowColor="";
 
-                                                            <?php $pt_enrol_paid_on_comp = $pt_enrol_paid_on && !empty($pt_enrol_paid_on); ?>
-                                                            
-                                                            <?php
-                                                                $rowColor="";
+                                                                    if($pt_enrol_paid_on_comp)
+                                                                    {
+                                                                        $rowColor="hasCompleted";
+                                                                    }
+                                                                ?>
 
-                                                                if($pt_enrol_paid_on_comp)
-                                                                {
-                                                                    $rowColor="hasCompleted";
-                                                                }
-                                                            ?>
-
-                                                            <tr class="row-1 tbl_row_clr" >
-                                                                <td class="column-1 <?= $rowColor; ?>" width="1%" nowrap>
-                                                                    <?= $sr; ?>
-                                                                </td>
-                                                                <td class="column-2 <?= $rowColor; ?>" width="5%" nowrap>
-                                                                    <?= $e_row['client_group_number']; ?>
-                                                                </td>
-                                                                <td class="column-3 <?= $rowColor; ?>" width="15%" nowrap>
-                                                                    <?php 
-                                                                        if(in_array($e_row['orgType'], INDIVIDUAL_ARRAY))
-                                                                            $clientNameVar=$e_row['clientName'];
-                                                                        else
-                                                                            $clientNameVar=$e_row['clientBussOrganisation']; 
-                                                                    ?>
-                                                                    <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $clientNameVar; ?>">
+                                                                <tr class="row-1 tbl_row_clr" >
+                                                                    <td class="column-1 <?= $rowColor; ?>" width="1%" nowrap>
+                                                                        <?= $sr; ?>
+                                                                    </td>
+                                                                    <td class="column-2 <?= $rowColor; ?>" width="5%" nowrap>
+                                                                        <?= $e_row['client_group_number']; ?>
+                                                                    </td>
+                                                                    <td class="column-3 <?= $rowColor; ?>" width="15%" nowrap>
                                                                         <?php 
-                                                                            if(strlen($clientNameVar)>24)
+                                                                            if(in_array($e_row['orgType'], INDIVIDUAL_ARRAY))
+                                                                                $clientNameVar=$e_row['clientName'];
+                                                                            else
+                                                                                $clientNameVar=$e_row['clientBussOrganisation']; 
+                                                                        ?>
+                                                                        <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $clientNameVar; ?>">
+                                                                            <?php 
+                                                                                if(strlen($clientNameVar)>24)
+                                                                                {
+                                                                                    echo substr($clientNameVar, 0, 24)."..";
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    echo $clientNameVar;
+                                                                                }
+                                                                            ?>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td class="column-4 text-center <?= $rowColor; ?>" width="10%" nowrap>
+                                                                        <?= $e_row['client_org_short_name']; ?>
+                                                                    </td>
+                                                                    <td class="column-5 text-center <?= $rowColor; ?>" width="7%">
+                                                                        <?= (!empty($e_row['client_document_number'])) ? $e_row['client_document_number'] : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-6 text-center <?= $rowColor; ?>" width="7%" nowrap>
+                                                                        <?php if($e_row['juniors']!=""): ?>
+                                                                            <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $e_row['juniors']; ?>">
+                                                                                <?php 
+                                                                                    if(strlen($e_row['juniors'])>10)
+                                                                                        echo substr_replace($e_row['juniors'], "...", 10); 
+                                                                                    else
+                                                                                        echo $e_row['juniors'];
+                                                                                ?>
+                                                                            </a>
+                                                                        <?php else: ?>
+                                                                            -
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="column-7 text-center <?= $rowColor; ?>" width="7%">
+                                                                        <?= (!empty($e_row['seniorName'])) ? $e_row['seniorName'] : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-8 text-center <?= $rowColor; ?>" nowrap>
+                                                                        <?php
+                                                                            if($e_row['periodicity']=="1")
                                                                             {
-                                                                                echo substr($clientNameVar, 0, 24)."..";
+                                                                                echo date("d-M-Y", strtotime($e_row["daily_date"]));
+                                                                            }
+                                                                            elseif($e_row['periodicity']=="2")
+                                                                            {
+                                                                                echo date("M", strtotime("2021-".$e_row["period_month"]."-01"))."-".$e_row["period_year"];
+                                                                            }
+                                                                            elseif($e_row['periodicity']>="3")
+                                                                            {
+                                                                                echo date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
                                                                             }
                                                                             else
                                                                             {
-                                                                                echo $clientNameVar;
+                                                                                echo "N/A";
                                                                             }
                                                                         ?>
-                                                                    </a>
-                                                                </td>
-                                                                <td class="column-4 text-center <?= $rowColor; ?>" width="10%" nowrap>
-                                                                    <?= $e_row['client_org_short_name']; ?>
-                                                                </td>
-                                                                <td class="column-5 text-center <?= $rowColor; ?>" width="7%">
-                                                                    <?= (!empty($e_row['client_document_number'])) ? $e_row['client_document_number'] : "-"; ?>
-                                                                </td>
-                                                                <td class="column-6 text-center <?= $rowColor; ?>" width="7%" nowrap>
-                                                                    <?php if($e_row['juniors']!=""): ?>
-                                                                        <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $e_row['juniors']; ?>">
+                                                                    </td>
+                                                                    <td class="column-10 text-right <?= $rowColor; ?>">
+                                                                        <?= (!empty($e_row['pt_enrol_amt_paid'])) ? amount_format($e_row['pt_enrol_amt_paid']) : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-11 text-center <?= $rowColor; ?>">
+                                                                        <?= (check_valid_date($e_row['pt_enrol_paid_on'])) ? date('d-m-Y', strtotime($e_row['pt_enrol_paid_on'])) : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-12 text-center <?= $rowColor; ?>">
+                                                                        <?= (!empty($e_row['pt_enrol_pmt_mode'])) ? $e_row['pt_enrol_pmt_mode'] : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-13 text-center">
+                                                                        <div class="btn-group">
+                                                                            <button type="button" class="waves-effect waves-light btn btn-info btn-sm btn-xs btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                            <div class="dropdown-menu" style="will-change: transform;">
+                                                                                <a class="dropdown-item" href="<?= base_url('manage-pt-enrol-payments/'.$e_row['workId']); ?>">View/Edit</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php $sr++; ?>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                        <tr class="row-1 tbl_row_clr">
+                                                            <td colspan="12" class="column-1 seperator_line_tbl"></td>
+                                                        </tr>
+                                                        <?php foreach($workDataArr AS $e_row): ?>
+                                                            <?php if($e_row["pt_enrol_prof_tax_pmt"]==2): ?>
+                                                                <?php $pt_enrol_paid_on = check_valid_date($e_row['pt_enrol_paid_on']); ?>
+
+                                                                <?php $pt_enrol_paid_on_comp = $pt_enrol_paid_on && !empty($pt_enrol_paid_on); ?>
+                                                                
+                                                                <?php
+                                                                    $rowColor="";
+
+                                                                    if($pt_enrol_paid_on_comp)
+                                                                    {
+                                                                        $rowColor="hasCompleted";
+                                                                    }
+                                                                ?>
+
+                                                                <tr class="row-1 tbl_row_clr" >
+                                                                    <td class="column-1 <?= $rowColor; ?>" width="1%" nowrap>
+                                                                        <?= $sr; ?>
+                                                                    </td>
+                                                                    <td class="column-2 <?= $rowColor; ?>" width="5%" nowrap>
+                                                                        <?= $e_row['client_group_number']; ?>
+                                                                    </td>
+                                                                    <td class="column-3 <?= $rowColor; ?>" width="15%" nowrap>
+                                                                        <?php 
+                                                                            if(in_array($e_row['orgType'], INDIVIDUAL_ARRAY))
+                                                                                $clientNameVar=$e_row['clientName'];
+                                                                            else
+                                                                                $clientNameVar=$e_row['clientBussOrganisation']; 
+                                                                        ?>
+                                                                        <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $clientNameVar; ?>">
                                                                             <?php 
-                                                                                if(strlen($e_row['juniors'])>10)
-                                                                                    echo substr_replace($e_row['juniors'], "...", 10); 
+                                                                                if(strlen($clientNameVar)>24)
+                                                                                {
+                                                                                    echo substr($clientNameVar, 0, 24)."..";
+                                                                                }
                                                                                 else
-                                                                                    echo $e_row['juniors'];
+                                                                                {
+                                                                                    echo $clientNameVar;
+                                                                                }
                                                                             ?>
                                                                         </a>
-                                                                    <?php else: ?>
-                                                                        -
-                                                                    <?php endif; ?>
-                                                                </td>
-                                                                <td class="column-7 text-center <?= $rowColor; ?>" width="7%">
-                                                                    <?= (!empty($e_row['seniorName'])) ? $e_row['seniorName'] : "-"; ?>
-                                                                </td>
-                                                                <td class="column-8 text-center <?= $rowColor; ?>" nowrap>
-                                                                    <?php
-                                                                        if($e_row['periodicity']=="1")
-                                                                        {
-                                                                            echo date("d-M-Y", strtotime($e_row["daily_date"]));
-                                                                        }
-                                                                        elseif($e_row['periodicity']=="2")
-                                                                        {
-                                                                            echo date("M", strtotime("2021-".$e_row["period_month"]."-01"))."-".$e_row["period_year"];
-                                                                        }
-                                                                        elseif($e_row['periodicity']>="3")
-                                                                        {
-                                                                            echo date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            echo "N/A";
-                                                                        }
-                                                                    ?>
-                                                                </td>
-                                                                <td class="column-10 text-right <?= $rowColor; ?>">
-                                                                    <?= (!empty($e_row['pt_enrol_amt_paid'])) ? amount_format($e_row['pt_enrol_amt_paid']) : "-"; ?>
-                                                                </td>
-                                                                <td class="column-11 text-center <?= $rowColor; ?>">
-                                                                    <?= (check_valid_date($e_row['pt_enrol_paid_on'])) ? date('d-m-Y', strtotime($e_row['pt_enrol_paid_on'])) : "-"; ?>
-                                                                </td>
-                                                                <td class="column-12 text-center <?= $rowColor; ?>">
-                                                                    <?= (!empty($e_row['pt_enrol_pmt_mode'])) ? $e_row['pt_enrol_pmt_mode'] : "-"; ?>
-                                                                </td>
-                                                                <td class="column-13 text-center">
-                                                                    <div class="btn-group">
-                                                                        <button type="button" class="waves-effect waves-light btn btn-info btn-sm btn-xs btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
-                                                                        <div class="dropdown-menu" style="will-change: transform;">
-                                                                            <a class="dropdown-item" href="<?= base_url('manage-pt-enrol-payments/'.$e_row['workId']); ?>">View/Edit</a>
+                                                                    </td>
+                                                                    <td class="column-4 text-center <?= $rowColor; ?>" width="10%" nowrap>
+                                                                        <?= $e_row['client_org_short_name']; ?>
+                                                                    </td>
+                                                                    <td class="column-5 text-center <?= $rowColor; ?>" width="7%">
+                                                                        <?= (!empty($e_row['client_document_number'])) ? $e_row['client_document_number'] : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-6 text-center <?= $rowColor; ?>" width="7%" nowrap>
+                                                                        <?php if($e_row['juniors']!=""): ?>
+                                                                            <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="<?= $e_row['juniors']; ?>">
+                                                                                <?php 
+                                                                                    if(strlen($e_row['juniors'])>10)
+                                                                                        echo substr_replace($e_row['juniors'], "...", 10); 
+                                                                                    else
+                                                                                        echo $e_row['juniors'];
+                                                                                ?>
+                                                                            </a>
+                                                                        <?php else: ?>
+                                                                            -
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="column-7 text-center <?= $rowColor; ?>" width="7%">
+                                                                        <?= (!empty($e_row['seniorName'])) ? $e_row['seniorName'] : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-8 text-center <?= $rowColor; ?>" nowrap>
+                                                                        <?php
+                                                                            if($e_row['periodicity']=="1")
+                                                                            {
+                                                                                echo date("d-M-Y", strtotime($e_row["daily_date"]));
+                                                                            }
+                                                                            elseif($e_row['periodicity']=="2")
+                                                                            {
+                                                                                echo date("M", strtotime("2021-".$e_row["period_month"]."-01"))."-".$e_row["period_year"];
+                                                                            }
+                                                                            elseif($e_row['periodicity']>="3")
+                                                                            {
+                                                                                echo date("M", strtotime("2021-".$e_row["f_period_month"]."-01"))."-".$e_row["f_period_year"]." - ".date("M", strtotime("2021-".$e_row["t_period_month"]."-01"))."-".$e_row["t_period_year"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                echo "N/A";
+                                                                            }
+                                                                        ?>
+                                                                    </td>
+                                                                    <td class="column-10 text-right <?= $rowColor; ?>">
+                                                                        <?= (!empty($e_row['pt_enrol_amt_paid'])) ? amount_format($e_row['pt_enrol_amt_paid']) : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-11 text-center <?= $rowColor; ?>">
+                                                                        <?= (check_valid_date($e_row['pt_enrol_paid_on'])) ? date('d-m-Y', strtotime($e_row['pt_enrol_paid_on'])) : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-12 text-center <?= $rowColor; ?>">
+                                                                        <?= (!empty($e_row['pt_enrol_pmt_mode'])) ? $e_row['pt_enrol_pmt_mode'] : "-"; ?>
+                                                                    </td>
+                                                                    <td class="column-13 text-center">
+                                                                        <div class="btn-group">
+                                                                            <button type="button" class="waves-effect waves-light btn btn-info btn-sm btn-xs btnPrimClr dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action</button>
+                                                                            <div class="dropdown-menu" style="will-change: transform;">
+                                                                                <a class="dropdown-item" href="<?= base_url('manage-pt-enrol-payments/'.$e_row['workId']); ?>">View/Edit</a>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
+                                                                    </td>
+                                                                </tr>
                                                             <?php $sr++; ?>
+                                                            <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     <?php else: ?>
                                                     <tr class="row-1 tbl_row_clr">
-                                                        <td colspan="13" class="column-1">
+                                                        <td colspan="12" class="column-1">
                                                             No records found
                                                         </td>
                                                     </tr>
