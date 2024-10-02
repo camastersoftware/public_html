@@ -144,6 +144,14 @@ class ProfessionTax extends BaseController
         $workDataArr=$query['userData'];
         
         $this->data['workDataArr']=$workDataArr;
+
+        $pt_enrol_prof_tax_pmt_col = array();
+
+        if(!empty($workDataArr)){
+            $pt_enrol_prof_tax_pmt_col = array_unique(array_column($workDataArr, "pt_enrol_prof_tax_pmt"));
+        }
+
+        $this->data['pt_enrol_prof_tax_pmt_col']=$pt_enrol_prof_tax_pmt_col;
         
         return view('firm_panel/compliance/profession_tax/enrol_payments', $this->data);
     }

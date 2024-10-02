@@ -400,9 +400,11 @@
                                                             <?php $sr++; ?>
                                                             <?php endif; ?>
                                                         <?php endforeach; ?>
-                                                        <tr class="row-1 tbl_row_clr">
-                                                            <td colspan="12" class="column-1 seperator_line_tbl"></td>
-                                                        </tr>
+                                                        <?php if(in_array(2, $pt_enrol_prof_tax_pmt_col)): ?>
+                                                            <tr class="row-1 tbl_row_clr">
+                                                                <td colspan="12" class="column-1 seperator_line_tbl"></td>
+                                                            </tr>
+                                                        <?php endif; ?>
                                                         <?php foreach($workDataArr AS $e_row): ?>
                                                             <?php if($e_row["pt_enrol_prof_tax_pmt"]==2): ?>
                                                                 <?php $pt_enrol_paid_on = check_valid_date($e_row['pt_enrol_paid_on']); ?>
