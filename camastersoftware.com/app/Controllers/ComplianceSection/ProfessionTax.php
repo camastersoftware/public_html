@@ -345,17 +345,6 @@ class ProfessionTax extends BaseController
         $navArr[0]['title']=$pageTitle;
 
         $this->data['navArr']=$navArr;
-
-        $fin_year_arr=explode("-", $this->sessDueDateYear);
-
-        $fromYr = (int)$fin_year_arr[0];
-        $toYr = $fromYr+5;
-
-        $otptFromDate=date("Y-m-d", strtotime($fromYr."-04-01"));
-        $otptToDate=date("Y-m-d", strtotime($toYr."-03-31"));
-
-        $this->data['otptFromDate']=$otptFromDate;
-        $this->data['otptToDate']=$otptToDate;
         
         $workCondtnArr['work_tbl.workId']=$workId;
         $workCondtnArr['work_tbl.status']="1";
