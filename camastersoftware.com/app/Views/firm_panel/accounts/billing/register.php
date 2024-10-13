@@ -306,7 +306,7 @@
                                                         ?>
                                                     </td>
                                                     <td class="text-right" width="5%" nowrap>
-                                                        <?= amount_format($totalBillAmt); ?>
+                                                        <?= amount_format($totalAmt); ?>
                                                     </td>
                                                     <td class="text-right" width="5%" nowrap>
                                                         <?= amount_format($gstAmt);?>

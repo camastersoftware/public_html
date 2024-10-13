@@ -65,7 +65,7 @@ class Billing extends BaseController
         $this->data['cssArr']=$cssArr;
         $this->data['jsArr']=$jsArr;
         
-        $pageTitle="Create Bills";
+        $pageTitle="Create Bills - Type A";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();
