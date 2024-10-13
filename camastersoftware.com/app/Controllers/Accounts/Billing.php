@@ -23,6 +23,7 @@ class Billing extends BaseController
         $this->MbillDescription = new \App\Models\MbillDescription();
         $this->Mconfig = new \App\Models\Mconfig();
         $this->Mgroup = new \App\Models\Mgroup();
+        $this->Mreceipts = new \App\Models\Mreceipts();
         $this->TableLib = new \App\Libraries\TableLib();
 
         $tableArr=$this->TableLib->get_tables();
@@ -42,6 +43,7 @@ class Billing extends BaseController
         $this->bill_work_map_tbl=$tableArr['bill_work_map_tbl'];
         $this->bill_tbl=$tableArr['bill_tbl'];
         $this->bill_description_tbl=$tableArr['bill_description_tbl'];
+        $this->payment_mode_tbl=$tableArr['payment_mode_tbl'];
         
         $currMth=date('n');
         $this->currentMth=date('n');
@@ -1574,6 +1576,7 @@ class Billing extends BaseController
             bill_tbl.billDate,
             bill_tbl.billNo,
             bill_tbl.totalAmt,
+            bill_tbl.taxType,
             bill_tbl.cgstAmt,
             bill_tbl.sgstAmt,
             bill_tbl.igstAmt,
@@ -1597,6 +1600,36 @@ class Billing extends BaseController
         $billDataArr=$query['userData'];
     
         $this->data['billDataArr']=$billDataArr;
+
+        $receiptColNames = "
+            receipts_tbl.receiptId,
+            receipts_tbl.fkBillId,
+            receipts_tbl.receiptNo,
+            receipts_tbl.receiptDate,
+            receipts_tbl.receiptAmt,
+            receipts_tbl.receiptGst,
+            receipts_tbl.receiptTotal,
+            receipts_tbl.receiptTds,
+            receipts_tbl.receiptNet,
+            payment_mode_tbl.name AS rcptPmtMode
+        ";
+
+        $receiptsArr=$this->Mreceipts->select($receiptColNames)
+                        ->join($this->payment_mode_tbl, 'payment_mode_tbl.id=receipts_tbl.receiptMode AND payment_mode_tbl.status=1', 'left')
+                        ->where('receipts_tbl.status', 1)
+                        ->findAll();
+
+        $this->data['receiptsArr']=$receiptsArr;
+
+        $billReceiptsArr = array();
+
+        if(!empty($receiptsArr)){
+            foreach($receiptsArr AS $e_rcpt){
+                $billReceiptsArr[$e_rcpt["fkBillId"]][] = $e_rcpt;
+            }
+        }
+
+        $this->data['billReceiptsArr']=$billReceiptsArr;
         
 	    return view('firm_panel/accounts/billing/register', $this->data);
 	}

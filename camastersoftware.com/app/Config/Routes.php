@@ -898,6 +898,14 @@ $routes->get('/view-single-ddf-billing/(:any)', 'Accounts\Billing::view_single_d
 $routes->get('/bill-register', 'Accounts\Billing::register');
 $routes->post('/update-bill-type', 'Accounts\Billing::update_bill_type');
 
+// Receipts
+$routes->get('/create-receipt/(:any)', 'Accounts\Receipts::create_receipt/$1');
+$routes->post('/generate-receipt', 'Accounts\Receipts::generate_receipt');
+$routes->get('/edit-receipt/(:any)', 'Accounts\Receipts::edit_receipt/$1');
+$routes->post('/update-receipt', 'Accounts\Receipts::update_receipt');
+$routes->post('/delete-receipt', 'Accounts\Receipts::delete_receipt');
+$routes->get('/view-receipt-pdf/(:any)', 'Accounts\Receipts::view_receipt_pdf/$1');
+
 // Non-Regular Due Date For
 $routes->get('non-regular-due-date-for-list', 'NonRegularDueDateFor::index');
 $routes->post('/add-non-regular-due-date-for', 'NonRegularDueDateFor::add');
