@@ -116,8 +116,14 @@
     .discontinueClass td {
       color: #9d9c97 !important;
     }
+
+    .marqueeFontSize {
+        font-size: 18px !important;
+    }
     
 </style>
+
+<link rel="stylesheet" href="<?= esc(base_url('assets/css/marquee.css')); ?>">
 
 <section class="content client_list_tbl mt-35">
     <div class="row">
@@ -142,6 +148,11 @@
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="marqueeDiv mb-15">
+                        <p class="marqueeFontSize">
+                            To create other bills, which are not covered in Type A.
+                        </p>
+                    </div>
                     <div class="table-responsive">
                         <table class="data_tbl_fixed_header table table-bordered table-striped" style="width:100%">
                             <thead>
