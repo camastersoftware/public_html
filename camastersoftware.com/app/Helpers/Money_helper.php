@@ -105,7 +105,7 @@ if(!function_exists('moneyInWords')) {
    }
    
    
-   function moneyInWords($num) {
+   function moneyInWordsOld1($num) {
         $ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
         $teens = ['', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
         $tens = ['', 'Ten', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
@@ -157,6 +157,64 @@ if(!function_exists('moneyInWords')) {
     
         return $return_data;
     }
+
+    function moneyInWords($num) {
+        $ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+        $teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+        $tens = ['', 'Ten', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    
+        function convert_number_to_words($n, $ones, $teens, $tens) {
+            if ($n < 10) {
+                return $ones[$n];
+            } elseif ($n < 20) {
+                return $teens[$n - 10];
+            } elseif ($n < 100) {
+                return $tens[intval($n / 10)] . ' ' . $ones[$n % 10];
+            } else {
+                return $ones[intval($n / 100)] . ' Hundred ' . convert_number_to_words($n % 100, $ones, $teens, $tens);
+            }
+        }
+    
+        $rupees = intval($num);
+        $paise = round(($num - $rupees) * 100);
+    
+        if ($rupees == 0) {
+            return 'Zero Rupees Only';
+        }
+    
+        $words = [];
+    
+        // Grouping logic for the Indian numbering system
+        if ($rupees >= 10000000) { // Crore part
+            $crore = intval($rupees / 10000000);
+            $words[] = convert_number_to_words($crore, $ones, $teens, $tens) . ' Crore';
+            $rupees %= 10000000;
+        }
+        if ($rupees >= 100000) { // Lakh part
+            $lakh = intval($rupees / 100000);
+            $words[] = convert_number_to_words($lakh, $ones, $teens, $tens) . ' Lakh';
+            $rupees %= 100000;
+        }
+        if ($rupees >= 1000) { // Thousand part
+            $thousand = intval($rupees / 1000);
+            $words[] = convert_number_to_words($thousand, $ones, $teens, $tens) . ' Thousand';
+            $rupees %= 1000;
+        }
+        if ($rupees > 0) { // Remaining part (Hundreds, Tens, Units)
+            $words[] = convert_number_to_words($rupees, $ones, $teens, $tens);
+        }
+    
+        // Join all parts with a space, filtering out any empty values
+        $finalWords = implode(' ', array_filter($words)) . ' Rupees';
+    
+        // Convert Paise part if any
+        if ($paise > 0) {
+            $finalWords .= ' And ' . convert_number_to_words($paise, $ones, $teens, $tens) . ' Paise';
+        }
+    
+        return $finalWords . ' Only';
+    }
+    
 }
 
 ?>
