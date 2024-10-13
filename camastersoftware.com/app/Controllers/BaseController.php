@@ -216,6 +216,29 @@ class BaseController extends Controller
         $this->data['tot_Msg_Count'] = getTotMSGCount($this->sessUserId);
 
         $this->data['isReminderPresent'] = getTodaysReminders($this->sessUserId);
+
+        // Get the current URL
+        $currentURL = current_url();
+        
+        // Only proceed if the request method is GET
+        if ($this->requestMethod === 'get') {
+            // Get the last two URLs from the session
+            $lastURL = $this->session->get('previous_url');
+            $secondLastURL = $this->session->get('second_last_url');
+
+            // Only store the current URL if it's unique and is a GET request
+            if ($currentURL !== $lastURL) {
+                if ($currentURL !== $secondLastURL) {
+                    // Update the session with the current URL as the last
+                    $this->session->set('second_last_url', $lastURL);  // Move last to second last
+                    $this->session->set('previous_url', $currentURL);   // Update last to current
+                } else {
+                    // If the current URL is the same as second last, only update the last URL
+                    $this->session->set('previous_url', $currentURL);   // Update last to current
+                }
+            }
+        }
+
         //    dd($this->data['tot_Msg_Count']);
 
         //--------------------------------------------------------------------
