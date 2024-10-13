@@ -58,7 +58,7 @@ class Bill extends BaseController
         $jsArr=array('data-table', 'datatables.min', 'sweetalert.min');
         $this->data['jsArr']=$jsArr;
         
-        $pageTitle="Create Other Bills";
+        $pageTitle="Create Bills - Type B";
         $this->data['pageTitle']=$pageTitle;
 
         $navArr=array();
