@@ -716,7 +716,7 @@
                 }
             });
 
-        });   
+        }); 
 
         $('.markAsFree').on('click', function () {
 

@@ -37,7 +37,7 @@ if (!function_exists('amount_format')) {
             $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 0);
             
             // Format the rounded amount
-            $formattedAmount = $fmt->format($amt);
+            $formattedAmount = $fmt->format(abs($amt));
             
             // Handle negative amounts by adding parentheses
             if ($amt < 0) {

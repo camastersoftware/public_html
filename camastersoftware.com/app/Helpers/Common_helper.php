@@ -8,7 +8,7 @@ if (!function_exists('add_leading_zero')) {
 }
 
 if (!function_exists('display_client_name')) {
-    function display_client_name($orgType, $clientName, $orgName)
+    function display_client_name($orgType, $clientName, $orgName, $needFull = false, $reqdLength=15)
     {
 
         $orgNm = (!empty($orgName)) ? " (" . $orgName . ")" : "";
@@ -21,35 +21,39 @@ if (!function_exists('display_client_name')) {
             $cliNameVar = $orgName;
         }
 
-        $cliNameLength = strlen($cliNameVar);
+        if(!$needFull){
+            $cliNameLength = strlen($cliNameVar);
 
-        $fullLength = 30;
-        $partLength = 15;
+            $fullLength = 30;
+            $partLength = $reqdLength;
 
-        if ($cliNameLength > $fullLength) {
-            if ($orgType == 8) {
-                $cliNameLgth = strlen($clientName);
-                $orgNameLgth = strlen($orgNm);
+            if ($cliNameLength > $fullLength) {
+                if ($orgType == 8) {
+                    $cliNameLgth = strlen($clientName);
+                    $orgNameLgth = strlen($orgNm);
 
-                if ($cliNameLgth > $partLength)
-                    $cliNameVal = substr($clientName, 0, $partLength) . "...";
-                else
-                    $cliNameVal = $clientName;
+                    if ($cliNameLgth > $partLength)
+                        $cliNameVal = substr($clientName, 0, $partLength) . "...";
+                    else
+                        $cliNameVal = $clientName;
 
-                if ($orgNameLgth > $partLength)
-                    $orgNameVal = substr($orgNm, 0, $partLength) . "...";
-                else
-                    $orgNameVal = $orgNm;
+                    if ($orgNameLgth > $partLength)
+                        $orgNameVal = substr($orgNm, 0, $partLength) . "...";
+                    else
+                        $orgNameVal = $orgNm;
 
-                $displayName = $cliNameVal . " " . $orgNameVal;
+                    $displayName = $cliNameVal . " " . $orgNameVal;
+                } else {
+                    $displayName = substr($cliNameVar, 0, $fullLength) . "...";
+                }
             } else {
-                $displayName = substr($cliNameVar, 0, $fullLength) . "...";
+                $displayName = $cliNameVar;
             }
-        } else {
-            $displayName = $cliNameVar;
-        }
 
-        $returnData = '<span data-toggle="tooltip" data-original-title="' . $cliNameVar . '" style="cursor:pointer;">' . $displayName . '</span>';
+            $returnData = '<span data-toggle="tooltip" data-original-title="' . $cliNameVar . '" style="cursor:pointer;">' . $displayName . '</span>';
+        }else{
+            $returnData = $cliNameVar;
+        }
 
         return $returnData;
     }

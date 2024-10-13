@@ -126,6 +126,7 @@ class TableLib
         $tableArr['time_sheet_tbl']=$adminDB.".time_sheet_tbl";
         $tableArr['staff_cost_tbl']=$adminDB.".staff_cost_tbl";
         $tableArr['bill_work_map_tbl']=$adminDB.".bill_work_map_tbl";
+        $tableArr['receipts_tbl']=$adminDB.".receipts_tbl";
         
         return $tableArr;
 	}

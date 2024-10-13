@@ -988,3 +988,19 @@ table tr td a {
 .seperator_line_tbl {
     background-color: #005495 !important;
 }
+
+tr.partialRecvd, tr.partialRecvd td:not(:last-child):not(td table td) {
+    background : #e8f219a3 !important;
+}
+
+tr.fullRecvd, tr.fullRecvd td:not(:last-child):not(td table td) {
+    background : #24d724a6 !important;
+}
+
+tr.overPmt, tr.overPmt td:not(:last-child):not(td table td) {
+    background : pink !important;
+}
+
+.spanHeader{
+    font-size: 14px;
+}
